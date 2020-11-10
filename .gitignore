@@ -1,0 +1,16 @@
+.idea/
+.vscode/
+
+.DS_Store
+
+# Environments
+.env
+.venv
+env/
+venv
+env.bak/
+venv.bak/
+data.db
+
+__pycache__/
+*.pyc
