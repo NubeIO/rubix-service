@@ -35,7 +35,7 @@ def _validate_and_create_action(action) -> str:
 
 def _validate_and_create_service(action, service) -> str:
     if service.upper() in Services.__members__.keys():
-        return "sudo systemctl {} {}".format(action, Services[service.upper()].value)
+        return "systemctl {} {}".format(action, Services[service.upper()].value)
     else:
         abort(400, message="service {} does not exist in our system".format(service))
 
