@@ -10,3 +10,10 @@ sudo pip3 install --upgrade pip
 sudo pip3 install -r requirements.txt
 sudo python3 run.py
 ```
+
+```
+sudo journalctl -f -u nubeio-s-mon.service
+sudo systemctl start nubeio-s-mon.service
+sudo systemctl stop nubeio-s-mon.service
+sudo systemctl restart nubeio-s-mon.service
+```

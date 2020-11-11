@@ -1,16 +1,15 @@
 import enum
 from flask_restful import Resource, reqparse, abort
 
-from src.system.utils.shell_commands import execute_command, systemctl_status_check
+from src.system.utils.shell_commands import execute_command, systemctl_status_check, systemctl_status
 
 '''
 sudo systemctl status nubeio-rubix-wires.service
-'''
-'''
 sudo systemctl status nubeio-bac-rest.service
-'''
-'''
 sudo systemctl status nubeio-wires-plat.service
+sudo service lorawan-server stop
+sudo service mosquitto.service stop
+
 '''
 
 
@@ -23,7 +22,12 @@ class ServiceAction(enum.Enum):
 class Services(enum.Enum):
     WIRES = 'nubeio-rubix-wires.service'
     PLAT = 'nubeio-wires-plat.service'
+    LORAWAN = 'lorawan-server'
     MOSQUITTO = 'mosquitto.service'
+    BBB = 'nubeio-wires-plat.service'  # TODO
+    BAC_REST = 'nubeio-wires-plat.service'  # TODO
+    BAC_SERVER = 'nubeio-wires-plat.service'  # TODO
+    DRAC = 'nubeio-wires-plat.service'  # TODO
 
 
 def _validate_and_create_action(action) -> str:
@@ -60,7 +64,7 @@ class SystemctlCommand(Resource):
             return {'msg': msg, 'status': False, 'fail': False}, 404
 
 
-class SystemctlStatus(Resource):
+class SystemctlStatusBool(Resource):
     @classmethod
     def get(cls, service):
         if service.upper() in Services.__members__.keys():
@@ -74,3 +78,20 @@ class SystemctlStatus(Resource):
         else:
             msg = "status: {}  does not exist in our system".format(service)
             return {'msg': msg, 'status': False, 'fail': True}
+
+
+class SystemctlStatus(Resource):
+    @classmethod
+    def get(cls, service):
+        if service.upper() in Services.__members__.keys():
+            check = systemctl_status(Services[service.upper()].value)
+            if check:
+                msg = check
+                return {'msg': msg, 'status': True, 'fail': False}
+            else:
+                msg = check
+                return {'msg': msg, 'status': False, 'fail': False}
+        else:
+            msg = "status: {}  does not exist in our system".format(service)
+            return {'msg': msg, 'status': False, 'fail': True}
+
