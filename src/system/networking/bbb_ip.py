@@ -2,16 +2,17 @@ import enum
 from flask_restful import Resource, reqparse, abort
 from src.system.utils.shell_commands import execute_command, systemctl_status_check
 
-'''
-sudo systemctl start nubeio-rubix-wires.service
-'''
-'''
-sudo systemctl status nubeio-bac-rest.service
-'''
-'''
-sudo systemctl start nubeio-wires-plat.service
-'''
+interface = 'eth0'
+dhcp_static = True
+ip = "body.eth1Ip;"
+sub = "body.eth1Ip;"
+gate = "body.eth1Ip;"
+name_server = "body.eth1Ip;"
 
+
+
+# setIP = `sudo connmanctl config ${iface} --ipv4 manual ${ipAddress} ${subnetMask} ${gateway} --nameservers 8.8.8.8 8.8.4.4`;
+# setIpDHCP = `sudo connmanctl config ${iface} --ipv4 dhcp`;
 
 class ServiceAction(enum.Enum):
     START = 1
@@ -50,7 +51,8 @@ class SystemctlCommand(Resource):
         args = parser.parse_args()
         action = _validate_and_create_action(args['action'])
         service = _validate_and_create_service(action, args['service'])
-        call = execute_command(service)
+        # call = execute_command(service)
+        call = True
         if call:
             return {"service": f'{call}, worked!'}
         else:
