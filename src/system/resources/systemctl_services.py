@@ -4,13 +4,13 @@ from flask_restful import Resource, reqparse, abort
 from src.system.utils.shell_commands import execute_command, systemctl_status_check
 
 '''
-sudo systemctl start nubeio-rubix-wires.service
+sudo systemctl status nubeio-rubix-wires.service
 '''
 '''
 sudo systemctl status nubeio-bac-rest.service
 '''
 '''
-sudo systemctl start nubeio-wires-plat.service
+sudo systemctl status nubeio-wires-plat.service
 '''
 
 
