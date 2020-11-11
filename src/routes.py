@@ -6,4 +6,4 @@ api_prefix = 'api'
 api = Api(app)
 
 
-api.add_resource(GetSystemMem, "{}/system/memory".format(api_prefix))
+api.add_resource(GetSystemMem, "/{}/system/memory".format(api_prefix))
