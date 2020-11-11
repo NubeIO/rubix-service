@@ -1,5 +1,6 @@
 import enum
 from flask_restful import Resource, reqparse, abort
+
 from src.system.utils.shell_commands import execute_command, systemctl_status_check
 
 '''
@@ -34,9 +35,9 @@ def _validate_and_create_action(action) -> str:
 
 def _validate_and_create_service(action, service) -> str:
     if service.upper() in Services.__members__.keys():
-        return f'sudo systemctl {action} {Services[service.upper()].value}'
+        return "sudo systemctl {} {}".format(action, Services[service.upper()].value)
     else:
-        abort(400, message=f'service {service} does not exist in our system`')
+        abort(400, message="service {} does not exist in our system".format(service))
 
 
 class SystemctlCommand(Resource):
@@ -52,9 +53,11 @@ class SystemctlCommand(Resource):
         service = _validate_and_create_service(action, args['service'])
         call = execute_command(service)
         if call:
-            return {"service": f'{call}, worked!'}
+            return {"service: {}".format(call)}
         else:
-            return {"service": f'{call}, failed!'}, 404
+            return {"service: {} failed".format(call)}, 404
+
+
 
 
 class SystemctlStatus(Resource):
@@ -63,8 +66,8 @@ class SystemctlStatus(Resource):
         if service.upper() in Services.__members__.keys():
             check = systemctl_status_check(Services[service.upper()].value)
             if check:
-                return {'status': f'{service} is running'}
+                return {"status: {} is running".format(service)}
             else:
-                return {'status': f'{service} is not running'}
+                return {"status: {} is not running".format(service)}
         else:
-            return {'status': f'{service} does not exist in our system'}
+            return {"status: {}  does not exist in our system".format(service)}
