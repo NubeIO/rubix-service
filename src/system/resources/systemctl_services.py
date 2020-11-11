@@ -65,9 +65,16 @@ class SystemctlStatus(Resource):
     def get(cls, service):
         if service.upper() in Services.__members__.keys():
             check = systemctl_status_check(Services[service.upper()].value)
+            print(3333)
+            print(check)
+            print(3333)
             if check:
-                return {"status: {} is running".format(service)}
+                msg = "status: {} is running".format(service)
+                return {'msg': msg}
             else:
-                return {"status: {} is not running".format(service)}
+                msg = "status: {} is not running".format(service)
+                return {'msg': msg}
         else:
-            return {"status: {}  does not exist in our system".format(service)}
+            msg = "status: {}  does not exist in our system".format(service)
+            return {'msg': msg}
+
