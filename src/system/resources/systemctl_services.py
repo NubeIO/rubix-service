@@ -54,14 +54,10 @@ class SystemctlCommand(Resource):
         call = execute_command(service)
         if call:
             msg = "update to service success: {}".format(service)
-            return {'msg': msg}
-        # return {"service: {}".format(call)}
+            return {'msg': msg, 'status': True, 'fail': False}
         else:
             msg = "update to service failed: {}".format(service)
-            return {'msg': msg}, 404
-            # return {"service: {} failed".format(call)}, 404
-
-
+            return {'msg': msg, 'status': False, 'fail': False}, 404
 
 
 class SystemctlStatus(Resource):
@@ -69,16 +65,12 @@ class SystemctlStatus(Resource):
     def get(cls, service):
         if service.upper() in Services.__members__.keys():
             check = systemctl_status_check(Services[service.upper()].value)
-            print(3333)
-            print(check)
-            print(3333)
             if check:
                 msg = "status: {} is running".format(service)
-                return {'msg': msg}
+                return {'msg': msg, 'status': True, 'fail': False}
             else:
                 msg = "status: {} is not running".format(service)
-                return {'msg': msg}
+                return {'msg': msg, 'status': False, 'fail': False}
         else:
             msg = "status: {}  does not exist in our system".format(service)
-            return {'msg': msg}
-
+            return {'msg': msg, 'status': False, 'fail': True}
