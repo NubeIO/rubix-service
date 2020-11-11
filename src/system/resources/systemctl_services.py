@@ -53,9 +53,11 @@ class SystemctlCommand(Resource):
         service = _validate_and_create_service(action, args['service'])
         call = execute_command(service)
         if call:
-            return {"service: {}".format(call)}
+            return {"service:" "success"}
+        # return {"service: {}".format(call)}
         else:
-            return {"service: {} failed".format(call)}, 404
+            return {"service:" "failed"}, 404
+            # return {"service: {} failed".format(call)}, 404
 
 
 

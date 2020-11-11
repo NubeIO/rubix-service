@@ -4,10 +4,9 @@
 ### Installing (for linux)
 
 ```
-cd bac-rest/
-python3 -m venv venv
+sudo python3 -m venv venv
 source venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
-python run.py
+sudo pip3 install --upgrade pip
+sudo pip3 install -r requirements.txt
+sudo python3 run.py
 ```
