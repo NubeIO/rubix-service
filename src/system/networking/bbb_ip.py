@@ -93,13 +93,13 @@ class BBB_STAIC(Resource):
         sub = args['sub']
         gate = args['gate']
         check = valid_ip(ip)
-        if check is not None:
+        if check is False:
             return {'msg': 'ip is not vaild', 'status': False, 'fail': False}, 404
         check = valid_ip(sub)
-        if check is not None:
+        if check is False:
             return {'msg': 'subnet is not vaild', 'status': False, 'fail': False}, 404
         check = valid_ip(gate)
-        if check is not None:
+        if check is False:
             return {'msg': 'gateway is not vaild', 'status': False, 'fail': False}, 404
         interface = get_interface()
         if interface is not None:

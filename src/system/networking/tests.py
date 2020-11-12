@@ -12,6 +12,6 @@ def valid_ip(address):
         return False
 
 
-print(valid_ip('10.10.20.'))
+print(valid_ip('192.168.0.237'))
 
 
