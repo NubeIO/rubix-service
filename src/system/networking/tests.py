@@ -1,7 +1,17 @@
-
 import os
+import re
 
-res = os.popen('connmanctl services').read()
-res = res.replace('*AO Wired', '')  # remove word
-res = " ".join(res.split())  # white space
-print(res)
+import socket
+
+
+def valid_ip(address):
+    try:
+        socket.inet_aton(address)
+        return True
+    except:
+        return False
+
+
+print(valid_ip('10.10.20.'))
+
+

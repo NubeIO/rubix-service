@@ -1,13 +1,24 @@
 import enum
 import os
+import socket
+
 from flask_restful import Resource, reqparse, abort
 from src.system.utils.shell_commands import execute_command, systemctl_status_check
-
 
 
 class ServiceAction(enum.Enum):
     true = 0
     false = 1
+
+
+def valid_ip(address):
+    try:
+        socket.inet_aton(address)
+        return True
+    except:
+        return False
+
+
 
 def _validate_and_create_action(action) -> str:
     if action.upper() in ServiceAction.__members__.keys():
@@ -37,6 +48,21 @@ def set_staic_command(iface, ip, sub, gate):
     return command
 
 
+fake_dchp = {
+    "msg": "sudo connmanctl config ethernet_4c3fd3322f59_cable --ipv4 dhcp",
+    "interface": "ethernet_4c3fd3322f59_cable",
+    "status": True,
+    "fail": False
+}
+
+fake_dchp_fail = {
+    "msg": None,
+    "interface": None,
+    "status": True,
+    "fail": False
+}
+
+
 class BBB_DHCP(Resource):
     def post(self):
         parser = reqparse.RequestParser()
@@ -47,9 +73,39 @@ class BBB_DHCP(Resource):
             interface = get_interface()
             if interface is not None:
                 cmd = set_dhcp_command(interface)
+                # TODO add setip
                 return {'msg': cmd, 'interface': interface, 'status': True, 'fail': False}
             else:
-                return {'msg': None, 'interface': interface, 'status': False, 'fail': True}
+                return {'msg': None, 'interface': None, 'status': False, 'fail': True}
         else:
             msg = "update to interface to DHCP fail"
             return {'msg': msg, 'status': False, 'fail': False}, 404
+
+
+class BBB_STAIC(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('ip', type=bool, help='should be an IP address', required=True)
+        parser.add_argument('sub', type=bool, help='should be an sub address`', required=True)
+        parser.add_argument('gate', type=bool, help='should be an gateway address', required=True)
+        args = parser.parse_args()
+        ip = args['ip']
+        sub = args['sub']
+        gate = args['gate']
+        check = valid_ip(ip)
+        if check is not None:
+            return {'msg': 'ip is not vaild', 'status': False, 'fail': False}, 404
+        check = valid_ip(sub)
+        if check is not None:
+            return {'msg': 'subnet is not vaild', 'status': False, 'fail': False}, 404
+        check = valid_ip(gate)
+        if check is not None:
+            return {'msg': 'gateway is not vaild', 'status': False, 'fail': False}, 404
+        interface = get_interface()
+        if interface is not None:
+            cmd = set_staic_command(interface, ip, sub, gate)
+            # TODO add setip
+            return {'msg': cmd, 'interface': interface, 'status': True, 'fail': False}
+        else:
+            return {'msg': None, 'interface': None, 'status': False, 'fail': True}
+
