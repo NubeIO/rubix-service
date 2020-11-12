@@ -7,6 +7,9 @@ from src.system.utils.shell_commands import execute_command, systemctl_status_ch
 sudo systemctl status nubeio-rubix-wires.service
 sudo systemctl status nubeio-bac-rest.service
 sudo systemctl status nubeio-wires-plat.service
+sudo systemctl status nubeio-bbio.service
+sudo systemctl status nubeio-bac-rest.service
+sudo systemctl status nubeio-bacnet-server.service 
 sudo service lorawan-server stop
 sudo service mosquitto.service stop
 '''
@@ -23,10 +26,10 @@ class Services(enum.Enum):
     PLAT = 'nubeio-wires-plat.service'
     LORAWAN = 'lorawan-server'
     MOSQUITTO = 'mosquitto.service'
-    BBB = 'nubeio-wires-plat.service'  # TODO
-    BAC_REST = 'nubeio-wires-plat.service'  # TODO
-    BAC_SERVER = 'nubeio-wires-plat.service'  # TODO
-    DRAC = 'nubeio-wires-plat.service'  # TODO
+    BBB = 'nubeio-bbio.service'
+    BAC_REST = 'nubeio-bac-rest.service'
+    BAC_SERVER = 'nubeio-bacnet-server.service'
+    DRAC = 'nubeio-drac.service'  # TODO
 
 
 def _validate_and_create_action(action) -> str:
