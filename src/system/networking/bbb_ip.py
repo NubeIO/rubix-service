@@ -19,7 +19,6 @@ def valid_ip(address):
         return False
 
 
-
 def _validate_and_create_action(action) -> str:
     if action.upper() in ServiceAction.__members__.keys():
         return action.lower()
@@ -48,20 +47,6 @@ def set_staic_command(iface, ip, sub, gate):
     return command
 
 
-fake_dchp = {
-    "msg": "sudo connmanctl config ethernet_4c3fd3322f59_cable --ipv4 dhcp",
-    "interface": "ethernet_4c3fd3322f59_cable",
-    "status": True,
-    "fail": False
-}
-
-fake_dchp_fail = {
-    "msg": None,
-    "interface": None,
-    "status": True,
-    "fail": False
-}
-
 
 class BBB_DHCP(Resource):
     def post(self):
@@ -70,7 +55,8 @@ class BBB_DHCP(Resource):
         args = parser.parse_args()
         action = args['action']
         if action:
-            interface = get_interface()
+            # interface = get_interface()
+            interface = "ethernet_4c3fd3322f59_cable"
             if interface is not None:
                 cmd = set_dhcp_command(interface)
                 # TODO add setip
@@ -101,17 +87,11 @@ class BBB_STAIC(Resource):
         check = valid_ip(gate)
         if not check:
             return {'msg': 'gateway is not vaild', 'status': False, 'fail': False}, 404
-        interface = get_interface()
-        print(11111)
-        print(interface)
-        print(11111)
+        # interface = get_interface()
+        interface = "ethernet_4c3fd3322f59_cable"
         if interface is not None:
-            print(222)
-            print(interface)
-            print(222)
             cmd = set_staic_command(interface, ip, sub, gate)
             # TODO add setip
             return {'msg': cmd, 'interface': interface, 'status': True, 'fail': False}
         else:
             return {'msg': None, 'interface': None, 'status': False, 'fail': True}
-
