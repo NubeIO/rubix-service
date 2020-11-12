@@ -103,6 +103,9 @@ class BBB_STAIC(Resource):
             return {'msg': 'gateway is not vaild', 'status': False, 'fail': False}, 404
         interface = get_interface()
         if interface is not None:
+            print(11111)
+            print(interface)
+            print(11111)
             cmd = set_staic_command(interface, ip, sub, gate)
             # TODO add setip
             return {'msg': cmd, 'interface': interface, 'status': True, 'fail': False}
