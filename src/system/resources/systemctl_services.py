@@ -9,7 +9,6 @@ sudo systemctl status nubeio-bac-rest.service
 sudo systemctl status nubeio-wires-plat.service
 sudo service lorawan-server stop
 sudo service mosquitto.service stop
-
 '''
 
 
@@ -88,9 +87,6 @@ class SystemctlStatus(Resource):
             if check:
                 msg = check
                 return {'msg': msg, 'status': True, 'fail': False}
-            else:
-                msg = check
-                return {'msg': msg, 'status': False, 'fail': False}
         else:
             msg = "status: {}  does not exist in our system".format(service)
             return {'msg': msg, 'status': False, 'fail': True}
