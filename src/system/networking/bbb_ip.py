@@ -85,21 +85,21 @@ class BBB_DHCP(Resource):
 class BBB_STAIC(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('ip', type=bool, help='should be an IP address', required=True)
-        parser.add_argument('sub', type=bool, help='should be an sub address`', required=True)
-        parser.add_argument('gate', type=bool, help='should be an gateway address', required=True)
+        parser.add_argument('ip', type=str, help='should be an IP address', required=True)
+        parser.add_argument('sub', type=str, help='should be an sub address`', required=True)
+        parser.add_argument('gate', type=str, help='should be an gateway address', required=True)
         args = parser.parse_args()
         ip = args['ip']
         sub = args['sub']
         gate = args['gate']
         check = valid_ip(ip)
-        if check is False:
+        if not check:
             return {'msg': 'ip is not vaild', 'status': False, 'fail': False}, 404
         check = valid_ip(sub)
-        if check is False:
+        if not check:
             return {'msg': 'subnet is not vaild', 'status': False, 'fail': False}, 404
         check = valid_ip(gate)
-        if check is False:
+        if not check:
             return {'msg': 'gateway is not vaild', 'status': False, 'fail': False}, 404
         interface = get_interface()
         if interface is not None:
