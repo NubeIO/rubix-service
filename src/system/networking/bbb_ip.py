@@ -44,12 +44,12 @@ class BBB_DHCP(Resource):
         args = parser.parse_args()
         action = args['action']
         if action:
-            call = get_interface()
-            if call is not None:
-                set_dhcp_command(call)
-                return {'msg': call, 'status': True, 'fail': False}
+            interface = get_interface()
+            if interface is not None:
+                cmd = set_dhcp_command(interface)
+                return {'msg': cmd, 'interface': interface, 'status': True, 'fail': False}
             else:
-                return {'msg': call, 'status': False, 'fail': True}
+                return {'msg': None, 'interface': interface, 'status': False, 'fail': True}
         else:
             msg = "update to interface to DHCP fail"
             return {'msg': msg, 'status': False, 'fail': False}, 404
