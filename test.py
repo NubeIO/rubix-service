@@ -12,6 +12,17 @@ import requests
 # print(f.namelist())
 
 
+
+# Pass in the following
+# service
+# version to install as selected by the user
+# user
+# dir
+
+
+
+# sudo bash script.bash start -u=pi -dir=/home/pi/bacnet-flask -lib_dir=/home/pi/common-py-libs
+
 import requests
 
 r = requests.get('https://api.github.com/repos/NubeDev/bacnet-flask/releases')

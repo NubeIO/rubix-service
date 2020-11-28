@@ -1,26 +1,46 @@
 import enum
 from flask_restful import Resource, reqparse, abort
 
+from src.system.resources.systemctl_services import ServiceAction
+from src.system.services import Services
 from src.system.utils.shell_commands import execute_command, systemctl_status_check, systemctl_status
 
 '''
-sudo systemctl status nubeio-rubix-wires.service
-sudo systemctl status nubeio-bac-rest.service
-sudo systemctl status nubeio-wires-plat.service
-sudo systemctl status nubeio-bbio.service
-sudo systemctl status nubeio-bac-rest.service
-sudo systemctl status nubeio-bacnet-server.service 
-sudo service lorawan-server stop
-sudo service mosquitto.service stop
+HTTP get and show options
+stop existing service RETURN 200 or 404
+## delete existing RETURN 200 or 404
+## unzip RETURN 200 or 404
+## start install RETURN 200 or 404
+
 '''
 
 
-class ServiceAction(enum.Enum):
-    START = 1
-    STOP = 2
-    RESTART = 3
+def download_service(service):
+    return service
 
 
+def stop_service(service):
+    return service
+
+
+def delete_existing_folder(service):
+    return service
+
+
+def unzip_service(service):
+    return service
+
+
+def install_service(service):
+    return service
+
+
+def restart_service(service):
+    return service
+
+
+def check_service_is_running(service):
+    return service
 
 
 def _validate_and_create_action(action) -> str:
@@ -84,4 +104,3 @@ class SystemctlStatus(Resource):
         else:
             msg = "status: {}  does not exist in our system".format(service)
             return {'msg': msg, 'status': False, 'fail': True}
-

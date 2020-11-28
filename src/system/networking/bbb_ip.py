@@ -6,7 +6,7 @@ from flask_restful import Resource, reqparse, abort
 from src.system.utils.shell_commands import execute_command, systemctl_status_check
 
 
-class ServiceAction(enum.Enum):
+class ServiceActionBBB(enum.Enum):
     true = 0
     false = 1
 
@@ -20,7 +20,7 @@ def valid_ip(address):
 
 
 def _validate_and_create_action(action) -> str:
-    if action.upper() in ServiceAction.__members__.keys():
+    if action.upper() in ServiceActionBBB.__members__.keys():
         return action.lower()
     else:
         abort(400, message='action should be `start | stop | restart`')
