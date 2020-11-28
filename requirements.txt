@@ -1,3 +1,4 @@
 Flask
 Flask-RESTful
 Flask-cors
+requests
