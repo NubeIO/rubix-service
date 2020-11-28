@@ -15,4 +15,5 @@ api.add_resource(SystemctlStatusBool, "/{}/system/service/up/<string:service>".f
 api.add_resource(SystemctlStatus, "/{}/system/service/stats/<string:service>".format(api_prefix))
 api.add_resource(BBB_DHCP, "/{}/system/networking/update/bbb/dhcp".format(api_prefix))
 api.add_resource(BBB_STAIC, "/{}/system/networking/update/bbb/static".format(api_prefix))
-api.add_resource(Ping, f'/{api_prefix}/ping')
+api.add_resource(Ping, "/{}/ping".format(api_prefix))
+
