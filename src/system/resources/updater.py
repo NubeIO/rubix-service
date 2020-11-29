@@ -1,5 +1,4 @@
 import time
-
 from flask_restful import Resource, reqparse, abort
 from src.system.services import Services
 from io import BytesIO
@@ -7,28 +6,8 @@ from urllib.request import urlopen
 from zipfile import ZipFile
 from pathlib import Path
 import shutil
-
 from src.system.utils.shell_commands import execute_command
 from src.system.utils.url_check import service_urls, IsValidURL
-
-'''
-Step 1:
-WIRES-PLAT: HTTP get all releases
-Step 2: 
-WIRES-PLAT: POST {service: WIRES, action: stop}: S-MON RETURN 200 or 404
-Have a refresh button 
-WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
-Step 3: 
-WIRES-PLAT: to send service: S-MON (HTTP GET service/WIRES) http://0.0.0.0:1616/api/services/download/BAC_REST
-WIRES-PLAT: HTTP POST with user selected {releases}  
-S-MON: delete existing, download and unzip new S-MON RETURN 200 or 404
-Step 4: 
-install RETURN 200 or 404
-Step 5: 
-WIRES-PLAT: POST {service: WIRES, action: start}: S-MON RETURN 200 or 404
-Have a refresh button 
-WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
-'''
 
 
 def delete_existing_folder(_dir):

@@ -101,7 +101,7 @@ Body
 }
 ```
 
-### HTTP POST download
+### HTTP POST install
 /api/services/install
 if `test_install": true` is true then this will not run the system command (This is used for testing the API)
 
