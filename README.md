@@ -69,7 +69,7 @@ Body
 ## Updater
 
 
-'''
+```
 Step 1:
 WIRES-PLAT: HTTP get all releases
 Step 2: 
@@ -86,7 +86,7 @@ Step 5:
 WIRES-PLAT: POST {service: WIRES, action: start}: S-MON RETURN 200 or 404
 Have a refresh button 
 WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
-'''
+```
 
 
 ### HTTP POST download
