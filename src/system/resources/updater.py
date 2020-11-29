@@ -1,106 +1,124 @@
-import enum
+import time
+
 from flask_restful import Resource, reqparse, abort
-
-from src.system.resources.systemctl_services import ServiceAction
 from src.system.services import Services
-from src.system.utils.shell_commands import execute_command, systemctl_status_check, systemctl_status
+from io import BytesIO
+from urllib.request import urlopen
+from zipfile import ZipFile
+from pathlib import Path
+import shutil
+
+from src.system.utils.shell_commands import execute_command
+from src.system.utils.url_check import service_urls, IsValidURL
 
 '''
-HTTP get and show options
-stop existing service RETURN 200 or 404
-## delete existing RETURN 200 or 404
-## unzip RETURN 200 or 404
-## start install RETURN 200 or 404
-
+Step 1:
+WIRES-PLAT: HTTP get all releases
+Step 2: 
+WIRES-PLAT: POST {service: WIRES, action: stop}: S-MON RETURN 200 or 404
+Have a refresh button 
+WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
+Step 3: 
+WIRES-PLAT: to send service: S-MON (HTTP GET service/WIRES) http://0.0.0.0:1616/api/services/download/BAC_REST
+WIRES-PLAT: HTTP POST with user selected {releases}  
+S-MON: delete existing, download and unzip new S-MON RETURN 200 or 404
+Step 4: 
+install RETURN 200 or 404
+Step 5: 
+WIRES-PLAT: POST {service: WIRES, action: start}: S-MON RETURN 200 or 404
+Have a refresh button 
+WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
 '''
 
 
-def download_service(service):
-    return service
-
-
-def stop_service(service):
-    return service
-
-
-def delete_existing_folder(service):
-    return service
-
-
-def unzip_service(service):
-    return service
-
-
-def install_service(service):
-    return service
-
-
-def restart_service(service):
-    return service
-
-
-def check_service_is_running(service):
-    return service
-
-
-def _validate_and_create_action(action) -> str:
-    if action.upper() in ServiceAction.__members__.keys():
-        return action.lower()
+def delete_existing_folder(_dir):
+    dir_path = Path(_dir)
+    if dir_path.exists() and dir_path.is_dir():
+        shutil.rmtree(dir_path)
+        return True
     else:
-        abort(400, message='action should be `start | stop | restart`')
+        return False
 
 
-def _validate_and_create_service(action, service) -> str:
+def download_unzip_service(service, _dir):
+    try:
+        with urlopen(service) as zip_resp:
+            with ZipFile(BytesIO(zip_resp.read())) as z_file:
+                z_file.extractall(_dir)
+                return True
+    except FileNotFoundError:
+        return False
+
+
+def build_install_cmd(_dir, user, lib_dir):
+    # sudo bash script.bash start -u=<pi|debian> -dir=<bacnet_flask_dir> -lib_dir=<common-py-libs-dir>
+    cmd = "sudo bash script.bash start -u={} -dir={} -lib_dir={}".format(user, _dir, lib_dir)
+    return cmd
+
+
+def build_install(cmd, test):
+    if test:
+        time.sleep(5)
+        return True
+    run = execute_command(cmd)
+    if not run:
+        return False
+    else:
+        return True
+
+
+def _validate_service(service) -> str:
     if service.upper() in Services.__members__.keys():
-        return "sudo systemctl {} {}".format(action, Services[service.upper()].value)
+        return service_urls.get(service)
     else:
         abort(400, message="service {} does not exist in our system".format(service))
 
 
-class SystemctlCommand(Resource):
+class DownloadService(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('action', type=str, help='action should be `start | stop | restart`', required=True)
-        parser.add_argument('service',
-                            type=str,
-                            help='service type is required example: (wires, mosquitto)',
-                            required=True)
+        parser.add_argument('service', type=str, required=True)
+        parser.add_argument('build_url', type=str, required=True)
+        parser.add_argument('directory', type=str, required=True)
         args = parser.parse_args()
-        action = _validate_and_create_action(args['action'])
-        service = _validate_and_create_service(action, args['service'])
-        call = execute_command(service)
-        if call:
-            msg = "update to service success: {}".format(service)
-            return {'msg': msg, 'status': True, 'fail': False}
-        else:
-            msg = "update to service failed: {}".format(service)
-            return {'msg': msg, 'status': False, 'fail': False}, 404
+        _service = args['service']
+        build_url = args['build_url']
+        directory = args['directory']
+        service = _validate_service(_service)
+        if not service:
+            abort(400, message="service {} does not exist in our system".format(service))
+        url = IsValidURL(build_url, _service)
+        service_url = url.service_to_url()
+        check_url = url.check_url(service_url)
+        if not check_url:
+            abort(400, message="service {} is an invalid url".format(service))
+        delete_existing_dir = delete_existing_folder(directory)
+        download = download_unzip_service(build_url, directory)
+        if not download:
+            abort(400, message="valid URL service {} but download failed check internet!".format(service))
+        return {'service': service, 'service_to_url': service_url, 'del_existing_dir': delete_existing_dir}
 
 
-class SystemctlStatusBool(Resource):
-    @classmethod
-    def get(cls, service):
-        if service.upper() in Services.__members__.keys():
-            check = systemctl_status_check(Services[service.upper()].value)
-            if check:
-                msg = "status: {} is running".format(service)
-                return {'msg': msg, 'status': True, 'fail': False}
-            else:
-                msg = "status: {} is not running".format(service)
-                return {'msg': msg, 'status': False, 'fail': False}
-        else:
-            msg = "status: {}  does not exist in our system".format(service)
-            return {'msg': msg, 'status': False, 'fail': True}
+class InstallService(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('service', type=str, required=True)
+        parser.add_argument('_dir', type=str, required=True)
+        parser.add_argument('user', type=str, required=True)
+        parser.add_argument('lib_dir', type=str, required=True)
+        parser.add_argument('test_install', type=bool, required=True)
+        args = parser.parse_args()
+        _service = args['service']
+        _dir = args['_dir']
+        user = args['user']
+        lib_dir = args['lib_dir']
+        test_install = args['test_install']
+        service = _validate_service(_service)
+        if not service:
+            abort(400, message="service {} does not exist in our system".format(service))
+        build_cmd = build_install_cmd(_dir, user, lib_dir)
+        install = build_install(build_cmd, test_install)
+        if not install:
+            abort(400, message="valid service {} issue on install, build cmd: {}".format(service, build_cmd))
+        return {'service': service, 'build_cmd': build_cmd, 'install_completed': install}
 
-
-class SystemctlStatus(Resource):
-    @classmethod
-    def get(cls, service):
-        if service.upper() in Services.__members__.keys():
-            check = systemctl_status(Services[service.upper()].value)
-            if check:
-                msg = check
-                return {'msg': msg, 'status': True, 'fail': False}
-        else:
-            msg = "status: {}  does not exist in our system".format(service)
-            return {'msg': msg, 'status': False, 'fail': True}

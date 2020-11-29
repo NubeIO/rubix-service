@@ -18,9 +18,6 @@ sudo systemctl stop nubeio-s-mon.service
 sudo systemctl restart nubeio-s-mon.service
 ```
 
-
-
-
 ## API
 
 ### GET
@@ -62,10 +59,59 @@ RESTART = restart a service
 service to start/stop/restart
 
 Body
-
 ```
 {
     "action": "start",
     "service": "wires"
+}
+```
+
+## Updater
+
+
+'''
+Step 1:
+WIRES-PLAT: HTTP get all releases
+Step 2: 
+WIRES-PLAT: POST {service: WIRES, action: stop}: S-MON RETURN 200 or 404
+Have a refresh button 
+WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
+Step 3: 
+WIRES-PLAT: to send service: S-MON (HTTP GET service/WIRES) http://0.0.0.0:1616/api/services/download/BAC_REST
+WIRES-PLAT: HTTP POST with user selected {releases}  
+S-MON: delete existing, download and unzip new S-MON RETURN 200 or 404
+Step 4: 
+install RETURN 200 or 404
+Step 5: 
+WIRES-PLAT: POST {service: WIRES, action: start}: S-MON RETURN 200 or 404
+Have a refresh button 
+WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
+'''
+
+
+### HTTP POST download
+/api/services/download
+
+Body
+```
+{
+    "service": "BAC_SERVER",
+    "directory": "/home/aidan/code/test",
+    "build_url": "https://api.github.com/repos/NubeDev/bacnet-flask/zipball/v1.1.1"
+}
+```
+
+### HTTP POST download
+/api/services/install
+if `test_install": true` is true then this will not run the system command (This is used for testing the API)
+
+Body
+```
+{   
+    "service": "BAC_SERVER",
+    "_dir": "/home/aidan/code/test",
+     "user": "AIDAN",
+    "lib_dir": "/home/aa/",
+    "test_install": true
 }
 ```
