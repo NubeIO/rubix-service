@@ -1,21 +1,15 @@
 # s-mon
-#### How to run
 
-### Installing (for linux)
+### Running on Production
 
-```
-sudo python3 -m venv venv
-source venv/bin/activate
-sudo pip3 install --upgrade pip
-sudo pip3 install -r requirements.txt
-sudo python3 run.py
-```
+#### One time setup:
+- Clone [this](https://github.com/NubeIO/common-py-libs)
+- Create `venv` on inside that directory (follow instruction on [here](https://github.com/NubeIO/common-py-libs#how-to-create))
 
-```
-sudo journalctl -f -u nubeio-s-mon.service
-sudo systemctl start nubeio-s-mon.service
-sudo systemctl stop nubeio-s-mon.service
-sudo systemctl restart nubeio-s-mon.service
+#### Commands:
+```bash
+sudo bash script.bash start -u=<pi|debian> -dir=<s-mon_dir> -lib_dir=<common-py-libs-dir>
+sudo bash script.bash -h
 ```
 
 ## API
