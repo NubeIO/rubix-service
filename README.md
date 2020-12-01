@@ -9,6 +9,7 @@
 #### Commands:
 ```bash
 sudo bash script.bash start -u=<pi|debian> -dir=<s-mon_dir> -lib_dir=<common-py-libs-dir>
+sudo bash script.bash start -u=pi -dir=/home/pi/s-mon -lib_dir=/home/pi/common-py-libs
 sudo bash script.bash -h
 ```
 
