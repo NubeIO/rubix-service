@@ -5,7 +5,7 @@ wires_domain = (
 )
 
 bac_rest_domain = (
-    'github',
+    'api.github.com',
     'NubeDev',
     'bac-rest'
 )
