@@ -55,6 +55,15 @@ def build_install_cmd(_dir, user, lib_dir):
     return [cmd, build_dir]
 
 
+def build_install_cmd_wires(_dir, user):
+    # sudo bash script.bash start -u=<pi|debian> -dir=<bacnet_flask_dir> -lib_dir=<common-py-libs-dir>
+    build_dir = "{}/{}/{}".format(_dir, get_path_global(), user)
+    print(9999, build_dir, get_path_global())
+    "bash script.bash start -u=pi -hp=/home/pi -l=false"
+    cmd = "bash script.bash start -u={} -hp={} -l=false".format(user, build_dir)
+    return [cmd, build_dir]
+
+
 def build_install(cmd, test, cwd):
     if test:
         time.sleep(5)
@@ -117,9 +126,17 @@ class InstallService(Resource):
 
         if not service:
             abort(400, message="service {} does not exist in our system".format(service))
-        build_cmd = build_install_cmd(_dir, user, lib_dir)
-        print(build_cmd, test_install)
-        install = build_install(build_cmd[0], test_install, build_cmd[1])
-        if not install:
-            abort(400, message="valid service {} issue on install, build cmd: {}".format(service, build_cmd))
-        return {'service': service, 'build_cmd': build_cmd, 'install_completed': install}
+        if _service == "WIRES":
+            build_cmd = build_install_cmd_wires(_dir, user)
+            print(_service, build_cmd, test_install)
+            install = build_install(build_cmd[0], test_install, build_cmd[1])
+            if not install:
+                abort(400, message="valid service {} issue on install, build cmd: {}".format(service, build_cmd))
+            return {'service': service, 'build_cmd': build_cmd, 'install_completed': install}
+        elif _service == "BAC_REST" or _service == "BAC_SERVER":
+            build_cmd = build_install_cmd(_dir, user, lib_dir)
+            print(_service, build_cmd, test_install)
+            install = build_install(build_cmd[0], test_install, build_cmd[1])
+            if not install:
+                abort(400, message="valid service {} issue on install, build cmd: {}".format(service, build_cmd))
+            return {'service': service, 'build_cmd': build_cmd, 'install_completed': install}
