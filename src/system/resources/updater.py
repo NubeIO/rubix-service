@@ -57,10 +57,12 @@ def build_install_cmd(_dir, user, lib_dir):
 
 def build_install_cmd_wires(_dir, user):
     # sudo bash script.bash start -u=<pi|debian> -dir=<bacnet_flask_dir> -lib_dir=<common-py-libs-dir>
-    build_dir = "{}/{}/{}".format(_dir, get_path_global(), user)
-    print(9999, build_dir, get_path_global())
+    build_dir = "{}/{}".format(_dir, get_path_global())
+
     "bash script.bash start -u=pi -hp=/home/pi -l=false"
     cmd = "bash script.bash start -u={} -hp={} -l=false".format(user, build_dir)
+    print(9999, build_dir, get_path_global())
+    print(9999, cmd)
     return [cmd, build_dir]
 
 
@@ -98,9 +100,12 @@ class DownloadService(Resource):
         url = IsValidURL(build_url, _service)
         service_url = url.service_to_url()
         check_url = url.check_url(service_url)
+        print(11111, url, service_url, check_url)
         if not check_url:
             abort(400, message="service {} is an invalid url".format(service))
+        print(">>>>>>> delete_existing_dir")
         delete_existing_dir = delete_existing_folder(directory)
+        print(">>>>>>> download")
         download = download_unzip_service(build_url, directory)
         if not download:
             abort(400, message="valid URL service {} but download failed check internet!".format(service))
@@ -113,7 +118,7 @@ class InstallService(Resource):
         parser.add_argument('service', type=str, required=True)
         parser.add_argument('_dir', type=str, required=True)
         parser.add_argument('user', type=str, required=True)
-        parser.add_argument('lib_dir', type=str, required=True)
+        parser.add_argument('lib_dir', type=str, required=False)
         parser.add_argument('test_install', type=bool, required=True)
         args = parser.parse_args()
         _service = args['service']
@@ -122,11 +127,13 @@ class InstallService(Resource):
         lib_dir = args['lib_dir']
         test_install = args['test_install']
         service = _validate_service(_service)
-        print(_dir, user, lib_dir)
+        print(">>>>>>> INSTALL")
+        print(_dir, user, lib_dir, _service)
 
         if not service:
             abort(400, message="service {} does not exist in our system".format(service))
         if _service == "WIRES":
+            print(">>>>>>> INSTALL WIRES")
             build_cmd = build_install_cmd_wires(_dir, user)
             print(_service, build_cmd, test_install)
             install = build_install(build_cmd[0], test_install, build_cmd[1])
@@ -134,6 +141,7 @@ class InstallService(Resource):
                 abort(400, message="valid service {} issue on install, build cmd: {}".format(service, build_cmd))
             return {'service': service, 'build_cmd': build_cmd, 'install_completed': install}
         elif _service == "BAC_REST" or _service == "BAC_SERVER":
+            print(">>>>>>> INSTALL BAC_REST OR BAC_SERVER")
             build_cmd = build_install_cmd(_dir, user, lib_dir)
             print(_service, build_cmd, test_install)
             install = build_install(build_cmd[0], test_install, build_cmd[1])
