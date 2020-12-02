@@ -1,3 +1,4 @@
+import os
 import time
 from flask_restful import Resource, reqparse, abort
 from src.system.services import Services
@@ -8,6 +9,17 @@ from pathlib import Path
 import shutil
 from src.system.utils.shell_commands import execute_command
 from src.system.utils.url_check import service_urls, IsValidURL
+
+path_global = ""
+
+
+def set_path_global(_dir):
+    global path_global
+    path_global = _dir.split('/')[0]
+
+
+def get_path_global():
+    return path_global
 
 
 def delete_existing_folder(_dir):
@@ -20,10 +32,16 @@ def delete_existing_folder(_dir):
 
 
 def download_unzip_service(service, _dir):
+    print(2222)
+    print(service, _dir)
+    print(2222)
     try:
         with urlopen(service) as zip_resp:
             with ZipFile(BytesIO(zip_resp.read())) as z_file:
                 z_file.extractall(_dir)
+                dirs = list(set([os.path.dirname(x) for x in z_file.namelist()]))
+                set_path_global(dirs[0])
+                get_path_global()
                 return True
     except FileNotFoundError:
         return False
@@ -31,7 +49,9 @@ def download_unzip_service(service, _dir):
 
 def build_install_cmd(_dir, user, lib_dir):
     # sudo bash script.bash start -u=<pi|debian> -dir=<bacnet_flask_dir> -lib_dir=<common-py-libs-dir>
-    cmd = "sudo bash script.bash start -u={} -dir={} -lib_dir={}".format(user, _dir, lib_dir)
+    build_dir = "{}/{}".format(_dir, get_path_global())
+    print(9999, build_dir, get_path_global())
+    cmd = "sudo bash script.bash start -u={} -dir={} -lib_dir={}".format(user, build_dir, lib_dir)
     return cmd
 
 
@@ -93,11 +113,13 @@ class InstallService(Resource):
         lib_dir = args['lib_dir']
         test_install = args['test_install']
         service = _validate_service(_service)
+        print(_dir, user, lib_dir)
+
         if not service:
             abort(400, message="service {} does not exist in our system".format(service))
         build_cmd = build_install_cmd(_dir, user, lib_dir)
+        print(build_cmd, test_install)
         install = build_install(build_cmd, test_install)
         if not install:
             abort(400, message="valid service {} issue on install, build cmd: {}".format(service, build_cmd))
         return {'service': service, 'build_cmd': build_cmd, 'install_completed': install}
-
