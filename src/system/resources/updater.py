@@ -58,9 +58,10 @@ def build_install_cmd(_dir, user, lib_dir):
 def build_install_cmd_wires(_dir, user):
     # sudo bash script.bash start -u=<pi|debian> -dir=<bacnet_flask_dir> -lib_dir=<common-py-libs-dir>
     build_dir = "{}/{}".format(_dir, get_path_global())
+    wires_path = 'rubix-wires'
 
     "bash script.bash start -u=pi -hp=/home/pi -l=false"
-    cmd = "bash script.bash start -u={} -hp={} -l=false".format(user, build_dir)
+    cmd = "bash script.bash start -u={} -hp={}/{} -l=false".format(user, build_dir, wires_path)
     print(9999, build_dir, get_path_global())
     print(9999, cmd)
     return [cmd, build_dir]
