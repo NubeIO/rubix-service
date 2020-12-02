@@ -1,4 +1,4 @@
-from src.resources.utils import map_rest_schema
+from src.platform.utils import map_rest_schema
 
 wires_plat_all_attributes = {
     'device_id': {

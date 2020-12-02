@@ -1,8 +1,8 @@
 import uuid
 from flask_restful import Resource, reqparse, marshal_with, abort
 
-from src.models.wires.model_wires_plat import WiresPlatModel
-from src.resources.rest_schema.schema_wires_plat import wires_plat_all_attributes, wires_plat_all_fields
+from src.platform.model_wires_plat import WiresPlatModel
+from src.platform.schema_wires_plat import wires_plat_all_attributes, wires_plat_all_fields
 
 
 class WiresPlatResource(Resource):

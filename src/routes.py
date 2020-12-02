@@ -1,5 +1,6 @@
 from flask_restful import Api
 from src import app
+from src.platform.resource_wires_plat import WiresPlatResource
 from src.system.networking.bbb_ip import BBB_DHCP, BBB_STAIC
 from src.system.resources.memory import GetSystemMem
 from src.system.resources.ping import Ping
@@ -19,3 +20,6 @@ api.add_resource(DownloadService, "/{}/services/download".format(api_prefix))
 api.add_resource(InstallService, "/{}/services/install".format(api_prefix))
 api.add_resource(Ping, "/{}/ping".format(api_prefix))
 
+
+wires_api_prefix = f'{api_prefix}/wires'
+api.add_resource(WiresPlatResource, f'/{wires_api_prefix}/plat')

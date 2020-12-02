@@ -2,8 +2,6 @@ from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import validates
 
 from src import db
-from src.event_dispatcher import EventDispatcher
-from src.services.event_service_base import Event, EventType
 
 
 class ModelBase(db.Model):
@@ -41,18 +39,6 @@ class ModelBase(db.Model):
                 setattr(self, key, value)
         self.check_self()
         db.session.commit()
-        event = Event(self.get_model_event_type(), {
-            'model': self,
-            'updates': kwargs
-        })
-        # TODO: source_driver name to publish change to source driver
-        EventDispatcher.dispatch_from_service(None, event, None)
-
-    def get_model_event_name(self) -> str:
-        raise NotImplemented
-
-    def get_model_event_type(self) -> EventType:
-        raise NotImplemented
 
     def check_self(self) -> (bool, any):
         return True
