@@ -52,14 +52,14 @@ def build_install_cmd(_dir, user, lib_dir):
     build_dir = "{}/{}".format(_dir, get_path_global())
     print(9999, build_dir, get_path_global())
     cmd = "sudo bash script.bash start -u={} -dir={} -lib_dir={}".format(user, build_dir, lib_dir)
-    return cmd
+    return [cmd, build_dir]
 
 
-def build_install(cmd, test):
+def build_install(cmd, test, cwd):
     if test:
         time.sleep(5)
         return True
-    run = execute_command(cmd)
+    run = execute_command(cmd, cwd)
     if not run:
         return False
     else:
@@ -119,7 +119,7 @@ class InstallService(Resource):
             abort(400, message="service {} does not exist in our system".format(service))
         build_cmd = build_install_cmd(_dir, user, lib_dir)
         print(build_cmd, test_install)
-        install = build_install(build_cmd, test_install)
+        install = build_install(build_cmd[0], test_install, build_cmd[1])
         if not install:
             abort(400, message="valid service {} issue on install, build cmd: {}".format(service, build_cmd))
         return {'service': service, 'build_cmd': build_cmd, 'install_completed': install}
