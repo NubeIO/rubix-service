@@ -1,7 +1,7 @@
 import enum
 from flask_restful import Resource, reqparse, abort
 
-from src.system.services import Services
+from src.system.services import Services, validate_service
 from src.system.utils.shell_commands import execute_command, systemctl_status_check, systemctl_status
 
 '''
@@ -22,8 +22,6 @@ class ServiceAction(enum.Enum):
     RESTART = 3
 
 
-
-
 def _validate_and_create_action(action) -> str:
     if action.upper() in ServiceAction.__members__.keys():
         return action.lower()
@@ -32,7 +30,8 @@ def _validate_and_create_action(action) -> str:
 
 
 def _validate_and_create_service(action, service) -> str:
-    if service.upper() in Services.__members__.keys():
+    service = service.upper()
+    if validate_service(service):
         return "sudo systemctl {} {}".format(action, Services[service.upper()].value)
     else:
         abort(400, message="service {} does not exist in our system".format(service))
@@ -61,28 +60,29 @@ class SystemctlCommand(Resource):
 class SystemctlStatusBool(Resource):
     @classmethod
     def get(cls, service):
-        if service.upper() in Services.__members__.keys():
+        service = service.upper()
+        if validate_service(service):
             check = systemctl_status_check(Services[service.upper()].value)
             if check:
-                msg = "status: {} is running".format(service)
+                msg = f"status: {service} is running"
                 return {'msg': msg, 'status': True, 'fail': False}
             else:
-                msg = "status: {} is not running".format(service)
+                msg = f"status: {service} is not running"
                 return {'msg': msg, 'status': False, 'fail': False}
         else:
-            msg = "status: {}  does not exist in our system".format(service)
+            msg = f"status: {service} does not exist in our system"
             return {'msg': msg, 'status': False, 'fail': True}
 
 
 class SystemctlStatus(Resource):
     @classmethod
     def get(cls, service):
-        if service.upper() in Services.__members__.keys():
+        service = service.upper()
+        if validate_service(service):
             check = systemctl_status(Services[service.upper()].value)
             if check:
                 msg = check
                 return {'msg': msg, 'status': True, 'fail': False}
         else:
-            msg = "status: {}  does not exist in our system".format(service)
+            msg = f"status: {service} does not exist in our system"
             return {'msg': msg, 'status': False, 'fail': True}
-
