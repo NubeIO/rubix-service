@@ -12,7 +12,7 @@ COMMAND=""
 
 help() {
     echo "Service commands:"
-    echo -e "   ${GREEN}start -u=<user> -dir=<working_dir> -lib_dir=<lib_dir>${DEFAULT}   Start the service (-u=pi -dir=/home/pi/backend-${version}-${sha})"
+    echo -e "   ${GREEN}start -u=<user> -dir=<working_dir> -lib_dir=<lib_dir>${DEFAULT}   Start the service (-u=pi -dir=/home/pi/s-mon -lib_dir=/home/pi/common-py-lib)"
     echo -e "   ${GREEN}disable${DEFAULT}                                                 Disable the service"
     echo -e "   ${GREEN}enable${DEFAULT}                                                  Enable the stopped service"
     echo -e "   ${GREEN}delete${DEFAULT}                                                  Delete the service"

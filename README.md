@@ -13,16 +13,13 @@ sudo bash script.bash start -u=pi -dir=/home/pi/s-mon -lib_dir=/home/pi/common-p
 sudo bash script.bash -h
 ```
 
-## API
+## APIs
 
-### GET
-`/api/system/service/stats/SERVICE_ID` # returns an uptime
-`/api/system/service/up/SERVICE_ID`  # returns a true/false
+### GET APIs
+- For returning an uptime: `/api/system/service/stats/<service>`
+- For returning a `true`/`false`: `/api/system/service/up/<service>`
 
-example is top get the status of rubix-wires
-
-Options for the services
-
+Options for the `<service>` are:
 ```
 WIRES = 'nubeio-rubix-wires.service'
 PLAT = 'nubeio-wires-plat.service'
@@ -34,35 +31,38 @@ BAC_SERVER = 'nubeio-wires-plat.service'  # TODO
 DRAC = 'nubeio-wires-plat.service'  # TODO
 ```
 
-
+Example is top get the status of rubix-wires:
 ```
 http://0.0.0.0:1616/api/system/service/stats/wires
 http://0.0.0.0:1616/api/system/service/up/wires
 ```
 
 
-### POST
+### POST APIs
 
-`action`
-```
-START = start a service
-STOP = start a service
-RESTART = restart a service
-```
+For `start|stop|restart` services: 
 
-`service`
-service to start/stop/restart
+> POST: `/api/system/service`
 
-Body
-```
+> Body
+```json
 {
-    "action": "start",
-    "service": "wires"
+    "action": "<action>",
+    "service": "<service>"
 }
 ```
 
-## Updater
+Where `<action>` are:
+- `start`: for starting a service
+- `stop`: for stopping a service
+- `restart`: for restarting a service
 
+> Example:
+```bash
+curl -X POST http://localhost:1616/api/system/service -H "Content-Type: application/json" -d '{"action": "restart","service":"wires"}'
+```
+
+## Updater
 
 ```
 Step 1:
@@ -84,29 +84,38 @@ WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
 ```
 
 
-### HTTP POST download
-/api/services/download
+### Download
+> POST: `/api/services/download`
 
-Body
-```
+> Body
+```json
 {
     "service": "BAC_SERVER",
-    "directory": "/home/aidan/code/test",
-    "build_url": "https://api.github.com/repos/NubeDev/bacnet-flask/zipball/v1.1.1"
+    "dir": "/home/pi/bacnet-server-auto",
+    "build_url": "https://api.github.com/repos/NubeDev/bacnet-flask/zipball/v1.1.3"
 }
 ```
-
-### HTTP POST install
-/api/services/install
-if `test_install": true` is true then this will not run the system command (This is used for testing the API)
-
-Body
+>Examples:
+```bash
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"BAC_SERVER","dir":"/home/pi/bacnet-server-auto","build_url":"https://api.github.com/repos/NubeDev/bacnet-flask/zipball/v1.1.3"}'
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"WIRES","dir":"/home/pi/wires-builds-auto","build_url":"https://api.github.com/repos/NubeIO/wires-builds/zipball/v1.8.2"}'
 ```
+
+
+### Install
+> POST: `/api/services/install`
+
+> Body
+```json
 {   
     "service": "BAC_SERVER",
-    "_dir": "/home/aidan/code/test",
-     "user": "AIDAN",
-    "lib_dir": "/home/aa/",
-    "test_install": true
+    "dir": "/home/pi/bacnet-server-auto",
+    "user": "pi",
+    "lib_dir": "/home/pi/common-py-libs"
 }
+```
+> Examples:
+```bash
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"BAC_SERVER","dir":"/home/pi/bacnet-server-auto","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"WIRES","dir":"/home/pi/wires-builds-auto","user":"pi"}'
 ```
