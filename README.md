@@ -7,6 +7,8 @@
 - Create `venv` on inside that directory (follow instruction on [here](https://github.com/NubeIO/common-py-libs#how-to-create))
 
 #### Commands:
+THE SYSTEM D FILE IS IN  `/lib/systemd/`
+
 ```bash
 sudo bash script.bash start -u=<pi|debian> -dir=<s-mon_dir> -lib_dir=<common-py-libs-dir>
 sudo bash script.bash start -u=pi -dir=/home/pi/s-mon -lib_dir=/home/pi/common-py-libs
