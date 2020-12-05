@@ -11,7 +11,7 @@ from src.system.resources.updater import DownloadService, InstallService
 api_prefix = 'api'
 api = Api(app)
 
-api.add_resource(GetSystemTime, "f/{api_prefix}/system/time")
+api.add_resource(GetSystemTime, f"/{api_prefix}/system/time")
 api.add_resource(GetSystemMem, f"/{api_prefix}/system/memory")
 api.add_resource(GetSystemDiscUsage, f"/{api_prefix}/system/disc")
 api.add_resource(SystemctlCommand, f"/{api_prefix}/system/service")
