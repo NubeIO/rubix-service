@@ -1,4 +1,4 @@
-# s-mon
+# rubix-service
 
 ### Running on Production
 
