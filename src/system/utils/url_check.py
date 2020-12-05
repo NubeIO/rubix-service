@@ -9,7 +9,7 @@ wires_domain = (
 bac_rest_domain = (
     'api.github.com',
     'NubeIO',
-    'bac-rest'
+    'rubix-point-server'
 )
 
 bacnet_flask_domain = (
