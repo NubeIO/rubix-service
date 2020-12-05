@@ -5,14 +5,14 @@ RED="\033[31m"
 USER=""
 WORKING_DIR=""
 LIB_DIR=""
-SERVICE=nubeio-s-mon.service
+SERVICE=nubeio-rubix-service.service
 SERVICE_DIR=/lib/systemd/system
 SERVICE_DIR_SOFT_LINK=/etc/systemd/system/multi-user.target.wants
 COMMAND=""
 
 help() {
     echo "Service commands:"
-    echo -e "   ${GREEN}start -u=<user> -dir=<working_dir> -lib_dir=<lib_dir>${DEFAULT}   Start the service (-u=pi -dir=/home/pi/s-mon -lib_dir=/home/pi/common-py-lib)"
+    echo -e "   ${GREEN}start -u=<user> -dir=<working_dir> -lib_dir=<lib_dir>${DEFAULT}   Start the service (-u=pi -dir=/home/pi/rubix-service -lib_dir=/home/pi/common-py-lib)"
     echo -e "   ${GREEN}disable${DEFAULT}                                                 Disable the service"
     echo -e "   ${GREEN}enable${DEFAULT}                                                  Enable the stopped service"
     echo -e "   ${GREEN}delete${DEFAULT}                                                  Delete the service"
