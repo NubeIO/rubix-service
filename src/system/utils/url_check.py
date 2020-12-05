@@ -8,14 +8,14 @@ wires_domain = (
 
 bac_rest_domain = (
     'api.github.com',
-    'NubeDev',
+    'NubeIO',
     'bac-rest'
 )
 
 bacnet_flask_domain = (
     'api.github.com',
-    'NubeDev',
-    'bacnet-flask'
+    'NubeIO',
+    'rubix-bacnet-server'
 )
 
 
