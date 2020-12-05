@@ -2,7 +2,6 @@ from flask_restful import Api
 
 from src import app
 from src.platform.resource_wires_plat import WiresPlatResource
-from src.system.networking.bbb_ip import BBB_DHCP, BBB_STAIC
 from src.system.networking.network_info import NetworkInfo
 from src.system.resources.host_info import GetSystemMem, GetSystemTime, GetSystemDiscUsage
 from src.system.resources.ping import Ping
@@ -19,8 +18,6 @@ api.add_resource(SystemctlCommand, f"/{api_prefix}/system/service")
 api.add_resource(SystemctlStatusBool, f"/{api_prefix}/system/service/up/<string:service>")
 api.add_resource(SystemctlStatus, f"/{api_prefix}/system/service/stats/<string:service>")
 api.add_resource(NetworkInfo, f"/{api_prefix}/system/networking")
-api.add_resource(BBB_DHCP, f"/{api_prefix}/system/networking/update/bbb/dhcp")
-api.add_resource(BBB_STAIC, f"/{api_prefix}/system/networking/update/bbb/static")
 api.add_resource(DownloadService, f"/{api_prefix}/services/download")
 api.add_resource(InstallService, f"/{api_prefix}/services/install")
 api.add_resource(Ping, f"/{api_prefix}/ping")
