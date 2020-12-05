@@ -11,7 +11,7 @@ Restart=always
 RestartSec=10
 StandardOutput=syslog
 StandardError=syslog
-SyslogIdentifier=s-mon
+SyslogIdentifier=rubix-service
 
 [Install]
 WantedBy=multi-user.target

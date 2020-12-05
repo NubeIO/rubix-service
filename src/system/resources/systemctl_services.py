@@ -1,19 +1,7 @@
 import enum
 from flask_restful import Resource, reqparse, abort
-
 from src.system.services import Services, validate_service
 from src.system.utils.shell_commands import execute_command, systemctl_status_check, systemctl_status
-
-'''
-sudo systemctl status nubeio-rubix-wires.service
-sudo systemctl status nubeio-bac-rest.service
-sudo systemctl status nubeio-wires-plat.service
-sudo systemctl status nubeio-bbio.service
-sudo systemctl status nubeio-bac-rest.service
-sudo systemctl status nubeio-bacnet-server.service 
-sudo service lorawan-server stop
-sudo service mosquitto.service stop
-'''
 
 
 class ServiceAction(enum.Enum):

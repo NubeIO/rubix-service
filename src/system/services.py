@@ -3,13 +3,13 @@ import enum
 
 class InstallableServices(enum.Enum):
     WIRES = 'nubeio-rubix-wires.service'
-    BAC_REST = 'nubeio-bac-rest.service'
+    BAC_REST = 'nubeio-point-server.service'
     BAC_SERVER = 'nubeio-bacnet-server.service'
 
 
 class Services(enum.Enum):
     WIRES = 'nubeio-rubix-wires.service'
-    BAC_REST = 'nubeio-bac-rest.service'
+    BAC_REST = 'nubeio-point-server.service'
     BAC_SERVER = 'nubeio-bacnet-server.service'
     PLAT = 'nubeio-wires-plat.service'
     LORAWAN = 'lorawan-server'
