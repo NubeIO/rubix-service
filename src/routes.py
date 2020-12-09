@@ -5,7 +5,7 @@ from src.system.networking.network_info import NetworkInfo
 from src.system.resources.host_info import GetSystemMem, GetSystemTime, GetSystemDiscUsage
 from src.system.resources.ping import Ping
 from src.system.resources.systemctl_services import SystemctlStatus, SystemctlCommand, SystemctlStatusBool
-from src.system.resources.updater import DownloadService, InstallService, DeleteDataBaseDir
+from src.system.resources.updater import DownloadService, InstallService, DeleteData, DeleteInstallation
 
 api_prefix = 'api'
 api = Api(app)
@@ -21,9 +21,8 @@ api.add_resource(SystemctlStatus, f"/{api_prefix}/system/service/stats/<string:s
 
 api.add_resource(DownloadService, f"/{api_prefix}/services/download")
 api.add_resource(InstallService, f"/{api_prefix}/services/install")
-api.add_resource(DeleteDataBaseDir, f"/{api_prefix}/services/delete/installation")
-api.add_resource(DeleteDataBaseDir, f"/{api_prefix}/services/delete/database")
-
+api.add_resource(DeleteInstallation, f"/{api_prefix}/services/delete/installation")
+api.add_resource(DeleteData, f"/{api_prefix}/services/delete/data")
 
 wires_api_prefix = f'{api_prefix}/wires'
 api.add_resource(WiresPlatResource, f'/{wires_api_prefix}/plat')
