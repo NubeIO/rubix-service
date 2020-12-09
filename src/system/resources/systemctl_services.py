@@ -30,7 +30,10 @@ def _validate_and_create_service(action, service) -> str:
 class SystemctlCommand(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('action', type=str, help='action should be `start | stop | restart`', required=True)
+        parser.add_argument('action',
+                            type=str,
+                            help='action should be `start | stop | restart | disable | enable`',
+                            required=True)
         parser.add_argument('service',
                             type=str,
                             help='service type is required example: (wires, mosquitto)',

@@ -1,4 +1,5 @@
 import enum
+import os
 
 
 class InstallableServices(enum.Enum):
@@ -20,18 +21,13 @@ class Services(enum.Enum):
     DRAC = 'nubeio-drac.service'  # TODO
 
 
-installation_dir = {
-    'WIRES': 'wires-builds',
-    'BAC_REST': 'point-server',
-    'BAC_SERVER': 'bacnet-server',
-    'LORA_RAW': 'lora-raw',
-}
+app_parent_dir = '/nube-apps/'
 
-database_dir = {
-    'WIRES': "/data/{}".format(installation_dir['WIRES']),
-    'BAC_REST': "/data/{}".format(installation_dir['BAC_REST']),
-    'BAC_SERVER': "/data/{}".format(installation_dir['BAC_SERVER']),
-    'LORA_RAW': "/data/{}".format(installation_dir['LORA_RAW']),
+installation_dir = {
+    'WIRES': os.path.join(app_parent_dir, 'wires-builds'),
+    'BAC_REST': os.path.join(app_parent_dir, 'point-server'),
+    'BAC_SERVER': os.path.join(app_parent_dir, 'bacnet-server'),
+    'LORA_RAW': os.path.join(app_parent_dir, 'lora-raw'),
 }
 
 
@@ -41,5 +37,3 @@ def validate_installation_service(service) -> bool:
 
 def validate_service(service) -> bool:
     return service in Services.__members__.keys()
-
-
