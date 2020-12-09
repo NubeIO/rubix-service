@@ -2,7 +2,8 @@ from src.system.apps.base.installable_app import InstallableApp
 
 
 class LoRaRawApp(InstallableApp):
-    def id(self) -> str:
+    @classmethod
+    def id(cls) -> str:
         return 'LORA_RAW'
 
     def name(self) -> str:

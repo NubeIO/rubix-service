@@ -7,8 +7,16 @@ from src.system.utils.file import get_extracted_dir
 class InstallableApp(object):
     __app_parent_dir = '/nube-apps'
 
+    @classmethod
+    def get_app(cls, service):
+        for subclass in InstallableApp.__subclasses__():
+            if subclass.id() == service:
+                return subclass()
+        raise Exception("service {} does not exist in our system".format(service))
+
+    @classmethod
     @abstractmethod
-    def id(self) -> str:
+    def id(cls) -> str:
         raise Exception("InstallableApp id needs to be overridden")
 
     @abstractmethod

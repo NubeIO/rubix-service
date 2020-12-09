@@ -4,7 +4,8 @@ from src.system.apps.base.installable_app import InstallableApp
 
 
 class WiresBuildsApp(InstallableApp):
-    def id(self) -> str:
+    @classmethod
+    def id(cls) -> str:
         return 'WIRES'
 
     def name(self) -> str:

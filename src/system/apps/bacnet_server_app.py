@@ -2,7 +2,8 @@ from src.system.apps.base.installable_app import InstallableApp
 
 
 class BACnetServerApp(InstallableApp):
-    def id(self) -> str:
+    @classmethod
+    def id(cls) -> str:
         return 'BAC_SERVER'
 
     def name(self) -> str:

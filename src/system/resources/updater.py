@@ -2,7 +2,7 @@ import os
 
 from flask_restful import Resource, reqparse, abort
 
-from src.system.apps.mapper.service_to_installable_app_mapper import service_to_installable_app_mapper
+from src.system.apps.base.installable_app import InstallableApp
 from src.system.utils.file import delete_existing_folder, download_unzip_service, get_extracted_dir
 from src.system.utils.shell_commands import execute_command
 
@@ -16,7 +16,7 @@ class DownloadService(Resource):
         service = args['service'].upper()
         build_url = args['build_url']
         try:
-            app = service_to_installable_app_mapper(service)
+            app = InstallableApp.get_app(service)
             os.makedirs(app.installation_dir(), 0o775, exist_ok=True)  # create dir if doesn't exist
             if not app.validate_domain(build_url):
                 abort(400, message="service {} is an invalid build_url".format(service))
@@ -41,7 +41,7 @@ class InstallService(Resource):
         user = args['user']
         lib_dir = args['lib_dir']
         try:
-            app = service_to_installable_app_mapper(service)
+            app = InstallableApp.get_app(service)
             install = execute_command(app.get_install_cmd(user, lib_dir), app.get_cwd())
             if not install:
                 abort(400, message="valid service {} issue on install".format(service))
@@ -57,7 +57,7 @@ class DeleteInstallation(Resource):
         args = parser.parse_args()
         service = args['service'].upper()
         try:
-            app = service_to_installable_app_mapper(service)
+            app = InstallableApp.get_app(service)
             delete = execute_command(app.get_delete_command(), app.get_cwd())
             if not delete:
                 abort(400, message="valid service {} issue on delete".format(service))
@@ -74,7 +74,7 @@ class DeleteData(Resource):
         args = parser.parse_args()
         service = args['service'].upper()
         try:
-            app = service_to_installable_app_mapper(service)
+            app = InstallableApp.get_app(service)
             delete_data = execute_command(app.get_delete_data_command(), app.get_cwd())
             if not delete_data:
                 abort(400, message="valid service {} issue on delete_data".format(service))

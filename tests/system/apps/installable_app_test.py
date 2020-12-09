@@ -1,5 +1,9 @@
-from src.system.apps.mapper.service_to_installable_app_mapper import service_to_installable_app_mapper
+from src.system.apps.base.installable_app import InstallableApp
 
 if __name__ == "__main__":
-    app = service_to_installable_app_mapper('BAC-REST')
+    app = InstallableApp.get_app('WIRES')
     print(app.get_domain())
+    print(app.installation_dir())
+    app = InstallableApp.get_app('BAC_SERVER')
+    print(app.get_domain())
+    print(app.installation_dir())
