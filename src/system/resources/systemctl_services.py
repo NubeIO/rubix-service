@@ -8,13 +8,15 @@ class ServiceAction(enum.Enum):
     START = 1
     STOP = 2
     RESTART = 3
+    DISABLE = 4
+    ENABLE = 5
 
 
 def _validate_and_create_action(action) -> str:
     if action.upper() in ServiceAction.__members__.keys():
         return action.lower()
     else:
-        abort(400, message='action should be `start | stop | restart`')
+        abort(400, message='action should be `start | stop | restart | disable | enable`')
 
 
 def _validate_and_create_service(action, service) -> str:

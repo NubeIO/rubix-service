@@ -121,3 +121,22 @@ curl -X POST http://localhost:1616/api/services/download -H "Content-Type: appli
 curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"BAC_SERVER","dir":"/home/pi/bacnet-server-auto","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
 curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"WIRES","dir":"/home/pi/wires-builds-auto","user":"pi"}'
 ```
+
+
+### Uninstall
+> POST: `/api/services/uninstall`
+
+> Body
+```json
+{   
+    "service": "BAC_SERVER",
+    "dir": "/home/pi/bacnet-server-auto",
+    "user": "pi",
+    "lib_dir": "/home/pi/common-py-libs"
+}
+```
+> Examples:
+```bash
+curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"BAC_SERVER","dir":"/home/pi/bacnet-server-auto","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
+curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"WIRES","dir":"/home/pi/wires-builds-auto","user":"pi"}'
+```
