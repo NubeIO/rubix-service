@@ -57,13 +57,13 @@ class SystemctlStatusBool(Resource):
         if validate_service(service):
             check = systemctl_status_check(Services[service.upper()].value)
             if check:
-                msg = f"status: {service} is running"
+                msg = "status: {} is running".format(service)
                 return {'msg': msg, 'status': True, 'fail': False}
             else:
-                msg = f"status: {service} is not running"
+                msg = "status: {} is not running".format(service)
                 return {'msg': msg, 'status': False, 'fail': False}
         else:
-            msg = f"status: {service} does not exist in our system"
+            msg = "status: {} does not exist in our system".format(service)
             return {'msg': msg, 'status': False, 'fail': True}
 
 
@@ -77,5 +77,5 @@ class SystemctlStatus(Resource):
                 msg = check
                 return {'msg': msg, 'status': True, 'fail': False}
         else:
-            msg = f"status: {service} does not exist in our system"
+            msg = "status: {} does not exist in our system".format(service)
             return {'msg': msg, 'status': False, 'fail': True}

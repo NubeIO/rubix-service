@@ -19,11 +19,12 @@ class DownloadService(Resource):
             app = service_to_installable_app_mapper(service)
             os.makedirs(app.installation_dir(), 0o775, exist_ok=True)  # create dir if doesn't exist
             if not app.validate_domain(build_url):
-                abort(400, message=f"service {service} is an invalid build_url")
+                abort(400, message="service {} is an invalid build_url".format(service))
             delete_existing_dir = delete_existing_folder(app.installation_dir())
             download = download_unzip_service(build_url, app.installation_dir())
             if not download:
-                abort(501, message=f"valid URL service {service} but download failed check internet or version!")
+                abort(501,
+                      message="valid URL service {} but download failed check internet or version!".format(service))
             return {'service': service, 'build_url': build_url, 'delete_existing_dir': delete_existing_dir}
         except Exception as e:
             abort(404, message=str(e))
@@ -43,7 +44,7 @@ class InstallService(Resource):
             app = service_to_installable_app_mapper(service)
             install = execute_command(app.get_install_cmd(user, lib_dir), app.get_cwd())
             if not install:
-                abort(400, message=f"valid service {service} issue on install")
+                abort(400, message="valid service {} issue on install".format(service))
             return {'service': service, 'install completed': install}
         except Exception as e:
             abort(404, message=str(e))
@@ -59,7 +60,7 @@ class DeleteInstallation(Resource):
             app = service_to_installable_app_mapper(service)
             delete = execute_command(app.get_delete_command(), app.get_cwd())
             if not delete:
-                abort(400, message=f"valid service {service} issue on delete")
+                abort(400, message="valid service {} issue on delete".format(service))
             delete_existing_dir = delete_existing_folder(app.installation_dir())
             return {'service': service, 'delete completed': delete, 'delete_existing_dir': delete_existing_dir}
         except Exception as e:
@@ -76,7 +77,7 @@ class DeleteData(Resource):
             app = service_to_installable_app_mapper(service)
             delete_data = execute_command(app.get_delete_data_command(), app.get_cwd())
             if not delete_data:
-                abort(400, message=f"valid service {service} issue on delete_data")
+                abort(400, message="valid service {} issue on delete_data".format(service))
             return {'service': service, 'delete_data completed': delete_data}
         except Exception as e:
             abort(404, message=str(e))
