@@ -1,9 +1,12 @@
+import logging
 import os
 import shutil
 from io import BytesIO
 from pathlib import Path
 from urllib.request import urlopen
 from zipfile import ZipFile
+
+logger = logging.getLogger(__name__)
 
 
 def delete_existing_folder(dir_):
@@ -31,5 +34,5 @@ def get_extracted_dir(parent_dir) -> str:
         if len(dirs):
             return os.path.join(parent_dir, dirs[0])
     except Exception as e:
-        print(e)
+        logger.error(e)
     return ""

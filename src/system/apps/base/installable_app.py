@@ -1,7 +1,10 @@
+import logging
 import os
 from abc import abstractmethod
 
 from src.system.utils.file import get_extracted_dir
+
+logger = logging.getLogger(__name__)
 
 
 class InstallableApp(object):
@@ -57,5 +60,5 @@ class InstallableApp(object):
         u = url.split("/")
         domain = (u[2], u[4], u[5])
         app_domain = self.get_domain()
-        print("URL check:", domain, app_domain)
+        logger.info("URL check:", domain, app_domain)
         return app_domain == domain
