@@ -42,7 +42,7 @@ http://0.0.0.0:1616/api/system/service/up/wires
 
 ### POST APIs
 
-For `start|stop|restart` services: 
+For `start | stop | restart | disable | enable` services: 
 
 > POST: `/api/system/service`
 
@@ -58,6 +58,8 @@ Where `<action>` are:
 - `start`: for starting a service
 - `stop`: for stopping a service
 - `restart`: for restarting a service
+- `disable`: for disabling a service
+- `enable`: for enabling a service
 
 > Example:
 ```bash
@@ -85,6 +87,12 @@ Have a refresh button
 WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
 ```
 
+### Services
+- POINT_SERVER
+- BACNET_SERVER
+- LORA_RAW
+- WIRES
+
 
 ### Download
 > POST: `/api/services/download`
@@ -92,15 +100,15 @@ WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
 > Body
 ```json
 {
-    "service": "BAC_SERVER",
-    "dir": "/home/pi/bacnet-server-auto",
+    "service": "BACNET_SERVER",
     "build_url": "https://api.github.com/repos/NubeDev/bacnet-flask/zipball/v1.1.3"
 }
 ```
 >Examples:
 ```bash
-curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"BAC_SERVER","dir":"/home/pi/bacnet-server-auto","build_url":"https://api.github.com/repos/NubeDev/bacnet-flask/zipball/v1.1.3"}'
-curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"WIRES","dir":"/home/pi/wires-builds-auto","build_url":"https://api.github.com/repos/NubeIO/wires-builds/zipball/v1.8.2"}'
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","build_url":"https://api.github.com/repos/NubeIO/rubix-point-server/zipball/v1.1.2"}'
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","build_url":"https://api.github.com/repos/NubeIO/rubix-bacnet-server/zipball/v1.1.8"}'
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"WIRES","build_url":"https://api.github.com/repos/NubeIO/wires-builds/zipball/v1.8.2"}'
 ```
 
 
@@ -110,14 +118,48 @@ curl -X POST http://localhost:1616/api/services/download -H "Content-Type: appli
 > Body
 ```json
 {   
-    "service": "BAC_SERVER",
-    "dir": "/home/pi/bacnet-server-auto",
+    "service": "BACNET_SERVER",
     "user": "pi",
     "lib_dir": "/home/pi/common-py-libs"
 }
 ```
 > Examples:
 ```bash
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"BAC_SERVER","dir":"/home/pi/bacnet-server-auto","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"WIRES","dir":"/home/pi/wires-builds-auto","user":"pi"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"WIRES","user":"pi"}'
+```
+
+
+### Uninstall
+> POST: `/api/services/uninstall`
+
+> Body
+```json
+{   
+    "service": "BACNET_SERVER"
+}
+```
+> Examples:
+```bash
+curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"}'
+curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER"}'
+curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
+```
+
+
+### Delete Data
+> POST: `/api/services/delete_data`
+
+> Body
+```json
+{   
+    "service": "BACNET_SERVER"
+}
+```
+> Examples:
+```bash
+curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"}'
+curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER"}'
+curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
 ```

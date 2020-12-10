@@ -8,13 +8,15 @@ class ServiceAction(enum.Enum):
     START = 1
     STOP = 2
     RESTART = 3
+    DISABLE = 4
+    ENABLE = 5
 
 
 def _validate_and_create_action(action) -> str:
     if action.upper() in ServiceAction.__members__.keys():
         return action.lower()
     else:
-        abort(400, message='action should be `start | stop | restart`')
+        abort(400, message='action should be `start | stop | restart | disable | enable`')
 
 
 def _validate_and_create_service(action, service) -> str:
@@ -28,7 +30,10 @@ def _validate_and_create_service(action, service) -> str:
 class SystemctlCommand(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('action', type=str, help='action should be `start | stop | restart`', required=True)
+        parser.add_argument('action',
+                            type=str,
+                            help='action should be `start | stop | restart | disable | enable`',
+                            required=True)
         parser.add_argument('service',
                             type=str,
                             help='service type is required example: (wires, mosquitto)',
@@ -52,13 +57,13 @@ class SystemctlStatusBool(Resource):
         if validate_service(service):
             check = systemctl_status_check(Services[service.upper()].value)
             if check:
-                msg = f"status: {service} is running"
+                msg = "status: {} is running".format(service)
                 return {'msg': msg, 'status': True, 'fail': False}
             else:
-                msg = f"status: {service} is not running"
+                msg = "status: {} is not running".format(service)
                 return {'msg': msg, 'status': False, 'fail': False}
         else:
-            msg = f"status: {service} does not exist in our system"
+            msg = "status: {} does not exist in our system".format(service)
             return {'msg': msg, 'status': False, 'fail': True}
 
 
@@ -72,5 +77,5 @@ class SystemctlStatus(Resource):
                 msg = check
                 return {'msg': msg, 'status': True, 'fail': False}
         else:
-            msg = f"status: {service} does not exist in our system"
+            msg = "status: {} does not exist in our system".format(service)
             return {'msg': msg, 'status': False, 'fail': True}

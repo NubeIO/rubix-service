@@ -20,7 +20,7 @@ class WiresPlatModel(ModelBase):
     site_lon = db.Column(db.String(80), nullable=False)
 
     def __repr__(self):
-        return f"Wires({self.uuid})"
+        return "Wires({})".format(self.uuid)
 
     @classmethod
     def find_one(cls):
