@@ -11,8 +11,8 @@ class WiresBuildsApp(InstallableApp):
     def name(self) -> str:
         return 'wires-builds'
 
-    def service_file_name(self) -> str:
-        return 'nubeio-rubix-wires.service'
+    def data_dir_name(self) -> str:
+        return 'rubix-wires'
 
     def get_cwd(self) -> str:
         return os.path.join(super().get_cwd(), 'rubix-wires/systemd')

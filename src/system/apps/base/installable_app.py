@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 class InstallableApp(object):
     __app_parent_dir = '/nube-apps'
+    __data_parent_dir = '/data'
 
     @classmethod
     def get_app(cls, service):
@@ -20,15 +21,21 @@ class InstallableApp(object):
     @classmethod
     @abstractmethod
     def id(cls) -> str:
+        """id for mapping frontend request with the App"""
         raise Exception("InstallableApp id needs to be overridden")
 
     @abstractmethod
     def name(self) -> str:
+        """name for installation folder creation and github repo name validation"""
         raise Exception("InstallableApp name needs to be overridden")
 
     @abstractmethod
-    def service_file_name(self) -> str:
+    def data_dir_name(self) -> str:
+        """data_dir_name for making/denoting a valid data dir"""
         raise Exception("InstallableApp services needs to be overridden")
+
+    def get_data_dir(self) -> str:
+        return os.path.join(InstallableApp.__data_parent_dir, self.data_dir_name())
 
     def get_domain(self) -> tuple:
         return 'api.github.com', 'NubeIO', self.name()
@@ -44,14 +51,11 @@ class InstallableApp(object):
         """working dir for systemd working directory set"""
         return self.get_cwd()
 
-    def get_delete_data_command(self) -> str:
-        return "sudo bash script.bash delete_data"
+    def get_install_cmd(self, user, lib_dir=None) -> str:
+        return "sudo bash script.bash start -u={} -dir={} -lib_dir={}".format(user, self.get_wd(), lib_dir)
 
     def get_delete_command(self) -> str:
         return "sudo bash script.bash delete"
-
-    def get_install_cmd(self, user, lib_dir=None) -> str:
-        return "sudo bash script.bash start -u={} -dir={} -lib_dir={}".format(user, self.get_wd(), lib_dir)
 
     def installation_dir(self) -> str:
         return os.path.join(InstallableApp.__app_parent_dir, self.name())
@@ -60,5 +64,5 @@ class InstallableApp(object):
         u = url.split("/")
         domain = (u[2], u[4], u[5])
         app_domain = self.get_domain()
-        logger.info("URL check:", domain, app_domain)
+        logger.info("URL check: {}, {}".format(domain, app_domain))
         return app_domain == domain

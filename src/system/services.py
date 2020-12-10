@@ -2,11 +2,11 @@ import enum
 
 
 class Services(enum.Enum):
-    WIRES = 'nubeio-rubix-wires.service'
-    BAC_REST = 'nubeio-point-server.service'
-    BAC_SERVER = 'nubeio-bacnet-server.service'
     PLAT = 'nubeio-wires-plat.service'
+    POINT_SERVER = 'nubeio-point-server.service'
+    BACNET_SERVER = 'nubeio-bacnet-server.service'
     LORA_RAW = 'nubeio-lora-raw.service'
+    WIRES = 'nubeio-rubix-wires.service'
     LORAWAN = 'lorawan-server'
     MOSQUITTO = 'mosquitto.service'
     BBB = 'nubeio-bbio.service'

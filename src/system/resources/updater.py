@@ -15,19 +15,16 @@ class DownloadService(Resource):
         args = parser.parse_args()
         service = args['service'].upper()
         build_url = args['build_url']
-        try:
-            app = InstallableApp.get_app(service)
-            os.makedirs(app.installation_dir(), 0o775, exist_ok=True)  # create dir if doesn't exist
-            if not app.validate_domain(build_url):
-                abort(400, message="service {} is an invalid build_url".format(service))
-            delete_existing_dir = delete_existing_folder(app.installation_dir())
-            download = download_unzip_service(build_url, app.installation_dir())
-            if not download:
-                abort(501,
-                      message="valid URL service {} but download failed check internet or version!".format(service))
-            return {'service': service, 'build_url': build_url, 'delete_existing_dir': delete_existing_dir}
-        except Exception as e:
-            abort(404, message=str(e))
+        app: InstallableApp = get_app_from_service(service)
+        os.makedirs(app.installation_dir(), 0o775, exist_ok=True)  # create dir if doesn't exist
+        valid = app.validate_domain(build_url)
+        if not valid:
+            abort(404, message=f"service {service} is an invalid build_url")
+        delete_existing_dir = delete_existing_folder(app.installation_dir())
+        download = download_unzip_service(build_url, app.installation_dir())
+        if not download:
+            abort(501, message="valid URL service {} but download failed check internet or version!".format(service))
+        return {'service': service, 'build_url': build_url, 'delete_existing_dir': delete_existing_dir}
 
 
 class InstallService(Resource):
@@ -40,14 +37,14 @@ class InstallService(Resource):
         service = args['service'].upper()
         user = args['user']
         lib_dir = args['lib_dir']
+        app: InstallableApp = get_app_from_service(service)
         try:
-            app = InstallableApp.get_app(service)
-            install = execute_command(app.get_install_cmd(user, lib_dir), app.get_cwd())
-            if not install:
-                abort(400, message="valid service {} issue on install".format(service))
-            return {'service': service, 'install completed': install}
+            cmd = app.get_install_cmd(user, lib_dir)  # may got failed on evaluating wd
         except Exception as e:
-            abort(404, message=str(e))
+            abort(400, message=str(e))
+            return
+        install = execute_command_and_handle_error(cmd, app)
+        return {'service': service, 'install completed': install}
 
 
 class DeleteInstallation(Resource):
@@ -56,15 +53,10 @@ class DeleteInstallation(Resource):
         parser.add_argument('service', type=str, required=True)
         args = parser.parse_args()
         service = args['service'].upper()
-        try:
-            app = InstallableApp.get_app(service)
-            delete = execute_command(app.get_delete_command(), app.get_cwd())
-            if not delete:
-                abort(400, message="valid service {} issue on delete".format(service))
-            delete_existing_dir = delete_existing_folder(app.installation_dir())
-            return {'service': service, 'delete completed': delete, 'delete_existing_dir': delete_existing_dir}
-        except Exception as e:
-            abort(404, message=str(e))
+        app: InstallableApp = get_app_from_service(service)
+        delete = execute_command_and_handle_error(app.get_delete_command(), app)
+        delete_existing_dir = delete_existing_folder(app.installation_dir())
+        return {'service': service, 'delete completed': delete, 'delete_existing_dir': delete_existing_dir}
 
 
 class DeleteData(Resource):
@@ -73,11 +65,22 @@ class DeleteData(Resource):
         parser.add_argument('service', type=str, required=True)
         args = parser.parse_args()
         service = args['service'].upper()
-        try:
-            app = InstallableApp.get_app(service)
-            delete_data = execute_command(app.get_delete_data_command(), app.get_cwd())
-            if not delete_data:
-                abort(400, message="valid service {} issue on delete_data".format(service))
-            return {'service': service, 'delete_data completed': delete_data}
-        except Exception as e:
-            abort(404, message=str(e))
+        app: InstallableApp = get_app_from_service(service)
+        delete_data = delete_existing_folder(app.get_data_dir())
+        return {'service': service, 'delete_data completed': delete_data}
+
+
+def get_app_from_service(service) -> InstallableApp:
+    try:
+        app = InstallableApp.get_app(service)
+        return app
+    except Exception as e:
+        abort(404, message=str(e))
+
+
+def execute_command_and_handle_error(cmd, app: InstallableApp) -> bool:
+    try:
+        cwd = app.get_cwd()
+        return execute_command(cmd, cwd)
+    except Exception as e:
+        abort(400, message=str(e))

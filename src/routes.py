@@ -28,8 +28,8 @@ api.add_resource(SystemctlStatus, "/{}/service/stats/<string:service>".format(ap
 api_prefix_services = '{}/services'.format(api_prefix)
 api.add_resource(DownloadService, "/{}/download".format(api_prefix_services))
 api.add_resource(InstallService, "/{}/install".format(api_prefix_services))
-api.add_resource(DeleteInstallation, "/{}/delete/installation".format(api_prefix_services))
-api.add_resource(DeleteData, "/{}/delete/data".format(api_prefix_services))
+api.add_resource(DeleteInstallation, "/{}/uninstall".format(api_prefix_services))
+api.add_resource(DeleteData, "/{}/delete_data".format(api_prefix_services))
 
 # 4
 wires_api_prefix = '{}/wires'.format(api_prefix)
