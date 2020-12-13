@@ -3,7 +3,7 @@ import os
 from flask_restful import Resource, reqparse, abort
 
 from src.system.apps.base.installable_app import InstallableApp
-from src.system.utils.file import delete_existing_folder, download_unzip_service, get_extracted_dir
+from src.system.utils.file import delete_existing_folder, download_unzip_service, read_file
 from src.system.utils.shell_commands import execute_command
 
 
@@ -21,7 +21,7 @@ class DownloadService(Resource):
         if not valid:
             abort(404, message=f"service {service} is an invalid build_url")
         delete_existing_dir = delete_existing_folder(app.installation_dir())
-        download = download_unzip_service(build_url, app.installation_dir())
+        download = download_unzip_service(build_url, app.installation_dir(), read_file(os.environ.get("token")))
         if not download:
             abort(501, message="valid URL service {} but download failed check internet or version!".format(service))
         return {'service': service, 'build_url': build_url, 'delete_existing_dir': delete_existing_dir}

@@ -3,7 +3,7 @@ import os
 import shutil
 from io import BytesIO
 from pathlib import Path
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
 from zipfile import ZipFile
 
 logger = logging.getLogger(__name__)
@@ -18,9 +18,12 @@ def delete_existing_folder(dir_):
         return False
 
 
-def download_unzip_service(url, directory):
+def download_unzip_service(url, directory, token):
     try:
-        with urlopen(url) as zip_resp:
+        req = Request(url)
+        if token:
+            req.add_header("Authorization", "token {}".format(token))
+        with urlopen(req) as zip_resp:
             with ZipFile(BytesIO(zip_resp.read())) as z_file:
                 z_file.extractall(directory)
                 return True
@@ -36,3 +39,23 @@ def get_extracted_dir(parent_dir) -> str:
     except Exception as e:
         logger.error(e)
     return ""
+
+
+def read_file(file) -> str:
+    try:
+        f = open(file, "r")
+        return f.read()
+    except Exception as e:
+        logger.error(e)
+        return ""
+
+
+def write_file(file, content):
+    f = open(file, "w")
+    f.write(content)
+    f.close()
+
+
+def delete_file(file):
+    if os.path.exists(file):
+        os.remove(file)
