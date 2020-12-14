@@ -5,6 +5,7 @@ RED="\033[31m"
 USER=""
 WORKING_DIR=""
 LIB_DIR=""
+DATA_DIR=""
 TOKEN=""
 SERVICE=nubeio-rubix-service.service
 SERVICE_DIR=/lib/systemd/system
@@ -13,24 +14,22 @@ COMMAND=""
 
 help() {
     echo "Service commands:"
-    echo -e "   ${GREEN}start -u=<user> -dir=<working_dir> -lib_dir=<lib_dir> -t=<token>${DEFAULT}  Start the service (-u=pi -dir=<working_dir> -lib_dir=<lib_dir> -t=<token>)"
-    echo -e "   ${GREEN}disable${DEFAULT}                                                           Disable the service"
-    echo -e "   ${GREEN}enable${DEFAULT}                                                            Enable the stopped service"
-    echo -e "   ${GREEN}delete${DEFAULT}                                                            Delete the service"
-    echo -e "   ${GREEN}restart${DEFAULT}                                                           Restart the service"
+    echo -e "   ${GREEN}start -u=<user> -dir=<working_dir> -lib_dir=<lib_dir> -data_dir=<data_dir> -t=<token>${DEFAULT} Start the service"
+    echo -e "   ${GREEN}disable${DEFAULT}                                                                               Disable the service"
+    echo -e "   ${GREEN}enable${DEFAULT}                                                                                Enable the stopped service"
+    echo -e "   ${GREEN}delete${DEFAULT}                                                                                Delete the service"
+    echo -e "   ${GREEN}restart${DEFAULT}                                                                               Restart the service"
     echo
     echo "Service parameters:"
-    echo -e "   ${GREEN}-h --help${DEFAULT}                                                         Show this help"
-    echo -e "   ${GREEN}-u --user=<user>${DEFAULT}                                                  Which <user> is starting the service"
-    echo -e "   ${GREEN}-dir --working-dir=<working_dir>${DEFAULT}                                  From where wires is starting"
-    echo -e "   ${GREEN}-dir --lib_dir-dir=<lib_dir>${DEFAULT}                                      From where lib should load"
+    echo -e "   ${GREEN}-h --help${DEFAULT}                                                                             Show this help"
+    echo -e "   ${GREEN}-u --user=<user>${DEFAULT}                                                                      Which <user> is starting the service"
+    echo -e "   ${GREEN}-dir --working-dir=<working_dir>${DEFAULT}                                                      From where wires is starting"
+    echo -e "   ${GREEN}-dir --lib_dir-dir=<lib_dir>${DEFAULT}                                                          From where lib should load"
 }
 
 start() {
-    if [[ ${USER} != "" && ${WORKING_DIR} != "" && ${LIB_DIR} != "" ]]
-    then
-        if [[ ${TOKEN} == "" ]]
-        then
+    if [[ ${USER} != "" && ${WORKING_DIR} != "" && ${LIB_DIR} != "" && ${DATA_DIR} != "" ]]; then
+        if [[ ${TOKEN} == "" ]]; then
             echo -e "${RED}We are not adding token. If you want add, add '-t=<token>' in command...${DEFAULT}"
         fi
         echo -e "${GREEN}Creating Linux Service...${DEFAULT}"
@@ -38,7 +37,12 @@ start() {
         sed -i -e 's/<user>/'"${USER}"'/' ${SERVICE_DIR}/${SERVICE}
         sed -i -e 's,<working_dir>,'"${WORKING_DIR}"',' ${SERVICE_DIR}/${SERVICE}
         sed -i -e 's,<lib_dir>,'"${LIB_DIR}"',' ${SERVICE_DIR}/${SERVICE}
+        sed -i -e 's,<data_dir>,'"${DATA_DIR}"',' ${SERVICE_DIR}/${SERVICE}
         sed -i -e 's/<token>/'"${TOKEN}"'/' ${SERVICE_DIR}/${SERVICE}
+
+        # Create data_dir if not exist
+        mkdir -p ${DATA_DIR}
+        sudo chown -R ${USER}:${USER} ${DATA_DIR}
 
         echo -e "${GREEN}Soft Un-linking Linux Service...${DEFAULT}"
         sudo unlink ${SERVICE_DIR_SOFT_LINK}/${SERVICE}
@@ -55,7 +59,7 @@ start() {
 
         echo -e "${GREEN}Service is created and started.${DEFAULT}"
     else
-        echo -e ${RED}"-u=<user> -dir=<working_dir> -lib_dir=<lib_dir> these parameters should be on you input (-h, --help for help)${DEFAULT}"
+        echo -e ${RED}"-u=<user> -dir=<working_dir> -lib_dir=<lib_dir> -data_dir=<data_dir> these parameters should be on you input (-h, --help for help)${DEFAULT}"
     fi
 }
 
@@ -94,36 +98,37 @@ restart() {
 }
 
 parseCommand() {
-    for i in "$@"
-    do
-    case ${i} in
-    -h|--help)
-        help
-        exit 0
-        ;;
-    -u=*|--user=*)
-        USER="${i#*=}"
-        ;;
-    -dir=*|--working-dir=*)
-        WORKING_DIR="${i#*=}"
-        ;;
-    -lib_dir=*)
-        LIB_DIR="${i#*=}"
-        ;;
-    -t=*|--token=*)
-        TOKEN="${i#*=}"
-        ;;
-    start|disable|enable|delete|restart)
-        COMMAND=${i}
-        ;;
-    *)
-        echo -e "${RED}Unknown option (-h, --help for help)${DEFAULT}"
-        exit 1
-        ;;
-    esac
+    for i in "$@"; do
+        case ${i} in
+        -h | --help)
+            help
+            exit 0
+            ;;
+        -u=* | --user=*)
+            USER="${i#*=}"
+            ;;
+        -dir=* | --working-dir=*)
+            WORKING_DIR="${i#*=}"
+            ;;
+        -lib_dir=*)
+            LIB_DIR="${i#*=}"
+            ;;
+        -data_dir=*)
+            DATA_DIR="${i#*=}"
+            ;;
+        -t=* | --token=*)
+            TOKEN="${i#*=}"
+            ;;
+        start | disable | enable | delete | restart)
+            COMMAND=${i}
+            ;;
+        *)
+            echo -e "${RED}Unknown option (-h, --help for help)${DEFAULT}"
+            exit 1
+            ;;
+        esac
     done
 }
-
 
 runCommand() {
     case ${COMMAND} in

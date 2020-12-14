@@ -10,8 +10,8 @@
 THE SYSTEM D FILE IS IN  `/lib/systemd/`
 
 ```bash
-sudo bash script.bash start -u=<pi|debian> -dir=<s-mon_dir> -lib_dir=<common-py-libs-dir>
-sudo bash script.bash start -u=pi -dir=/home/pi/rubix-service -lib_dir=/home/pi/common-py-libs
+sudo bash script.bash start -u=<pi|debian> -dir=<s-mon_dir> -lib_dir=<common-py-libs-dir> -data_dir=<data_dir> -t=<token>
+sudo bash script.bash start -u=pi -dir=/home/pi/rubix-service -lib_dir=/home/pi/common-py-libs -data_dir=/data/rubix-service -t=a67227da53c622f5e91641aa6064b4fadeb6d540
 sudo bash script.bash -h
 ```
 
