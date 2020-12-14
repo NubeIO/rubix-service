@@ -9,7 +9,7 @@ from zipfile import ZipFile
 logger = logging.getLogger(__name__)
 
 
-def delete_existing_folder(dir_):
+def delete_existing_folder(dir_) -> bool:
     dir_path = Path(dir_)
     if dir_path.exists() and dir_path.is_dir():
         shutil.rmtree(dir_path)
@@ -18,17 +18,14 @@ def delete_existing_folder(dir_):
         return False
 
 
-def download_unzip_service(url, directory, token):
-    try:
-        req = Request(url)
-        if token:
-            req.add_header("Authorization", "token {}".format(token))
-        with urlopen(req) as zip_resp:
-            with ZipFile(BytesIO(zip_resp.read())) as z_file:
-                z_file.extractall(directory)
-                return True
-    except FileNotFoundError:
-        return False
+def download_unzip_service(download_link, directory, token) -> str:
+    req = Request(download_link)
+    if token:
+        req.add_header("Authorization", "token {}".format(token))
+    with urlopen(req) as zip_resp:
+        with ZipFile(BytesIO(zip_resp.read())) as z_file:
+            z_file.extractall(directory)
+            return z_file.namelist()[0]
 
 
 def get_extracted_dir(parent_dir) -> str:

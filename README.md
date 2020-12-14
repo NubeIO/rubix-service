@@ -106,9 +106,9 @@ WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
 ```
 >Examples:
 ```bash
-curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","build_url":"https://api.github.com/repos/NubeIO/rubix-point-server/zipball/v1.1.2"}'
-curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","build_url":"https://api.github.com/repos/NubeIO/rubix-bacnet-server/zipball/v1.1.8"}'
-curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"WIRES","build_url":"https://api.github.com/repos/NubeIO/wires-builds/zipball/v1.8.2"}'
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.1.2"}'
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.1.8"}'
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v1.8.2"}'
 ```
 
 

@@ -11,20 +11,22 @@ class DownloadService(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('service', type=str, required=True)
-        parser.add_argument('build_url', type=str, required=True)
+        parser.add_argument('version', type=str, required=True)
         args = parser.parse_args()
         service = args['service'].upper()
-        build_url = args['build_url']
+        version = args['version']
         app: InstallableApp = get_app_from_service(service)
         os.makedirs(app.installation_dir(), 0o775, exist_ok=True)  # create dir if doesn't exist
-        valid = app.validate_domain(build_url)
-        if not valid:
-            abort(404, message=f"service {service} is an invalid build_url")
-        delete_existing_dir = delete_existing_folder(app.installation_dir())
-        download = download_unzip_service(build_url, app.installation_dir(), read_file(os.environ.get("token")))
-        if not download:
-            abort(501, message="valid URL service {} but download failed check internet or version!".format(service))
-        return {'service': service, 'build_url': build_url, 'delete_existing_dir': delete_existing_dir}
+        directory = app.installation_dir()
+        try:
+            name = download_unzip_service(app.get_download_link(version),
+                                          directory,
+                                          read_file(os.environ.get("token")))
+            delete_existing_app = delete_existing_folder(os.path.join(directory, version))
+            os.rename(os.path.join(directory, name), os.path.join(directory, version))
+            return {'service': service, 'version': version, 'delete_existing_app': delete_existing_app}
+        except Exception as e:
+            abort(501, message=str(e))
 
 
 class InstallService(Resource):
@@ -55,8 +57,8 @@ class DeleteInstallation(Resource):
         service = args['service'].upper()
         app: InstallableApp = get_app_from_service(service)
         delete = execute_command_and_handle_error(app.get_delete_command(), app)
-        delete_existing_dir = delete_existing_folder(app.installation_dir())
-        return {'service': service, 'delete completed': delete, 'delete_existing_dir': delete_existing_dir}
+        delete_existing_data = delete_existing_folder(app.installation_dir())
+        return {'service': service, 'delete completed': delete, 'delete_existing_data': delete_existing_data}
 
 
 class DeleteData(Resource):

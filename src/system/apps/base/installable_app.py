@@ -37,8 +37,8 @@ class InstallableApp(object):
     def get_data_dir(self) -> str:
         return os.path.join(InstallableApp.__data_parent_dir, self.data_dir_name())
 
-    def get_domain(self) -> tuple:
-        return 'api.github.com', 'NubeIO', self.name()
+    def get_download_link(self, version) -> str:
+        return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.name(), version)
 
     def get_cwd(self) -> str:
         """current working dir for script.bash execution"""
@@ -59,10 +59,3 @@ class InstallableApp(object):
 
     def installation_dir(self) -> str:
         return os.path.join(InstallableApp.__app_parent_dir, self.name())
-
-    def validate_domain(self, url) -> bool:
-        u = url.split("/")
-        domain = (u[2], u[4], u[5])
-        app_domain = self.get_domain()
-        logger.info("URL check: {}, {}".format(domain, app_domain))
-        return app_domain == domain
