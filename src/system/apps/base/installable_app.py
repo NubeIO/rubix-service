@@ -2,17 +2,17 @@ import logging
 import os
 from abc import abstractmethod
 
-from src.system.utils.file import get_extracted_dir
-
 logger = logging.getLogger(__name__)
 
 
 class InstallableApp(object):
     __app_parent_dir = '/nube-apps'
     __data_parent_dir = '/data'
+    __version = ''
 
     @classmethod
-    def get_app(cls, service):
+    def get_app(cls, service, version):
+        InstallableApp.__version = version
         for subclass in InstallableApp.__subclasses__():
             if subclass.id() == service:
                 return subclass()
@@ -37,15 +37,12 @@ class InstallableApp(object):
     def get_data_dir(self) -> str:
         return os.path.join(InstallableApp.__data_parent_dir, self.data_dir_name())
 
-    def get_download_link(self, version) -> str:
-        return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.name(), version)
+    def get_download_link(self) -> str:
+        return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.name(), InstallableApp.__version)
 
     def get_cwd(self) -> str:
         """current working dir for script.bash execution"""
-        cwd = get_extracted_dir(self.installation_dir())
-        if not cwd:
-            raise Exception("Check {}, we don't have any files inside this dir".format(self.installation_dir()))
-        return cwd
+        return os.path.join(self.installation_dir(), InstallableApp.__version)
 
     def get_wd(self) -> str:
         """working dir for systemd working directory set"""

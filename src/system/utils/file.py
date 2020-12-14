@@ -14,8 +14,22 @@ def delete_existing_folder(dir_) -> bool:
     if dir_path.exists() and dir_path.is_dir():
         shutil.rmtree(dir_path)
         return True
-    else:
-        return False
+    return False
+
+
+def delete_all_folders_except(parent_dir, dir_) -> None:
+    """It deletes all folders inside the parent_dir except dir_"""
+    dir_path = Path(dir_)
+    if dir_path.exists():
+        dirs = os.listdir(parent_dir)
+        for dir__ in dirs:
+            if dir__ != dir_:
+                os.remove(os.path.join(parent_dir, dir__))
+
+
+def is_dir_exist(dir_) -> bool:
+    dir_path = Path(dir_)
+    return dir_path.exists()
 
 
 def download_unzip_service(download_link, directory, token) -> str:
@@ -26,16 +40,6 @@ def download_unzip_service(download_link, directory, token) -> str:
         with ZipFile(BytesIO(zip_resp.read())) as z_file:
             z_file.extractall(directory)
             return z_file.namelist()[0]
-
-
-def get_extracted_dir(parent_dir) -> str:
-    try:
-        dirs = os.listdir(parent_dir)
-        if len(dirs):
-            return os.path.join(parent_dir, dirs[0])
-    except Exception as e:
-        logger.error(e)
-    return ""
 
 
 def read_file(file) -> str:

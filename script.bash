@@ -29,8 +29,9 @@ help() {
 start() {
     if [[ ${USER} != "" && ${WORKING_DIR} != "" && ${LIB_DIR} != "" ]]
     then
-        if [[ ${TOKEN} == ""]] then
-            sed -i -e "${RED}We are not adding token, if you want add '-t=<token>' in command...${DEFAULT}"
+        if [[ ${TOKEN} == "" ]]
+        then
+            echo -e "${RED}We are not adding token. If you want add, add '-t=<token>' in command...${DEFAULT}"
         fi
         echo -e "${GREEN}Creating Linux Service...${DEFAULT}"
         sudo cp systemd/${SERVICE} ${SERVICE_DIR}/${SERVICE}
