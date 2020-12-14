@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 
+from src.system.utils.auth import get_auth_file
 from src.system.utils.file import delete_file, write_file
 
 logging.config.fileConfig('logging/logging.conf')
@@ -35,13 +36,14 @@ app.config['SQLALCHEMY_ECHO'] = False  # for print the sql query
 
 db = SQLAlchemy(app)
 
-# add/update/delete token
-token = os.environ.get("token")
-auth_file = os.path.join(os.environ.get("data_dir"), 'auth')
-if token:
-    write_file(auth_file, token)
-else:
-    delete_file(auth_file)
+if os.environ.get("data_dir"):
+    # add/update/delete token
+    auth_file = get_auth_file()
+    token = os.environ.get("token")
+    if token:
+        write_file(auth_file, token)
+    else:
+        delete_file(auth_file)
 
 from src import routes  # importing for creating all the schema on un-existing case
 

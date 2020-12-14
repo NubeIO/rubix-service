@@ -2,6 +2,7 @@ import os
 
 from flask_restful import Resource, reqparse, abort
 
+from src import get_auth_file
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.utils.file import delete_existing_folder, download_unzip_service, read_file, is_dir_exist, \
     delete_all_folders_except
@@ -22,7 +23,7 @@ class DownloadService(Resource):
         try:
             name = download_unzip_service(app.get_download_link(),
                                           installation_dir,
-                                          read_file(os.environ.get("token")))
+                                          read_file(get_auth_file()))
             downloaded_dir = app.get_downloaded_dir()
             existing_app_deletion = delete_existing_folder(downloaded_dir)
             os.rename(os.path.join(installation_dir, name), downloaded_dir)

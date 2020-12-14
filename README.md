@@ -7,11 +7,12 @@
 - Create `venv` on inside that directory (follow instruction on [here](https://github.com/NubeIO/common-py-libs#how-to-create))
 
 #### Commands:
-THE SYSTEM D FILE IS IN  `/lib/systemd/`
+
+Please generate token from [here](https://github.com/settings/tokens) with scope `repo`
 
 ```bash
 sudo bash script.bash start -u=<pi|debian> -dir=<s-mon_dir> -lib_dir=<common-py-libs-dir> -data_dir=<data_dir> -t=<token>
-sudo bash script.bash start -u=pi -dir=/home/pi/rubix-service -lib_dir=/home/pi/common-py-libs -data_dir=/data/rubix-service -t=a67227da53c622f5e91641aa6064b4fadeb6d540
+sudo bash script.bash start -u=pi -dir=/home/pi/rubix-service -lib_dir=/home/pi/common-py-libs -data_dir=/data/rubix-service -t=f31a04d4424c5eef5be61fc6e30b76aa09c94e10
 sudo bash script.bash -h
 ```
 
@@ -109,6 +110,7 @@ WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
 curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.1.2"}'
 curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.1.8"}'
 curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v1.8.2"}'
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT","version":"v1.1.5"}'
 ```
 
 
@@ -127,7 +129,8 @@ curl -X POST http://localhost:1616/api/services/download -H "Content-Type: appli
 ```bash
 curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.1.2","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
 curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.1.8","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v1.8.2,"user":"pi"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v1.8.2","user":"pi"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT","version":"v1.1.5","user":"pi"}'
 ```
 
 
@@ -145,6 +148,7 @@ curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: appli
 curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"}'
 curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER"}'
 curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
+curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}'
 ```
 
 
@@ -162,4 +166,5 @@ curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: app
 curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"}'
 curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER"}'
 curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
+curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}'
 ```
