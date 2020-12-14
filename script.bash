@@ -27,8 +27,14 @@ help() {
     echo -e "   ${GREEN}-dir --lib_dir-dir=<lib_dir>${DEFAULT}                                                          From where lib should load"
 }
 
+createDirIfNotExist() {
+    mkdir -p ${DATA_DIR}
+    sudo chown -R ${USER}:${USER} ${DATA_DIR}
+}
+
 start() {
     if [[ ${USER} != "" && ${WORKING_DIR} != "" && ${LIB_DIR} != "" && ${DATA_DIR} != "" ]]; then
+        createDirIfNotExist
         if [[ ${TOKEN} == "" ]]; then
             echo -e "${RED}We are not adding token. If you want add, add '-t=<token>' in command...${DEFAULT}"
         fi
@@ -39,10 +45,6 @@ start() {
         sed -i -e 's,<lib_dir>,'"${LIB_DIR}"',' ${SERVICE_DIR}/${SERVICE}
         sed -i -e 's,<data_dir>,'"${DATA_DIR}"',' ${SERVICE_DIR}/${SERVICE}
         sed -i -e 's/<token>/'"${TOKEN}"'/' ${SERVICE_DIR}/${SERVICE}
-
-        # Create data_dir if not exist
-        mkdir -p ${DATA_DIR}
-        sudo chown -R ${USER}:${USER} ${DATA_DIR}
 
         echo -e "${GREEN}Soft Un-linking Linux Service...${DEFAULT}"
         sudo unlink ${SERVICE_DIR_SOFT_LINK}/${SERVICE}

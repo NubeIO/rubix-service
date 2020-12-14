@@ -40,13 +40,16 @@ class InstallableApp(object):
     def get_download_link(self) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.name(), InstallableApp.__version)
 
+    def get_downloaded_dir(self):
+        return os.path.join(self.installation_dir(), InstallableApp.__version)
+
     def get_cwd(self) -> str:
         """current working dir for script.bash execution"""
-        return os.path.join(self.installation_dir(), InstallableApp.__version)
+        return self.get_downloaded_dir()
 
     def get_wd(self) -> str:
         """working dir for systemd working directory set"""
-        return self.get_cwd()
+        return self.get_downloaded_dir()
 
     def get_install_cmd(self, user, lib_dir=None) -> str:
         return "sudo bash script.bash start -u={} -dir={} -lib_dir={}".format(user, self.get_wd(), lib_dir)
