@@ -37,7 +37,7 @@ db = SQLAlchemy(app)
 
 # add/update/delete token
 token = os.environ.get("token")
-auth_file = 'auth'
+auth_file = os.path.join(os.environ.get("data_dir"), 'auth')
 if token:
     write_file(auth_file, token)
 else:
