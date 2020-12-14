@@ -8,14 +8,17 @@ logger = logging.getLogger(__name__)
 class InstallableApp(object):
     __app_parent_dir = '/nube-apps'
     __data_parent_dir = '/data'
-    __version = ''
+
+    def __init__(self):
+        self.version = ""
 
     @classmethod
     def get_app(cls, service, version):
-        InstallableApp.__version = version
         for subclass in InstallableApp.__subclasses__():
             if subclass.id() == service:
-                return subclass()
+                instance = subclass()
+                instance.version = version
+                return instance
         raise Exception("service {} does not exist in our system".format(service))
 
     @classmethod
@@ -38,10 +41,10 @@ class InstallableApp(object):
         return os.path.join(InstallableApp.__data_parent_dir, self.data_dir_name())
 
     def get_download_link(self) -> str:
-        return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.name(), InstallableApp.__version)
+        return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.name(), self.version)
 
     def get_downloaded_dir(self):
-        return os.path.join(self.installation_dir(), InstallableApp.__version)
+        return os.path.join(self.get_installation_dir(), self.version)
 
     def get_cwd(self) -> str:
         """current working dir for script.bash execution"""
@@ -57,5 +60,8 @@ class InstallableApp(object):
     def get_delete_command(self) -> str:
         return "sudo bash script.bash delete"
 
-    def installation_dir(self) -> str:
+    def get_installation_dir(self) -> str:
         return os.path.join(InstallableApp.__app_parent_dir, self.name())
+
+    def set_version(self, version):
+        self.version = version

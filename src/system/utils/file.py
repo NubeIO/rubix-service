@@ -60,3 +60,12 @@ def write_file(file, content):
 def delete_file(file):
     if os.path.exists(file):
         os.remove(file)
+
+
+def get_extracted_dir(parent_dir) -> str:
+    dir_path = Path(parent_dir)
+    if dir_path.exists():
+        dirs = os.listdir(parent_dir)
+        if len(dirs):
+            return os.path.join(parent_dir, dirs[0])
+    return ""

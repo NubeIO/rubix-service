@@ -5,7 +5,7 @@ from flask_restful import Resource, reqparse, abort
 from src import get_auth_file
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.utils.file import delete_existing_folder, download_unzip_service, read_file, is_dir_exist, \
-    delete_all_folders_except
+    delete_all_folders_except, get_extracted_dir
 from src.system.utils.shell_commands import execute_command
 
 
@@ -18,8 +18,8 @@ class DownloadService(Resource):
         service = args['service'].upper()
         version = args['version']
         app: InstallableApp = get_app_from_service(service, version)
-        os.makedirs(app.installation_dir(), 0o775, exist_ok=True)  # create dir if doesn't exist
-        installation_dir = app.installation_dir()
+        installation_dir = app.get_installation_dir()
+        os.makedirs(installation_dir, 0o775, exist_ok=True)  # create dir if doesn't exist
         try:
             name = download_unzip_service(app.get_download_link(),
                                           installation_dir,
@@ -49,7 +49,7 @@ class InstallService(Resource):
             abort(404, message=str('Please download service {} with version {} at first'.format(service, version)))
         cmd = app.get_install_cmd(user, lib_dir)
         installation = execute_command(cmd, app.get_cwd())
-        delete_all_folders_except(app.installation_dir(), version)
+        delete_all_folders_except(app.get_installation_dir(), version)
         return {'service': service, 'version': version, 'installation': installation}
 
 
@@ -60,8 +60,13 @@ class DeleteInstallation(Resource):
         args = parser.parse_args()
         service = args['service'].upper()
         app: InstallableApp = get_app_from_service(service)
+        # TODO: when we have DB to store installed version, we don't need to do this
+        version = get_extracted_dir(app.get_installation_dir())
+        if not version:
+            abort(404, message="service {} is not running".format(service))
+        app.set_version(version)
         deletion = execute_command(app.get_delete_command(), app.get_cwd())
-        existing_apps_deletion = delete_existing_folder(app.installation_dir())
+        existing_apps_deletion = delete_existing_folder(app.get_installation_dir())
         return {'service': service, 'deletion': deletion, 'existing_apps_deletion': existing_apps_deletion}
 
 
