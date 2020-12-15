@@ -33,9 +33,19 @@ class InstallableApp(object):
         raise Exception("InstallableApp name needs to be overridden")
 
     @abstractmethod
+    def service_file_name(self) -> str:
+        """service_file_name for systemd name"""
+        raise Exception("InstallableApp service_file_name needs to be overridden")
+
+    @abstractmethod
     def data_dir_name(self) -> str:
         """data_dir_name for making/denoting a valid data dir"""
         raise Exception("InstallableApp services needs to be overridden")
+
+    @abstractmethod
+    def port(self) -> int:
+        """port for running app"""
+        raise Exception("InstallableApp port needs to be overridden")
 
     def get_data_dir(self) -> str:
         return os.path.join(InstallableApp.__data_parent_dir, self.data_dir_name())
@@ -55,7 +65,8 @@ class InstallableApp(object):
         return self.get_downloaded_dir()
 
     def get_install_cmd(self, user, lib_dir=None) -> str:
-        return "sudo bash script.bash start -u={} -dir={} -lib_dir={}".format(user, self.get_wd(), lib_dir)
+        return "sudo bash script.bash start -service_name={} -u={} -dir={} -lib_dir={} -data-dir={} -p={}" \
+            .format(self.service_file_name(), user, self.get_wd(), lib_dir, self.get_data_dir(), self.port())
 
     def get_delete_command(self) -> str:
         return "sudo bash script.bash delete"

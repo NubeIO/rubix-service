@@ -11,14 +11,18 @@ class RubixPlatBuildApp(InstallableApp):
     def name(self) -> str:
         return 'rubix-plat-build'
 
+    def service_file_name(self) -> str:
+        return 'rubix'
+
     def data_dir_name(self) -> str:
         return 'rubix-plat-build'
+
+    def port(self) -> int:
+        """port for running app"""
+        return 1414
 
     def get_cwd(self) -> str:
         return os.path.join(super().get_cwd(), 'rubix-plat')
 
     def get_wd(self) -> str:
         return self.get_cwd()
-
-    def get_install_cmd(self, user, lib_dir=None) -> str:
-        return "sudo bash script.bash start -u={} -dir={}".format(user, self.get_wd())
