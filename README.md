@@ -11,8 +11,8 @@
 Please generate token from [here](https://github.com/settings/tokens) with scope `repo`
 
 ```bash
-sudo bash script.bash start -u=<pi|debian> -dir=<s-mon_dir> -lib_dir=<common-py-libs-dir> -data_dir=<data_dir> -t=<token>
-sudo bash script.bash start -u=pi -dir=/home/pi/rubix-service -lib_dir=/home/pi/common-py-libs -data_dir=/data/rubix-service -t=f31a04d4424c5eef5be61fc6e30b76aa09c94e10
+sudo bash script.bash start -service_name=<service_name> -u=<pi|debian> -dir=<working_dir> -lib_dir=<common-py-libs-dir> -data_dir=<data_dir> -p=<port> -t=<token>
+sudo bash script.bash start -service_name=nubeio-rubix-service.service -u=pi -dir=/home/pi/rubix-service -lib_dir=/home/pi/common-py-libs -data_dir=/data/rubix-service -p=1616 -t=f31a04d4424c5eef5be61fc6e30b76aa09c94e10
 sudo bash script.bash -h
 ```
 
