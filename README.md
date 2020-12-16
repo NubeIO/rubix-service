@@ -7,11 +7,12 @@
 - Create `venv` on inside that directory (follow instruction on [here](https://github.com/NubeIO/common-py-libs#how-to-create))
 
 #### Commands:
-THE SYSTEM D FILE IS IN  `/lib/systemd/`
+
+Please generate token from [here](https://github.com/settings/tokens) with scope `repo`
 
 ```bash
-sudo bash script.bash start -u=<pi|debian> -dir=<s-mon_dir> -lib_dir=<common-py-libs-dir>
-sudo bash script.bash start -u=pi -dir=/home/pi/rubix-service -lib_dir=/home/pi/common-py-libs
+sudo bash script.bash start -service_name=<service_name> -u=<pi|debian> -dir=<working_dir> -lib_dir=<common-py-libs-dir> -data_dir=<data_dir> -p=<port> -t=<token>
+sudo bash script.bash start -service_name=nubeio-rubix-service.service -u=pi -dir=/home/pi/rubix-service -lib_dir=/home/pi/common-py-libs -data_dir=/data/rubix-service -p=1616 -t=f31a04d4424c5eef5be61fc6e30b76aa09c94e10
 sudo bash script.bash -h
 ```
 
@@ -88,10 +89,11 @@ WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
 ```
 
 ### Services
-- POINT_SERVER
-- BACNET_SERVER
-- LORA_RAW
-- WIRES
+- POINT_SERVER: >=v1.1.3
+- BACNET_SERVER >=v1.2.1
+- LORA_RAW >=v1.0.0
+- WIRES >=v1.8.7
+- RUBIX_PLAT >=?
 
 
 ### Download
@@ -106,9 +108,11 @@ WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
 ```
 >Examples:
 ```bash
-curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","build_url":"https://api.github.com/repos/NubeIO/rubix-point-server/zipball/v1.1.2"}'
-curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","build_url":"https://api.github.com/repos/NubeIO/rubix-bacnet-server/zipball/v1.1.8"}'
-curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"WIRES","build_url":"https://api.github.com/repos/NubeIO/wires-builds/zipball/v1.8.2"}'
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.1.3"}'
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.2.1"}'
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"LORA_RAW","version":"v1.0.0"}'
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v1.8.7"}'
+curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT","version":"v1.1.5"}'
 ```
 
 
@@ -125,9 +129,11 @@ curl -X POST http://localhost:1616/api/services/download -H "Content-Type: appli
 ```
 > Examples:
 ```bash
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"WIRES","user":"pi"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.1.3","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.2.1","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"LORA_RAW","version":"v1.0.0","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v1.8.7","user":"pi"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT","version":"v1.1.5","user":"pi"}'
 ```
 
 
@@ -144,7 +150,9 @@ curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: appli
 ```bash
 curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"}'
 curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER"}'
+curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"LORA_RAW"}'
 curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
+curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}'
 ```
 
 
@@ -161,5 +169,7 @@ curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: app
 ```bash
 curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"}'
 curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER"}'
+curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"LORA_RAW"}'
 curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
+curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}'
 ```

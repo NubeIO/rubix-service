@@ -3,26 +3,26 @@ import os
 from src.system.apps.base.installable_app import InstallableApp
 
 
-class WiresBuildsApp(InstallableApp):
+class RubixPlatBuildApp(InstallableApp):
     @classmethod
     def id(cls) -> str:
-        return 'WIRES'
+        return 'RUBIX_PLAT'
 
     def name(self) -> str:
-        return 'wires-builds'
+        return 'rubix-plat-build'
 
     def service_file_name(self) -> str:
-        return 'nubeio-rubix-wires.service'
+        return 'rubix'
 
     def data_dir_name(self) -> str:
-        return 'rubix-wires'
+        return 'rubix-plat-build'
 
     def port(self) -> int:
         """port for running app"""
-        return 1313
+        return 1414
 
     def get_cwd(self) -> str:
-        return os.path.join(super().get_cwd(), 'rubix-wires/systemd')
+        return os.path.join(super().get_cwd(), 'rubix-plat')
 
     def get_wd(self) -> str:
-        return os.path.join(super().get_cwd(), 'rubix-wires')
+        return self.get_cwd()
