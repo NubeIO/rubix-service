@@ -1,5 +1,5 @@
-import logging.config
 import os
+import sys
 
 from flask import Flask
 from flask_cors import CORS
@@ -10,16 +10,25 @@ from sqlalchemy.engine import Engine
 from src.system.utils.auth import get_auth_file
 from src.system.utils.file import delete_file, write_file
 
-logging.config.fileConfig('logging/logging.conf')
+# import src.color_formatter
+
+# logging.config.fileConfig('logging/logging.conf')
 
 app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-if not os.environ.get("data_dir"):
-    url = 'sqlite:///data.db?timeout=60'
+if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+    print('running in a PyInstaller bundle')
 else:
-    url = f'sqlite:///{os.environ.get("data_dir")}/data.db?timeout=60'
+    print('running in a normal Python process')
+
+if not os.environ.get("data_dir"):
+    url = 'sqlite:////tmp/data.db?timeout=60'
+else:
+    url = f'sqlite:////{os.environ.get("data_dir")}/data.db?timeout=60'
+
+print(url)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', url)
 

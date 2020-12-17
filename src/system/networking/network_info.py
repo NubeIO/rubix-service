@@ -1,4 +1,3 @@
-import sys
 from flask_restful import Resource
 import netifaces
 
