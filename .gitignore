@@ -14,3 +14,8 @@ data.db
 
 __pycache__/
 *.pyc
+
+build/
+dist/
+
+*.iml
