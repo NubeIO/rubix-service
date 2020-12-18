@@ -18,7 +18,7 @@ FROM python:$PYTHON_VERSION-slim
 
 ARG MAINTAINER="zero88 <sontt246@gmail.com>"
 ARG APP_VERSION="1.0.0"
-ARG WIRES_UID=1412
+ARG RUBIX_UID=642
 ARG NUBEIO_GID=1173
 ARG COMMIT_SHA=$COMMIT_SHA
 
@@ -27,14 +27,16 @@ LABEL maintainer=$MAINTAINER version=$APP_VERSION commit=$COMMIT_SHA
 ENV GLOBAL_DATA=/data RUBIX_SERVICE_DATA=/data/rubix-service ARTIFACT_DIR=/data/apps RUBIX_SERVICE_TOKEN=''
 
 RUN apt update -qq \
-    && apt install curl -y \
+    && apt install curl sudo -y \
+#    && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
     && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
     && apt-get install -y nodejs
 
 RUN groupadd -g $NUBEIO_GID nubeio && \
-    useradd -u $WIRES_UID -G nubeio rubix && \
-    mkdir -p $RUBIX_SERVICE_DATA && \
-    chown -R rubix:nubeio $GLOBAL_DATA
+    && useradd -u $RUBIX_UID -G nubeio rubix \
+#    && usermod -a -G sudo rubix \
+    && mkdir -p $RUBIX_SERVICE_DATA \
+    && chown -R rubix:nubeio $GLOBAL_DATA
 
 WORKDIR /usr/src/app/
 COPY --chown=rubix:nubeio --from=build /usr/src/app/dist/rubix-service ./

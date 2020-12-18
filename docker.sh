@@ -3,7 +3,7 @@
 source ./docker/.env
 
 sha=$(git rev-parse --short HEAD)
-tag="dev-$sha"
+tag="dev"
 
 DOCKER_BUILDKIT=1 docker build \
     --build-arg "MAINTAINER=$APP_MAINTAINER" \
@@ -15,4 +15,4 @@ DOCKER_BUILDKIT=1 docker build \
     -f "$(pwd)/docker/Dockerfile" \
     ./ || { echo "Build $tag failure"; exit 2; }
 
-docker rmi $(docker images | grep "none" | awk '/ / { print $3 }') || return 0
+docker rmi $(docker images | grep "none" | awk '/ / { print $3 }') || exit 0
