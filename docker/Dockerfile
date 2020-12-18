@@ -1,1 +1,48 @@
-FROM python:slim
+ARG PYTHON_VERSION
+FROM python:$PYTHON_VERSION-slim as build
+
+WORKDIR /usr/src/app/
+
+ADD poetry.lock pyproject.toml ./
+RUN apt update -qq \
+    && apt install curl gcc -y \
+    && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -o /tmp/get-poetry.py \
+    && python /tmp/get-poetry.py
+RUN $HOME/.poetry/bin/poetry install
+
+ADD src src
+ADD run.py ./
+RUN $HOME/.poetry/bin/poetry run pyinstaller run.py -n rubix-service --hidden-import=sqlite3 --clean --onefile
+
+FROM python:$PYTHON_VERSION-slim
+
+ARG MAINTAINER="zero88 <sontt246@gmail.com>"
+ARG APP_VERSION="1.0.0"
+ARG WIRES_UID=1412
+ARG NUBEIO_GID=1173
+ARG COMMIT_SHA=$COMMIT_SHA
+
+LABEL maintainer=$MAINTAINER version=$APP_VERSION commit=$COMMIT_SHA
+
+ENV RUBIX_SERVICE_DATA=/data/rubix-service RUBIX_SERVICE_TOKEN=''
+
+RUN apt update -qq \
+    && apt install curl -y \
+    && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+    && apt-get install -y nodejs
+
+RUN groupadd -g $NUBEIO_GID nubeio && \
+    useradd -u $WIRES_UID -G nubeio rubix && \
+    mkdir -p $RUBIX_SERVICE_DATA && \
+    chown rubix:nubeio $RUBIX_SERVICE_DATA
+
+WORKDIR /usr/src/app/
+COPY --chown=rubix:nubeio --from=build /usr/src/app/dist/rubix-service ./
+
+USER rubix:nubeio
+
+VOLUME $RUBIX_SERVICE_DATA
+
+EXPOSE 1313 1414 1515 1616 1717 1919 1880 8081
+
+ENTRYPOINT [ "./rubix-service" ]

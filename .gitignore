@@ -20,4 +20,7 @@ dist/
 out/*
 !out/.gitkeep
 
+!docker/.env
+
 *.iml
+*.spec
