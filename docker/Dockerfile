@@ -24,7 +24,7 @@ ARG COMMIT_SHA=$COMMIT_SHA
 
 LABEL maintainer=$MAINTAINER version=$APP_VERSION commit=$COMMIT_SHA
 
-ENV RUBIX_SERVICE_DATA=/data/rubix-service RUBIX_SERVICE_TOKEN=''
+ENV GLOBAL_DATA=/data RUBIX_SERVICE_DATA=/data/rubix-service ARTIFACT_DIR=/data/apps RUBIX_SERVICE_TOKEN=''
 
 RUN apt update -qq \
     && apt install curl -y \
@@ -34,14 +34,14 @@ RUN apt update -qq \
 RUN groupadd -g $NUBEIO_GID nubeio && \
     useradd -u $WIRES_UID -G nubeio rubix && \
     mkdir -p $RUBIX_SERVICE_DATA && \
-    chown rubix:nubeio $RUBIX_SERVICE_DATA
+    chown -R rubix:nubeio $GLOBAL_DATA
 
 WORKDIR /usr/src/app/
 COPY --chown=rubix:nubeio --from=build /usr/src/app/dist/rubix-service ./
 
 USER rubix:nubeio
 
-VOLUME $RUBIX_SERVICE_DATA
+VOLUME $GLOBAL_DATA
 
 EXPOSE 1313 1414 1515 1616 1717 1919 1880 8081
 
