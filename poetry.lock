@@ -26,7 +26,7 @@ python-versions = "*"
 name = "cffi"
 version = "1.14.4"
 description = "Foreign Function Interface for Python calling C code."
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -121,7 +121,7 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 name = "gevent"
 version = "20.9.0"
 description = "Coroutine-based network library"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"
 
@@ -142,7 +142,7 @@ test = ["dnspython (>=1.16.0,<2.0)", "idna", "requests", "objgraph", "cffi (>=1.
 name = "greenlet"
 version = "0.4.17"
 description = "Lightweight in-process concurrent programming"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -150,7 +150,7 @@ python-versions = "*"
 name = "gunicorn"
 version = "20.0.4"
 description = "WSGI HTTP Server for UNIX"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.4"
 
@@ -232,7 +232,7 @@ future = "*"
 name = "pycparser"
 version = "2.20"
 description = "C parser in Python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
@@ -354,7 +354,7 @@ watchdog = ["watchdog"]
 name = "zope.event"
 version = "4.5.0"
 description = "Very basic event publishing system"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -366,7 +366,7 @@ test = ["zope.testrunner"]
 name = "zope.interface"
 version = "5.2.0"
 description = "Interfaces for Python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
@@ -378,7 +378,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "be8511343ed043053541c9cf833a14433bb6176e1bff6555979aaa85680fd224"
+content-hash = "fbbce80b756db29a6d749f7a89d25acda887039047f94c3d9f0a2bf112aac1be"
 
 [metadata.files]
 altgraph = [
