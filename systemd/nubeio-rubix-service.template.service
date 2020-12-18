@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=<user>
 WorkingDirectory=<working_dir>
-ExecStart=<lib_dir>/venv/bin/gunicorn -b 0.0.0.0:<port> --timeout 600 --worker-class gevent -w 1 run:app -e data_dir=<data_dir> -e token=<token>
+ExecStart=./rubix-service -p <port> -g /data -d /data/rubix-services -a /data/rubix-services/apps --workers 1 --prod --token=<token>
 Restart=always
 RestartSec=10
 StandardOutput=syslog
