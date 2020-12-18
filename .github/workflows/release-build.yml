@@ -92,10 +92,10 @@ jobs:
           curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
       - name: Install dependencies
-        run: poetry install
+        run: $HOME/.poetry/bin/poetry install
 
       - name: Packing app
-        run: poetry run pyinstaller run.py -n rubix-service --clean --onefile
+        run: $HOME/.poetry/bin/poetry run pyinstaller run.py -n rubix-service --clean --onefile
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
