@@ -95,7 +95,7 @@ jobs:
         run: poetry install
 
       - name: Packing app
-        run: poetry run pyinstaller run.py -n rubix-service --hidden-import=sqlite3 --clean --onefile
+        run: poetry run pyinstaller run.py -n rubix-service --clean --onefile
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
