@@ -6,8 +6,8 @@ WORKDIR /usr/src/app/
 ADD poetry.lock pyproject.toml ./
 RUN apt update -qq \
     && apt install curl gcc -y \
-    && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -o /tmp/get-poetry.py \
-    && python /tmp/get-poetry.py
+    && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+
 RUN $HOME/.poetry/bin/poetry install
 
 ADD src src
@@ -27,12 +27,12 @@ LABEL maintainer=$MAINTAINER version=$APP_VERSION commit=$COMMIT_SHA
 ENV GLOBAL_DATA=/data RUBIX_SERVICE_DATA=/data/rubix-service ARTIFACT_DIR=/data/apps RUBIX_SERVICE_TOKEN=''
 
 RUN apt update -qq \
-    && apt install curl sudo -y \
-#    && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
+    && apt install curl -y \
+#    && apt install sudo -y && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
     && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
     && apt-get install -y nodejs
 
-RUN groupadd -g $NUBEIO_GID nubeio && \
+RUN groupadd -g $NUBEIO_GID nubeio \
     && useradd -u $RUBIX_UID -G nubeio rubix \
 #    && usermod -a -G sudo rubix \
     && mkdir -p $RUBIX_SERVICE_DATA \
