@@ -1,6 +1,13 @@
-from flask_restful import Resource
-from datetime import datetime
 import time
+from datetime import datetime
+from logging import Logger
+
+from flask import current_app
+from flask_restful import Resource
+from werkzeug.local import LocalProxy
+
+# noinspection PyTypeChecker
+logger: Logger = LocalProxy(lambda: current_app.logger)
 
 startTime = time.time()
 up_time_date = str(datetime.now())
@@ -20,6 +27,7 @@ class Ping(Resource):
         up_min = "{:.2f}".format(up_min)
         up_hour = up_time / 3600
         up_hour = "{:.2f}".format(up_hour)
+        logger.info('ping here')
         return {
             'up_time_date': up_time_date,
             'up_min': up_min,

@@ -1,4 +1,5 @@
 import os
+import logging
 
 from flask import Flask
 from flask_cors import CORS
@@ -15,20 +16,22 @@ cors = CORS()
 
 def create_app(data_dir, token: str, prod: bool, setting_file: str) -> Flask:
     os.environ.setdefault('FLASK_ENV', 'production' if prod else 'development')
-    os.environ.setdefault('data_dir', data_dir)
     __handle_token(data_dir, token)
 
     app = Flask(__name__)
     app.config['CORS_HEADERS'] = 'Content-Type'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:////{data_dir}/data.db?timeout=60'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{data_dir}/data.db?timeout=60'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ECHO'] = False
-
     cors.init_app(app)
     db.init_app(app)
 
     @app.before_first_request
     def create_tables():
+        gunicorn_logger = logging.getLogger('gunicorn.error')
+        app.logger.handlers = gunicorn_logger.handlers
+        app.logger.setLevel(gunicorn_logger.level)
+        app.logger.info(app.config['SQLALCHEMY_DATABASE_URI'])
         db.create_all()
 
     @event.listens_for(Engine, "connect")
