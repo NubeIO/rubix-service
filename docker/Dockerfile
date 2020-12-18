@@ -12,7 +12,7 @@ RUN $HOME/.poetry/bin/poetry install
 
 ADD src src
 ADD run.py ./
-RUN $HOME/.poetry/bin/poetry run pyinstaller run.py -n rubix-service --hidden-import=sqlite3 --clean --onefile
+RUN $HOME/.poetry/bin/poetry run pyinstaller run.py -n rubix-service --clean --onefile
 
 FROM python:$PYTHON_VERSION-slim
 
