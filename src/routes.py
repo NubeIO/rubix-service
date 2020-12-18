@@ -1,6 +1,6 @@
+from flask import Blueprint
 from flask_restful import Api
 
-from src import app
 from src.platform.resource_wires_plat import WiresPlatResource
 from src.system.networking.network_info import NetworkInfo
 from src.system.resources.host_info import GetSystemMem, GetSystemTime, GetSystemDiscUsage
@@ -8,29 +8,32 @@ from src.system.resources.ping import Ping
 from src.system.resources.systemctl_services import SystemctlStatus, SystemctlCommand, SystemctlStatusBool
 from src.system.resources.updater import DownloadService, InstallService, DeleteData, DeleteInstallation
 
-api = Api(app)
-# 1
-api_prefix = 'api'
-api.add_resource(Ping, "/{}/ping".format(api_prefix))
+bp_ping = Blueprint('ping', __name__, url_prefix='/api/ping')
+bp_system = Blueprint('system', __name__, url_prefix='/api/system')
+bp_service = Blueprint('service', __name__, url_prefix='/api/service')
+bp_app = Blueprint('app', __name__, url_prefix='/api/services')
+bp_wires = Blueprint('wires', __name__, url_prefix='/api/wires')
 
-# 2
-api_prefix_system = '{}/system'.format(api_prefix)
-api.add_resource(GetSystemTime, "/{}/time".format(api_prefix_system))
-api.add_resource(GetSystemMem, "/{}/memory".format(api_prefix_system))
-api.add_resource(GetSystemDiscUsage, "/{}/disc".format(api_prefix_system))
-api.add_resource(NetworkInfo, "/{}/networking".format(api_prefix_system))
+Api(bp_ping).add_resource(Ping, '/')
 
-api.add_resource(SystemctlCommand, "/{}/service".format(api_prefix_system))
-api.add_resource(SystemctlStatusBool, "/{}/service/up/<string:service>".format(api_prefix_system))
-api.add_resource(SystemctlStatus, "/{}/service/stats/<string:service>".format(api_prefix_system))
+api_system = Api(bp_system)
+api_system.add_resource(GetSystemTime, '/time')
+api_system.add_resource(GetSystemMem, '/memory')
+api_system.add_resource(GetSystemDiscUsage, '/disc')
+api_system.add_resource(NetworkInfo, '/networking')
+
+api_service = Api(bp_service)
+api_service.add_resource(SystemctlCommand)
+api_service.add_resource(SystemctlStatusBool, '/up/<string:service>')
+api_service.add_resource(SystemctlStatus, '/stats/<string:service>')
 
 # 3
-api_prefix_services = '{}/services'.format(api_prefix)
-api.add_resource(DownloadService, "/{}/download".format(api_prefix_services))
-api.add_resource(InstallService, "/{}/install".format(api_prefix_services))
-api.add_resource(DeleteInstallation, "/{}/uninstall".format(api_prefix_services))
-api.add_resource(DeleteData, "/{}/delete_data".format(api_prefix_services))
+api_app = Api(bp_app)
+api_app.add_resource(DownloadService, '/download')
+api_app.add_resource(InstallService, '/install')
+api_app.add_resource(DeleteInstallation, '/uninstall')
+api_app.add_resource(DeleteData, '/delete_data')
 
 # 4
-wires_api_prefix = '{}/wires'.format(api_prefix)
-api.add_resource(WiresPlatResource, '/{}/plat'.format(wires_api_prefix))
+api_wires = Api(bp_wires)
+api_wires.add_resource(WiresPlatResource, '/plat')

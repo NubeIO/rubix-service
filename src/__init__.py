@@ -1,5 +1,4 @@
 import os
-import sys
 
 from flask import Flask
 from flask_cors import CORS
@@ -10,50 +9,53 @@ from sqlalchemy.engine import Engine
 from src.system.utils.auth import get_auth_file
 from src.system.utils.file import delete_file, write_file
 
-# import src.color_formatter
-
-# logging.config.fileConfig('logging/logging.conf')
-
-app = Flask(__name__)
-CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
-
-if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-    print('running in a PyInstaller bundle')
-else:
-    print('running in a normal Python process')
-
-if not os.environ.get("data_dir"):
-    url = 'sqlite:////tmp/data.db?timeout=60'
-else:
-    url = f'sqlite:////{os.environ.get("data_dir")}/data.db?timeout=60'
-
-print(url)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', url)
+db = SQLAlchemy()
+cors = CORS()
 
 
-@event.listens_for(Engine, "connect")
-def set_sqlite_pragma(dbapi_connection, connection_record):
-    cursor = dbapi_connection.cursor()
-    cursor.execute("PRAGMA foreign_keys=ON")
-    cursor.close()
+def create_app(data_dir, token: str, prod: bool, setting_file: str) -> Flask:
+    os.environ.setdefault('FLASK_ENV', 'production' if prod else 'development')
+    os.environ.setdefault('data_dir', data_dir)
+    __handle_token(data_dir, token)
+
+    app = Flask(__name__)
+    app.config['CORS_HEADERS'] = 'Content-Type'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:////{data_dir}/data.db?timeout=60'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_ECHO'] = False
+
+    cors.init_app(app)
+    db.init_app(app)
+
+    @app.before_first_request
+    def create_tables():
+        db.create_all()
+
+    @event.listens_for(Engine, "connect")
+    def set_sqlite_pragma(dbapi_connection, connection_record):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
+
+    def register_router(_app) -> Flask:
+        from src.routes import bp_ping
+        from src.routes import bp_system
+        from src.routes import bp_service
+        from src.routes import bp_app
+        from src.routes import bp_wires
+        _app.register_blueprint(bp_ping)
+        _app.register_blueprint(bp_system)
+        _app.register_blueprint(bp_service)
+        _app.register_blueprint(bp_app)
+        _app.register_blueprint(bp_wires)
+        return _app
+
+    return register_router(app)
 
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = False  # for print the sql query
-
-db = SQLAlchemy(app)
-
-if os.environ.get("data_dir"):
-    # add/update/delete token
-    auth_file = get_auth_file()
-    token = os.environ.get("token")
+def __handle_token(data_dir, token):
+    auth_file = get_auth_file(data_dir)
     if token:
         write_file(auth_file, token)
     else:
         delete_file(auth_file)
-
-from src import routes  # importing for creating all the schema on un-existing case
-
-db.create_all()
