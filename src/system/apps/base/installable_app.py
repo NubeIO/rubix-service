@@ -1,13 +1,17 @@
-import logging
 import os
 from abc import abstractmethod
+from logging import Logger
 
-logger = logging.getLogger(__name__)
+from flask import current_app
+from werkzeug.local import LocalProxy
+
+from src import AppSetting
+
+# noinspection PyTypeChecker
+logger: Logger = LocalProxy(lambda: current_app.logger)
 
 
 class InstallableApp(object):
-    __app_parent_dir = '/nube-apps'
-    __data_parent_dir = '/data'
 
     def __init__(self):
         self.version = ""
@@ -48,7 +52,8 @@ class InstallableApp(object):
         raise Exception("InstallableApp port needs to be overridden")
 
     def get_data_dir(self) -> str:
-        return os.path.join(InstallableApp.__data_parent_dir, self.data_dir_name())
+        setting: AppSetting = current_app.config['SETTING']
+        return os.path.join(setting.global_dir, self.data_dir_name())
 
     def get_download_link(self) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.name(), self.version)
@@ -72,7 +77,8 @@ class InstallableApp(object):
         return "sudo bash script.bash delete"
 
     def get_installation_dir(self) -> str:
-        return os.path.join(InstallableApp.__app_parent_dir, self.name())
+        setting: AppSetting = current_app.config['SETTING']
+        return os.path.join(setting.artifact_dir, self.name())
 
     def set_version(self, version):
         self.version = version

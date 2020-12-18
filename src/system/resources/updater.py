@@ -1,16 +1,19 @@
 import os
 
+from flask import current_app
 from flask_restful import Resource, reqparse, abort
 
-from src import get_auth_file
+from src import AppSetting
 from src.system.apps.base.installable_app import InstallableApp
-from src.system.utils.file import delete_existing_folder, download_unzip_service, read_file, is_dir_exist, \
+from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist, \
     delete_all_folders_except, get_extracted_dir
 from src.system.utils.shell_commands import execute_command
 
 
 class DownloadService(Resource):
+
     def post(self):
+        app_setting: AppSetting = current_app.config['SETTING']
         parser = reqparse.RequestParser()
         parser.add_argument('service', type=str, required=True)
         parser.add_argument('version', type=str, required=True)
@@ -21,9 +24,7 @@ class DownloadService(Resource):
         installation_dir = app.get_installation_dir()
         os.makedirs(installation_dir, 0o775, exist_ok=True)  # create dir if doesn't exist
         try:
-            name = download_unzip_service(app.get_download_link(),
-                                          installation_dir,
-                                          read_file(get_auth_file()))
+            name = download_unzip_service(app.get_download_link(), installation_dir, app_setting.token)
             downloaded_dir = app.get_downloaded_dir()
             existing_app_deletion = delete_existing_folder(downloaded_dir)
             os.rename(os.path.join(installation_dir, name), downloaded_dir)

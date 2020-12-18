@@ -1,12 +1,15 @@
-import logging
 import os
 import shutil
 from io import BytesIO
+from logging import Logger
 from pathlib import Path
 from urllib.request import urlopen, Request
 from zipfile import ZipFile
 
-logger = logging.getLogger(__name__)
+from flask import current_app
+from werkzeug.local import LocalProxy
+
+logger: Logger = LocalProxy(lambda: current_app.logger) or Logger(__name__)
 
 
 def delete_existing_folder(dir_) -> bool:
@@ -42,12 +45,13 @@ def download_unzip_service(download_link, directory, token) -> str:
             return z_file.namelist()[0]
 
 
-def read_file(file) -> str:
+def read_file(file, debug=False) -> str:
     try:
-        f = open(file, "r")
-        return f.read()
+        with open(file, "r") as f:
+            return f.read()
     except Exception as e:
-        logger.error(e)
+        if not debug:
+            logger.error(e)
         return ""
 
 

@@ -1,14 +1,10 @@
 import enum
-
-from numpy import long
+import socket
 
 
 class PointType(enum.Enum):
     DHCP = 0
     STATIC = 1
-
-
-import socket
 
 
 def valid_ip(address):
@@ -17,4 +13,3 @@ def valid_ip(address):
         return True
     except:
         return False
-

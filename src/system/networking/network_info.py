@@ -1,6 +1,5 @@
-import sys
-from flask_restful import Resource
 import netifaces
+from flask_restful import Resource
 
 
 def get_all_interfaces():

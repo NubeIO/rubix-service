@@ -14,3 +14,13 @@ data.db
 
 __pycache__/
 *.pyc
+
+build/
+dist/
+out/*
+!out/.gitkeep
+
+!docker/.env
+
+*.iml
+*.spec
