@@ -1,10 +1,37 @@
 # rubix-service
 
-### Running on Production
+## Running in development
 
-#### One time setup:
-- Clone [this](https://github.com/NubeIO/common-py-libs)
-- Create `venv` on inside that directory (follow instruction on [here](https://github.com/NubeIO/common-py-libs#how-to-create))
+- Use [`poetry`](https://github.com/python-poetry/poetry) to manage dependencies
+- Simple script to install
+
+```bash
+./setup.sh
+```
+
+## Deploy on Production
+
+- Download release artifact
+- Review help and start
+```bash
+./rubix-service -h
+
+Usage: rubix-service [OPTIONS]
+
+Options:
+  -p, --port INTEGER              Port  [default: 1616]
+  -d, --data-dir PATH             Application data dir
+  -g, --global-dir PATH           Global data dir
+  -a, --artifact-dir PATH         Artifact downloaded dir
+  --token TEXT                    Service token to download from GitHub private repository
+  --prod                          Production mode
+  -s, --setting-file TEXT         Rubix-Service: setting file
+  --workers INTEGER               Gunicorn: The number of worker processes for handling requests.
+  -c, --gunicorn-config TEXT      Gunicorn: config file(gunicorn.conf.py)
+  --log-level [FATAL|ERROR|WARN|INFO|DEBUG]
+                                  Logging level
+  -h, --help                      Show this message and exit.
+```
 
 #### Commands:
 
