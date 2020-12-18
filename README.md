@@ -9,6 +9,23 @@
 ./setup.sh
 ```
 
+## Docker build
+
+### Build
+
+```bash
+./docker.sh
+```
+
+The output image is: `rubix-service:dev`
+
+### Run
+
+```bash
+docker create volume rubix-service-data
+docker run --rm -it -p 1616:1616 -p 1313:1313 -v rubix-service-data:/data --name rubix-service rubix-service:dev
+```
+
 ## Deploy on Production
 
 - Download release artifact
