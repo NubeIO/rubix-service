@@ -9,8 +9,8 @@ from gunicorn.app.base import Application
 from gunicorn.glogging import Logger
 from gunicorn.workers.ggevent import GeventWorker
 
-from src import create_app
-from src.envs import TOKEN_ENV, DATA_DIR_ENV
+from src import create_app, AppSetting
+from src.envs import TOKEN_ENV, DATA_DIR_ENV, ARTIFACT_DIR_ENV, GLOBAL_DATA_DIR_ENV
 
 CLI_CTX_SETTINGS = dict(help_option_names=["-h", "--help"], max_content_width=120)
 
@@ -37,7 +37,12 @@ class GunicornFlaskApplication(Application, ABC):
 
 @click.command(context_settings=CLI_CTX_SETTINGS)
 @click.option('-p', '--port', type=int, default=1616, show_default=True, help='Port')
-@click.option('-d', '--data-dir', type=click.Path(), default=lambda: os.environ.get(DATA_DIR_ENV), help='Data dir')
+@click.option('-d', '--data-dir', type=click.Path(), default=lambda: os.environ.get(DATA_DIR_ENV),
+              help='Application data dir')
+@click.option('-g', '--global-dir', type=click.Path(), default=lambda: os.environ.get(GLOBAL_DATA_DIR_ENV),
+              help='Global data dir')
+@click.option('-a', '--artifact-dir', type=click.Path(), default=lambda: os.environ.get(ARTIFACT_DIR_ENV),
+              help='Artifact downloaded dir')
 @click.option('--token', type=str, default=lambda: os.environ.get(TOKEN_ENV),
               help='Service token to download from GitHub private repository')
 @click.option('--prod', is_flag=True, help='Production mode')
@@ -47,10 +52,9 @@ class GunicornFlaskApplication(Application, ABC):
 @click.option('-c', '--gunicorn-config', help='Gunicorn: config file(gunicorn.conf.py)')
 @click.option('--log-level', type=click.Choice(['FATAL', 'ERROR', 'WARN', 'INFO', 'DEBUG'], case_sensitive=False),
               show_default=True, help='Logging level')
-def cli(port, data_dir, token, prod, workers, setting_file, gunicorn_config, log_level):
-    data_dir = os.path.join(os.getcwd(), 'out') if data_dir is None or data_dir.strip() == '' else data_dir
-    data_dir = data_dir if os.path.isabs(data_dir) else os.path.join(os.getcwd(), data_dir)
-    token = None if token is None or token.strip() == '' else token
+def cli(port, data_dir, global_dir, artifact_dir, token, prod, workers, setting_file, gunicorn_config, log_level):
+    setting = AppSetting(global_dir=global_dir, data_dir=data_dir, artifact_dir=artifact_dir, token=token,
+                         prod=prod).reload(setting_file)
     options = {
         'bind': '%s:%s' % ('0.0.0.0', port),
         'workers': workers if prod else 1,
@@ -60,7 +64,7 @@ def cli(port, data_dir, token, prod, workers, setting_file, gunicorn_config, log
         'preload_app': True,
         'config': gunicorn_config
     }
-    GunicornFlaskApplication(create_app(data_dir, token, prod, setting_file), options).run()
+    GunicornFlaskApplication(create_app(setting), options).run()
 
 
 if __name__ == '__main__':
