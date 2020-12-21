@@ -3,7 +3,6 @@ import os
 from flask import current_app
 from flask_restful import Resource, reqparse, abort
 
-from src import AppSetting
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist, \
     delete_all_folders_except, get_extracted_dir
@@ -13,16 +12,15 @@ from src.system.utils.shell_commands import execute_command
 class DownloadService(Resource):
 
     def post(self):
-        app_setting: AppSetting = current_app.config['SETTING']
+        app_setting = current_app.config['SETTING']
         parser = reqparse.RequestParser()
         parser.add_argument('service', type=str, required=True)
         parser.add_argument('version', type=str, required=True)
         args = parser.parse_args()
         service = args['service'].upper()
         version = args['version']
-        app: InstallableApp = get_app_from_service(service, version)
+        app = get_app_from_service(service, version)
         installation_dir = app.get_installation_dir()
-        os.makedirs(installation_dir, 0o775, exist_ok=True)  # create dir if doesn't exist
         try:
             name = download_unzip_service(app.get_download_link(), installation_dir, app_setting.token)
             downloaded_dir = app.get_downloaded_dir()
@@ -38,17 +36,15 @@ class InstallService(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('service', type=str, required=True)
         parser.add_argument('version', type=str, required=True)
-        parser.add_argument('user', type=str, required=True)
         parser.add_argument('lib_dir', type=str, required=False)
         args = parser.parse_args()
         service = args['service'].upper()
         version = args['version']
-        user = args['user']
         lib_dir = args['lib_dir']
-        app: InstallableApp = get_app_from_service(service, version)
+        app = get_app_from_service(service, version)
         if not is_dir_exist(app.get_cwd()):
             abort(404, message=str('Please download service {} with version {} at first'.format(service, version)))
-        cmd = app.get_install_cmd(user, lib_dir)
+        cmd = app.get_install_cmd(lib_dir)
         installation = execute_command(cmd, app.get_cwd())
         delete_all_folders_except(app.get_installation_dir(), version)
         return {'service': service, 'version': version, 'installation': installation}
@@ -60,7 +56,7 @@ class DeleteInstallation(Resource):
         parser.add_argument('service', type=str, required=True)
         args = parser.parse_args()
         service = args['service'].upper()
-        app: InstallableApp = get_app_from_service(service)
+        app = get_app_from_service(service)
         # TODO: when we have DB to store installed version, we don't need to do this
         version = get_extracted_dir(app.get_installation_dir())
         if not version:
@@ -77,7 +73,7 @@ class DeleteData(Resource):
         parser.add_argument('service', type=str, required=True)
         args = parser.parse_args()
         service = args['service'].upper()
-        app: InstallableApp = get_app_from_service(service)
+        app = get_app_from_service(service)
         deletion = delete_existing_folder(app.get_data_dir())
         return {'service': service, 'deletion': deletion}
 

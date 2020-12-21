@@ -55,8 +55,9 @@ Options:
 Please generate token from [here](https://github.com/settings/tokens) with scope `repo`
 
 ```bash
-sudo bash script.bash start -service_name=<service_name> -u=<pi|debian> -dir=<working_dir> -lib_dir=<common-py-libs-dir> -data_dir=<data_dir> -p=<port> -t=<token>
-sudo bash script.bash start -service_name=nubeio-rubix-service.service -u=pi -dir=/home/pi/rubix-service -lib_dir=/home/pi/common-py-libs -data_dir=/data/rubix-service -p=1616 -t=f31a04d4424c5eef5be61fc6e30b76aa09c94e10
+sudo bash script.bash start --service-name=<service_name> --dir=<working_dir> --lib-dir=<common-py-libs-dir> --data-dir=<data_dir> -p=<port> -t=<token>
+sudo bash script.bash start --service-name=nubeio-rubix-service.service --dir=/home/pi/rubix-service --lib-dir=/home/pi/common-py-libs --data-dir=/data/rubix-service -p=1616
+sudo bash script.bash start --service-name=nubeio-rubix-service.service --dir=/home/debian/rubix-service --lib-dir=/home/debian/common-py-libs --data-dir=/data/rubix-service -p=1616
 sudo bash script.bash -h
 ```
 
@@ -173,11 +174,11 @@ curl -X POST http://localhost:1616/api/services/download -H "Content-Type: appli
 ```
 > Examples:
 ```bash
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.1.3","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.2.1","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"LORA_RAW","version":"v1.0.0","user":"pi","lib_dir":"/home/pi/common-py-libs"}'
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v1.8.7","user":"pi"}'
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT","version":"v1.1.5","user":"pi"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.1.3","lib_dir":"/home/debian/common-py-libs"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.2.1","lib_dir":"/home/pi/common-py-libs"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"LORA_RAW","version":"v1.0.0","lib_dir":"/home/pi/common-py-libs"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v1.8.7"}'
+curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT","version":"v1.1.5"}'
 ```
 
 
