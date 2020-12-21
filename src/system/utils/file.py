@@ -9,13 +9,13 @@ from zipfile import ZipFile
 from flask import current_app
 from werkzeug.local import LocalProxy
 
-logger: Logger = LocalProxy(lambda: current_app.logger) or Logger(__name__)
+logger = LocalProxy(lambda: current_app.logger) or Logger(__name__)
 
 
 def delete_existing_folder(dir_) -> bool:
     dir_path = Path(dir_)
     if dir_path.exists() and dir_path.is_dir():
-        shutil.rmtree(dir_path)
+        shutil.rmtree(dir_)
         return True
     return False
 

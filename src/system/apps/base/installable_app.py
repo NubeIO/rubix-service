@@ -1,14 +1,11 @@
 import os
 from abc import abstractmethod
-from logging import Logger
 
 from flask import current_app
 from werkzeug.local import LocalProxy
 
-from src import AppSetting
-
 # noinspection PyTypeChecker
-logger: Logger = LocalProxy(lambda: current_app.logger)
+logger = LocalProxy(lambda: current_app.logger)
 
 
 class InstallableApp(object):
@@ -52,7 +49,7 @@ class InstallableApp(object):
         raise Exception("InstallableApp port needs to be overridden")
 
     def get_data_dir(self) -> str:
-        setting: AppSetting = current_app.config['SETTING']
+        setting = current_app.config['SETTING']
         return os.path.join(setting.global_dir, self.data_dir_name())
 
     def get_download_link(self) -> str:
@@ -69,15 +66,16 @@ class InstallableApp(object):
         """working dir for systemd working directory set"""
         return self.get_downloaded_dir()
 
-    def get_install_cmd(self, user, lib_dir=None) -> str:
+    def get_install_cmd(self, lib_dir=None) -> str:
+        # TODO: remove user and upgrade parameters in future
         return "sudo bash script.bash start -service_name={} -u={} -dir={} -lib_dir={} -data-dir={} -p={}" \
-            .format(self.service_file_name(), user, self.get_wd(), lib_dir, self.get_data_dir(), self.port())
+            .format(self.service_file_name(), 'root', self.get_wd(), lib_dir, self.get_data_dir(), self.port())
 
     def get_delete_command(self) -> str:
         return "sudo bash script.bash delete"
 
     def get_installation_dir(self) -> str:
-        setting: AppSetting = current_app.config['SETTING']
+        setting = current_app.config['SETTING']
         return os.path.join(setting.artifact_dir, self.name())
 
     def set_version(self, version):

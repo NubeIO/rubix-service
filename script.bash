@@ -4,38 +4,27 @@ RED="\033[31m"
 
 COMMAND=""
 SERVICE_NAME="nubeio-rubix-service.service"
-USER=""
 WORKING_DIR=""
 LIB_DIR=""
-DATA_DIR="/data/rubix-service"
 PORT=1616
 TOKEN=""
 
-DATA_DIR_EDITED=false
 SERVICE_NAME_EDITED=false
 PORT_EDITED=false
 
 SERVICE_DIR=/lib/systemd/system
 SERVICE_DIR_SOFT_LINK=/etc/systemd/system/multi-user.target.wants
-SERVICE_TEMPLATE=systemd/nubeio-rubix-service.template.service
-
-createDirIfNotExist() {
-    mkdir -p ${DATA_DIR}
-    sudo chown -R ${USER}:${USER} ${DATA_DIR}
-}
+SERVICE_TEMPLATE=systemd/nubeio-rubix-service.old-template.service
 
 showServiceNameWarningIfNotEdited() {
-    if [ ${SERVICE_NAME_EDITED} == false ]; then
+    if [[ ${SERVICE_NAME_EDITED} == false ]]; then
         echo -e "${RED}We are using by default service_name=${SERVICE_NAME}!${DEFAULT}"
     fi
 }
 
 showWarningIfNotEdited() {
     showServiceNameWarningIfNotEdited
-    if [ ${DATA_DIR_EDITED} == false ]; then
-        echo -e "${RED}We are using by default data_dir=${DATA_DIR}!${DEFAULT}"
-    fi
-    if [ ${PORT_EDITED} == false ]; then
+    if [[ ${PORT_EDITED} == false ]]; then
         echo -e "${RED}We are using by default port=${PORT}!${DEFAULT}"
     fi
 }
@@ -49,10 +38,8 @@ showWarningIfNotToken() {
 createLinuxService() {
     echo -e "${GREEN}Creating Linux Service...${DEFAULT}"
     sudo cp ${SERVICE_TEMPLATE} ${SERVICE_DIR}/${SERVICE_NAME}
-    sed -i -e 's/<user>/'"${USER}"'/' ${SERVICE_DIR}/${SERVICE_NAME}
     sed -i -e 's,<working_dir>,'"${WORKING_DIR}"',' ${SERVICE_DIR}/${SERVICE_NAME}
     sed -i -e 's,<lib_dir>,'"${LIB_DIR}"',' ${SERVICE_DIR}/${SERVICE_NAME}
-    sed -i -e 's,<data_dir>,'"${DATA_DIR}"',' ${SERVICE_DIR}/${SERVICE_NAME}
     sed -i -e 's/<port>/'"${PORT}"'/' ${SERVICE_DIR}/${SERVICE_NAME}
     sed -i -e 's/<token>/'"${TOKEN}"'/' ${SERVICE_DIR}/${SERVICE_NAME}
 }
@@ -74,16 +61,15 @@ startNewLinuxService() {
     sudo systemctl restart ${SERVICE_NAME}
 }
 
-start() {
-    if [[ ${USER} != "" && ${WORKING_DIR} != "" && ${LIB_DIR} != "" ]]; then
-        createDirIfNotExist
+install() {
+    if [[ ${WORKING_DIR} != "" && ${LIB_DIR} != "" ]]; then
         showWarningIfNotEdited
         showWarningIfNotToken
         createLinuxService
         startNewLinuxService
         echo -e "${GREEN}Service is created and started.${DEFAULT}"
     else
-        echo -e ${RED}"-u=<user> -dir=<working_dir> -lib_dir=<lib_dir> these parameters should be on you input (-h, --help for help)${DEFAULT}"
+        echo -e ${RED}"--dir=<working_dir> --lib-dir=<lib_dir> these parameters should be on you input (-h, --help for help)${DEFAULT}"
     fi
 }
 
@@ -127,17 +113,21 @@ restart() {
 
 help() {
     echo "Service commands:"
-    echo -e "   ${GREEN}start -service_name=<service_name> -u=<user> -dir=<working_dir> -lib_dir=<lib_dir> -data_dir=<data_dir> -t=<token>${DEFAULT}    Start the service"
-    echo -e "   ${GREEN}disable${DEFAULT}                                                                                                               Disable the service"
-    echo -e "   ${GREEN}enable${DEFAULT}                                                                                                                Enable the stopped service"
-    echo -e "   ${GREEN}delete${DEFAULT}                                                                                                                Delete the service"
-    echo -e "   ${GREEN}restart${DEFAULT}                                                                                                               Restart the service"
+    echo -e "   ${GREEN}install -dir=<working_dir> -l=<lib_dir> [-s=<service_name>] [-p=<port>]${DEFAULT}   Install and start the service"
+    echo -e "   ${GREEN}disable${DEFAULT}                                                                   Disable the service"
+    echo -e "   ${GREEN}enable${DEFAULT}                                                                    Enable the service"
+    echo -e "   ${GREEN}delete${DEFAULT}                                                                    Delete the service"
+    echo -e "   ${GREEN}restart${DEFAULT}                                                                   Restart the service"
     echo
-    echo "Service parameters:"
-    echo -e "   ${GREEN}-h --help${DEFAULT}                                                                                                             Show this help"
-    echo -e "   ${GREEN}-u --user=<user>${DEFAULT}                                                                                                      Which <user> is starting the service"
-    echo -e "   ${GREEN}-dir --working-dir=<working_dir>${DEFAULT}                                                                                      From where wires is starting"
-    echo -e "   ${GREEN}-dir --lib_dir-dir=<lib_dir>${DEFAULT}                                                                                          From where lib should load"
+    echo -e "   ${GREEN}-h, --help${DEFAULT}                                                                Show this help"
+    echo
+    echo "Install parameters:"
+    echo "    required:"
+    echo -e "   ${GREEN}-d, --dir --working-dir=<working_dir>${DEFAULT}                                     Project absolute dir"
+    echo -e "   ${GREEN}-l, --lib-dir=<common-py-lib_dir>${DEFAULT}                                         Absolute dir to install requirements"
+    echo "    optional:"
+    echo -e "   ${GREEN}-s, --service-name=<service_name>${DEFAULT}                                         Name of system service to create"
+    echo -e "   ${GREEN}-p, --port=<port>${DEFAULT}                                                         HTTP server port"
 }
 
 parseCommand() {
@@ -147,36 +137,25 @@ parseCommand() {
             help
             exit 0
             ;;
-        -service_name=*)
-            SERVICE_NAME="${i#*=}"
-            SERVICE_NAME_EDITED=true
-            ;;
-        -u=* | --user=*)
-            USER="${i#*=}"
-            ;;
-        -dir=* | --working-dir=*)
+        -d=* | --dir=* | --working-dir=*)
             WORKING_DIR="${i#*=}"
             ;;
-        -lib_dir=*)
+        -l=* | --lib-dir=*)
             LIB_DIR="${i#*=}"
             ;;
-        -data_dir=*)
-            DATA_DIR="${i#*=}"
-            DATA_DIR_EDITED=true
+        -s=* | --service-name=*)
+            SERVICE_NAME="${i#*=}"
+            SERVICE_NAME_EDITED=true
             ;;
         -p=* | --port=*)
             PORT="${i#*=}"
             PORT_EDITED=true
             ;;
-        -t=* | --token=*)
-            TOKEN="${i#*=}"
-            ;;
-        start | disable | enable | delete | restart)
+        install | start | disable | enable | delete | restart)
             COMMAND=${i}
             ;;
         *)
-            echo -e "${RED}Unknown option (-h, --help for help)${DEFAULT}"
-            exit 1
+            echo -e "${RED}Unknown options ${i}  (-h, --help for help)${DEFAULT}"
             ;;
         esac
     done
@@ -184,8 +163,11 @@ parseCommand() {
 
 runCommand() {
     case ${COMMAND} in
+    install)
+        install
+        ;;
     start)
-        start
+        install
         ;;
     disable)
         disable

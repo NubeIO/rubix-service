@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=<working_dir>
-ExecStart=./rubix-service -p <port> -g /data -d /data/rubix-service -a /data/rubix-service/apps --workers 1 --prod --token=<token>
+ExecStart=<lib_dir>/venv/bin/python run.py -p <port> -g /data -d /data/rubix-service -a /data/rubix-service/apps --workers 1 --prod --token=<token>
 Restart=always
 RestartSec=10
 StandardOutput=syslog

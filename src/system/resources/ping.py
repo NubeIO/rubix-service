@@ -7,7 +7,7 @@ from flask_restful import Resource
 from werkzeug.local import LocalProxy
 
 # noinspection PyTypeChecker
-logger: Logger = LocalProxy(lambda: current_app.logger)
+logger = LocalProxy(lambda: current_app.logger)
 
 startTime = time.time()
 up_time_date = str(datetime.now())

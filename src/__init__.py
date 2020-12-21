@@ -1,5 +1,6 @@
 import logging
 import os
+import pathlib
 
 from flask import Flask
 from flask_cors import CORS
@@ -14,13 +15,13 @@ cors = CORS()
 
 
 class AppSetting:
-    _token_file_name: str = 'auth.txt'
-    _global_dir: str = 'out'
-    _data_dir: str = 'rubix-service'
-    _artifact_dir: str = 'apps'
-    _token: str
-    _prod: bool
-    _token_file: str = 'auth.txt'
+    _token_file_name = 'auth.txt'
+    _global_dir = 'out'
+    _data_dir = 'rubix-service'
+    _artifact_dir = 'apps'
+    _token = ''
+    _prod = False
+    _token_file = 'auth.txt'
 
     def __init__(self, **kwargs):
         self._global_dir = self.__compute_dir(kwargs['global_dir'], self._global_dir, 0o777)
@@ -75,13 +76,13 @@ class AppSetting:
             return read_file(token_file, debug=True)
 
 
-def create_app(app_setting: AppSetting) -> Flask:
+def create_app(app_setting) -> Flask:
     os.environ.setdefault('FLASK_ENV', 'production' if app_setting.prod else 'development')
 
     app = Flask(__name__)
     app_setting = app_setting.init_app(app)
     app.config['CORS_HEADERS'] = 'Content-Type'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{app_setting.data_dir}/data.db?timeout=60'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}/data.db?timeout=60'.format(app_setting.data_dir)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ECHO'] = False
     cors.init_app(app)
