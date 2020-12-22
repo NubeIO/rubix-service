@@ -61,7 +61,7 @@ jobs:
         if: ${{ steps.validateVersion.outputs.isSameVersion == 'false' }}
         run: |
           git commit -S -am "<ci-auto-commit> Update version"
-          git show --show-signature
+          git show --shortstat --show-signature
           git push
 
       - name: GIT get last commit
@@ -128,5 +128,5 @@ jobs:
       - name: GIT tag
         run: |
           git tag -s v${{ needs.context.outputs.projectVersion }} ${{ github.sha }} -m "Release v${{ needs.context.outputs.projectVersion }}"
-          git show v${{ needs.context.outputs.projectVersion }} --show-signature
+          git show v${{ needs.context.outputs.projectVersion }} --shortstat --show-signature
           git push origin v${{ needs.context.outputs.projectVersion }}
