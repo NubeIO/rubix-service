@@ -85,17 +85,17 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: 3.9
 
       - name: Install Poetry
         run: |
           curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
       - name: Install dependencies
-        run: poetry install
+        run: $HOME/.poetry/bin/poetry install
 
       - name: Packing app
-        run: poetry run pyinstaller run.py -n rubix-service --clean --onefile
+        run: $HOME/.poetry/bin/poetry run pyinstaller run.py -n rubix-service --clean --onefile
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2

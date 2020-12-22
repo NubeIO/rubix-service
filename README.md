@@ -5,9 +5,23 @@
 - Use [`poetry`](https://github.com/python-poetry/poetry) to manage dependencies
 - Simple script to install
 
-```bash
-./setup.sh
-```
+    ```bash
+    ./setup.sh
+    ```
+
+- Join `venv`
+
+    ```bash
+    poetry shell
+    ```
+
+- Build local binary
+
+    ```bash
+    poetry run pyinstaller run.py -n rubix-service --clean --onefile
+    ```
+
+  The output is: `dist/rubix-service`
 
 ## Docker build
 
