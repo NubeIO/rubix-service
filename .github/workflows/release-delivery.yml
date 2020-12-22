@@ -17,6 +17,7 @@ jobs:
       version: ${{ steps.grep.outputs.version }}
       sha: ${{ steps.grep.outputs.sha }}
       fqn: ${{ steps.grep.outputs.name }}-${{ steps.grep.outputs.version }}-${{ steps.grep.outputs.sha }}
+      images: ${{ steps.docker_image_name.outputs.images }}
 
     steps:
       - uses: actions/checkout@v2
@@ -39,9 +40,22 @@ jobs:
           echo "Target version: ${{ steps.grep.outputs.version }}"
           [[ ${{ steps.grep.outputs.cVer }} == ${{ steps.grep.outputs.version }} ]] || { echo "Release version and tag version is not match"; exit 1; }
 
+      - name: Docker image name
+        id: docker_image_name
+        run: |
+          localRegistry=localhost:5000/${{ steps.grep.outputs.name }}
+          ghcr=ghcr.io/nubeio/${{ steps.grep.outputs.name }}
+          dockerHub=nubeio/${{ steps.grep.outputs.name }}
+          echo ::set-output name=images::$ghcr
+
   build:
     runs-on: ubuntu-latest
     needs: context
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     steps:
       - uses: actions/checkout@v2
 
@@ -59,18 +73,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-${{ needs.context.outputs.name }}-
 
-      - name: Build by docker
-        id: docker_build
+      - name: Build artifact by docker
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: docker/Dockerfile
+          file: docker/build.Dockerfile
           platforms: ${{ env.PLATFORMS }}
           build-args: |
-            PYTHON_VERSION=3.7
+            BASE_IMAGE_VERSION=3.9
             APP_VERSION=${{ needs.context.outputs.version }}
             COMMIT_SHA=${{ needs.context.outputs.sha }}
-          tags: ${{ needs.context.outputs.fqn }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
           outputs: |
@@ -87,6 +99,32 @@ jobs:
             cd $folder; zip -r /tmp/zip/${{ needs.context.outputs.fqn }}.$p.zip ./; cd -
           done
 
+      - name: Docker meta
+        id: docker_meta
+        uses: crazy-max/ghaction-docker-meta@v1
+        with:
+          images: ${{ needs.context.outputs.images }}
+          tag-sha: true
+          tag-semver: |
+            {{version}}
+            {{major}}.{{minor}}
+
+      - name: Docker build
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: docker/build.Dockerfile
+          platforms: ${{ env.PLATFORMS }}
+          build-args: |
+            BASE_IMAGE_VERSION=3.9
+            APP_VERSION=${{ needs.context.outputs.version }}
+            COMMIT_SHA=${{ needs.context.outputs.sha }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          push: true
+
       - name: Create Release
         id: createRelease
         uses: softprops/action-gh-release@v1
@@ -99,41 +137,3 @@ jobs:
           prerelease: false
           files: |
             /tmp/zip/${{ needs.context.outputs.fqn }}.*.zip
-
-#  docker:
-#    runs-on: ubuntu-latest
-#    needs: [ context, build ]
-#    steps:
-#      - name: Trigger docker build
-#        run: |
-#          workflow=nodejs-docker.yml
-#          project="${{ needs.context.outputs.name }}"
-#          version="v${{ needs.context.outputs.version }}"
-#          data="{\"ref\":\"main\",\"inputs\":{\"project\":\"$project\",\"version\":\"$version\",\"platforms\":\"${{ env.PLATFORMS }}\",\"nodeVersion\":\"12\"}}"
-#          status=$(curl -X POST \
-#            -H "Accept: application/vnd.github.v3+json" \
-#            -H "Authorization: Bearer ${{ secrets.NUBEIO_CI_GITHUBPACKAGE_TOKEN }}" \
-#            -d "$data" -w "%{http_code}\n" -o out.json \
-#            https://api.github.com/repos/nubeio/ci-workflows/actions/workflows/$workflow/dispatches)
-#          cat out.json
-#          [[ "$status" =~ ^2[[:digit:]][[:digit:]] ]] || exit 1
-
-#  distribute:
-#    runs-on: ubuntu-latest
-#    needs: [ context, build ]
-#    steps:
-#      - name: Trigger release distribution
-#        run: |
-#          workflow=release-distribution-gh-repo.yml
-#          project="${{ needs.context.outputs.name }}"
-#          target="wires-builds"
-#          version="v${{ needs.context.outputs.version }}"
-#          assetId="${{ needs.context.outputs.fqn }}.armv7.zip"
-#          data="{\"ref\":\"main\",\"inputs\":{\"project\":\"$project\",\"target\":\"$target\",\"version\":\"$version\",\"assetId\":\"$assetId\",\"ref\":\"master\"}}"
-#          status=$(curl -X POST \
-#            -H "Accept: application/vnd.github.v3+json" \
-#            -H "Authorization: Bearer ${{ secrets.NUBEIO_CI_GITHUBPACKAGE_TOKEN }}" \
-#            -d "$data" -w "%{http_code}\n" -o out.json \
-#            https://api.github.com/repos/nubeio/ci-workflows/actions/workflows/$workflow/dispatches)
-#          cat out.json
-#          [[ "$status" =~ ^2[[:digit:]][[:digit:]] ]] || exit 1
