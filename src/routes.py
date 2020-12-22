@@ -10,7 +10,7 @@ from src.system.resources.updater import DownloadService, InstallService, Delete
 
 bp_ping = Blueprint('ping', __name__, url_prefix='/api/ping')
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')
-bp_service = Blueprint('service', __name__, url_prefix='/api/service')
+bp_service = Blueprint('service', __name__, url_prefix='/api/system/service')
 bp_app = Blueprint('app', __name__, url_prefix='/api/services')
 bp_wires = Blueprint('wires', __name__, url_prefix='/api/wires')
 
@@ -23,7 +23,7 @@ api_system.add_resource(GetSystemDiscUsage, '/disc')
 api_system.add_resource(NetworkInfo, '/networking')
 
 api_service = Api(bp_service)
-api_service.add_resource(SystemctlCommand)
+api_service.add_resource(SystemctlCommand, "/")
 api_service.add_resource(SystemctlStatusBool, '/up/<string:service>')
 api_service.add_resource(SystemctlStatus, '/stats/<string:service>')
 
