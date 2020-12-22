@@ -67,6 +67,7 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ needs.context.outputs.fqn }}
           restore-keys: |
             ${{ runner.os }}-buildx-${{ needs.context.outputs.name }}-
+            ${{ runner.os }}-buildx-
 
       - name: Build artifact by docker
         uses: docker/build-push-action@v2
@@ -99,6 +100,7 @@ jobs:
         uses: crazy-max/ghaction-docker-meta@v1
         with:
           images: ${{ needs.context.outputs.images }}
+          tag-latest: true
           tag-sha: true
           tag-semver: |
             {{version}}
