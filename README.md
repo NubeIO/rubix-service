@@ -104,7 +104,7 @@ http://0.0.0.0:1616/api/system/service/up/wires
 
 For `start | stop | restart | disable | enable` services: 
 
-> POST: `/api/system/service`
+> POST: `/api/system/service/control`
 
 > Body
 ```json
@@ -123,29 +123,11 @@ Where `<action>` are:
 
 > Example:
 ```bash
-curl -X POST http://localhost:1616/api/system/service -H "Content-Type: application/json" -d '{"action": "restart","service":"wires"}'
+curl -X POST http://localhost:1616/api/system/service/control -H "Content-Type: application/json" -d '{"action": "restart","service":"wires"}'
 ```
 
 ## Updater
 
-```
-Step 1:
-WIRES-PLAT: HTTP get all releases
-Step 2: 
-WIRES-PLAT: POST {service: WIRES, action: stop}: S-MON RETURN 200 or 404
-Have a refresh button 
-WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
-Step 3: 
-WIRES-PLAT: to send service: S-MON (HTTP GET service/WIRES) http://0.0.0.0:1616/api/services/download/BAC_REST
-WIRES-PLAT: HTTP POST with user selected {releases}  
-S-MON: delete existing, download and unzip new S-MON RETURN 200 or 404
-Step 4: 
-install RETURN 200 or 404
-Step 5: 
-WIRES-PLAT: POST {service: WIRES, action: start}: S-MON RETURN 200 or 404
-Have a refresh button 
-WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
-```
 
 ### Services
 - POINT_SERVER: >=v1.1.3
@@ -162,7 +144,7 @@ WIRES-PLAT: POST {service: WIRES, action: status}: S-MON RETURN service status
 ```json
 {
     "service": "BACNET_SERVER",
-    "build_url": "https://api.github.com/repos/NubeDev/bacnet-flask/zipball/v1.1.3"
+    "build_url": "https://api.github.com/repos/NubeIO/rubix-bacnet-server/zipball/v1.1.3"
 }
 ```
 >Examples:
