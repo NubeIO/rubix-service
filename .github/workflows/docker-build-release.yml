@@ -117,7 +117,7 @@ jobs:
         run: |
           image=localhost:5000/${{ needs.context.outputs.name }}:${{ needs.context.outputs.sha }}
           output=/usr/src/app/
-          mkdir -p /tmp/zip
+          mkdir -p /tmp/zip /tmp/images
           IFS=',' read -ra ARR <<< "${{ env.PLATFORMS }}"
           for plat in "${ARR[@]}"; do
             p=$(echo "${plat//\//}")
@@ -151,6 +151,9 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           pull: true
           push: true
+
+      - name: Cleanup Docker build cache if any
+        run: docker buildx prune --filter until=72h --keep-storage 5GB -f
 
       - name: Create Release
         if: ${{ needs.context.outputs.isRelease == 'true' }}
