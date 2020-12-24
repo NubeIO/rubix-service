@@ -68,7 +68,7 @@ class InstallableApp(object):
 
     def get_install_cmd(self, lib_dir=None) -> str:
         # TODO: remove user and upgrade parameters in future
-        return "sudo bash script.bash start -service_name={} -u={} -dir={} -lib_dir={} -data-dir={} -p={}" \
+        return "sudo bash script.bash start -service_name={} -u={} -dir={} -lib_dir={} -data_dir={} -p={}" \
             .format(self.service_file_name(), 'root', self.get_wd(), lib_dir, self.get_data_dir(), self.port())
 
     def get_delete_command(self) -> str:
