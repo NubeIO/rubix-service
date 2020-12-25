@@ -8,7 +8,7 @@ from werkzeug.local import LocalProxy
 logger = LocalProxy(lambda: current_app.logger)
 
 
-class InstallableApp(object):
+class InstallableApp:
 
     def __init__(self):
         self.version = ""
@@ -47,6 +47,12 @@ class InstallableApp(object):
     def port(self) -> int:
         """port for running app"""
         raise Exception("InstallableApp port needs to be overridden")
+
+    def url_prefix(self) -> str:
+        return ""
+
+    def gateway_access(self) -> bool:
+        return True
 
     def get_data_dir(self) -> str:
         setting = current_app.config['SETTING']

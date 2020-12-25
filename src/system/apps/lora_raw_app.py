@@ -18,3 +18,6 @@ class LoRaRawApp(InstallableApp):
     def port(self) -> int:
         """port for running app"""
         return 1919
+
+    def url_prefix(self) -> str:
+        return '/lora'

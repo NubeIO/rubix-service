@@ -18,3 +18,6 @@ class BACnetServerApp(InstallableApp):
     def port(self) -> int:
         """port for running app"""
         return 1717
+
+    def url_prefix(self) -> str:
+        return '/bacnet'

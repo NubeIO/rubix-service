@@ -18,3 +18,6 @@ class PointServerApp(InstallableApp):
     def port(self) -> int:
         """port for running app"""
         return 1515
+
+    def url_prefix(self) -> str:
+        return '/ps'

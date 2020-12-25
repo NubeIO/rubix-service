@@ -21,6 +21,9 @@ class WiresBuildsApp(InstallableApp):
         """port for running app"""
         return 1313
 
+    def gateway_access(self) -> bool:
+        return False
+
     def get_cwd(self) -> str:
         return os.path.join(super().get_cwd(), 'rubix-wires/systemd')
 

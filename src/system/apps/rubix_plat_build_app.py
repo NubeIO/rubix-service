@@ -21,6 +21,9 @@ class RubixPlatBuildApp(InstallableApp):
         """port for running app"""
         return 1414
 
+    def gateway_access(self) -> bool:
+        return False
+
     def get_cwd(self) -> str:
         return os.path.join(super().get_cwd(), 'rubix-plat')
 
