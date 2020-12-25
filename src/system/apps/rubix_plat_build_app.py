@@ -18,8 +18,10 @@ class RubixPlatBuildApp(InstallableApp):
         return 'rubix-plat-build'
 
     def port(self) -> int:
-        """port for running app"""
         return 1414
+
+    def min_support_version(self) -> str:
+        return 'v1.1.6'
 
     def gateway_access(self) -> bool:
         return False

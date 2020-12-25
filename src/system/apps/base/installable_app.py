@@ -20,39 +20,43 @@ class InstallableApp:
                 instance = subclass()
                 instance.version = version
                 return instance
-        raise Exception("service {} does not exist in our system".format(service))
+        raise ModuleNotFoundError("service {} does not exist in our system".format(service))
 
     @classmethod
     @abstractmethod
     def id(cls) -> str:
         """id for mapping frontend request with the App"""
-        raise Exception("InstallableApp id needs to be overridden")
+        raise NotImplementedError("id needs to be overridden")
 
     @abstractmethod
     def name(self) -> str:
         """name for installation folder creation and github repo name validation"""
-        raise Exception("InstallableApp name needs to be overridden")
+        raise NotImplementedError("name needs to be overridden")
 
     @abstractmethod
     def service_file_name(self) -> str:
         """service_file_name for systemd name"""
-        raise Exception("InstallableApp service_file_name needs to be overridden")
+        raise NotImplementedError("service_file_name needs to be overridden")
 
     @abstractmethod
     def data_dir_name(self) -> str:
         """data_dir_name for making/denoting a valid data dir"""
-        raise Exception("InstallableApp services needs to be overridden")
+        raise NotImplementedError("services needs to be overridden")
 
     @abstractmethod
     def port(self) -> int:
         """port for running app"""
-        raise Exception("InstallableApp port needs to be overridden")
+        raise NotImplementedError("port needs to be overridden")
 
     def url_prefix(self) -> str:
         return ""
 
     def gateway_access(self) -> bool:
         return True
+
+    @abstractmethod
+    def min_support_version(self) -> str:
+        raise NotImplementedError("min_support_version needs to be overridden")
 
     def get_data_dir(self) -> str:
         setting = current_app.config['SETTING']

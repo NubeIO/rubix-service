@@ -2,6 +2,7 @@ import json
 
 import requests
 from flask_restful import Resource
+from packaging import version
 
 from src.system.resources.app.utils import get_app_from_service
 
@@ -14,5 +15,6 @@ class ReleaseResource(Resource):
         data = json.loads(resp.content)
         releases = []
         for row in data:
-            releases.append(row.get('tag_name'))
+            if version.parse(app.min_support_version()) <= version.parse(row.get('tag_name')):
+                releases.append(row.get('tag_name'))
         return releases
