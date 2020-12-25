@@ -58,6 +58,9 @@ class InstallableApp:
         setting = current_app.config['SETTING']
         return os.path.join(setting.global_dir, self.data_dir_name())
 
+    def get_releases_link(self) -> str:
+        return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.name(), self.version)
+
     def get_download_link(self) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.name(), self.version)
 

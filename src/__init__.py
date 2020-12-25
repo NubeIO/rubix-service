@@ -89,6 +89,10 @@ def create_app(app_setting) -> Flask:
     cors.init_app(app)
     db.init_app(app)
 
+    # try to import / load gevent and ssl
+    from gevent import monkey as curious_george
+    curious_george.patch_all(thread=False, select=False)
+
     @app.before_first_request
     def create_tables():
         gunicorn_logger = logging.getLogger('gunicorn.error')

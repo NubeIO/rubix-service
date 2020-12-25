@@ -3,10 +3,14 @@ from flask_restful import Api
 
 from src.platform.resource_wires_plat import WiresPlatResource
 from src.system.networking.network_info import NetworkInfo
+from src.system.resources.app.delete_data import DeleteDataResource
+from src.system.resources.app.download import DownloadResource
+from src.system.resources.app.install import InstallResource
+from src.system.resources.app.release import ReleaseResource
+from src.system.resources.app.uninstall import UnInstallResource
 from src.system.resources.host_info import GetSystemMem, GetSystemTime, GetSystemDiscUsage
 from src.system.resources.ping import Ping
 from src.system.resources.systemctl_services import SystemctlStatus, SystemctlCommand, SystemctlStatusBool
-from src.system.resources.updater import DownloadService, InstallService, DeleteData, DeleteInstallation
 
 bp_ping = Blueprint('ping', __name__, url_prefix='/api/ping')
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')
@@ -29,10 +33,11 @@ api_service.add_resource(SystemctlStatus, '/stats/<string:service>')
 
 # 3
 api_app = Api(bp_app)
-api_app.add_resource(DownloadService, '/download')
-api_app.add_resource(InstallService, '/install')
-api_app.add_resource(DeleteInstallation, '/uninstall')
-api_app.add_resource(DeleteData, '/delete_data')
+api_app.add_resource(ReleaseResource, '/releases/<string:service>')
+api_app.add_resource(DownloadResource, '/download')
+api_app.add_resource(InstallResource, '/install')
+api_app.add_resource(UnInstallResource, '/uninstall')
+api_app.add_resource(DeleteDataResource, '/delete_data')
 
 # 4
 api_wires = Api(bp_wires)
