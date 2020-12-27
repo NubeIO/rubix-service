@@ -18,12 +18,12 @@ class DownloadResource(Resource):
         service = args['service'].upper()
         version = args['version']
         app = get_app_from_service(service, version)
-        installation_dir = app.get_installation_dir()
+        download_dir = app.get_download_dir()
         try:
-            name = download_unzip_service(app.get_download_link(), installation_dir, app_setting.token)
+            name = download_unzip_service(app.get_download_link(), download_dir, app_setting.token)
             downloaded_dir = app.get_downloaded_dir()
             existing_app_deletion = delete_existing_folder(downloaded_dir)
-            os.rename(os.path.join(installation_dir, name), downloaded_dir)
+            os.rename(os.path.join(download_dir, name), downloaded_dir)
             return {'service': service, 'version': version, 'existing_app_deletion': existing_app_deletion}
         except Exception as e:
             abort(501, message=str(e))

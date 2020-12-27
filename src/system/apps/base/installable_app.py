@@ -68,16 +68,13 @@ class InstallableApp:
     def get_download_link(self) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.name(), self.version)
 
-    def get_downloaded_dir(self):
-        return os.path.join(self.get_installation_dir(), self.version)
-
     def get_cwd(self) -> str:
         """current working dir for script.bash execution"""
-        return self.get_downloaded_dir()
+        return self.get_installed_dir()
 
     def get_wd(self) -> str:
         """working dir for systemd working directory set"""
-        return self.get_downloaded_dir()
+        return self.get_installed_dir()
 
     def get_install_cmd(self, lib_dir=None) -> str:
         # TODO: remove user and upgrade parameters in future
@@ -87,9 +84,19 @@ class InstallableApp:
     def get_delete_command(self) -> str:
         return "sudo bash script.bash delete"
 
+    def get_download_dir(self) -> str:
+        setting = current_app.config['SETTING']
+        return os.path.join(setting.artifact_dir, 'download', self.name())
+
     def get_installation_dir(self) -> str:
         setting = current_app.config['SETTING']
-        return os.path.join(setting.artifact_dir, self.name())
+        return os.path.join(setting.artifact_dir, 'install', self.name())
+
+    def get_downloaded_dir(self):
+        return os.path.join(self.get_download_dir(), self.version)
+
+    def get_installed_dir(self):
+        return os.path.join(self.get_installation_dir(), self.version)
 
     def set_version(self, version):
         self.version = version

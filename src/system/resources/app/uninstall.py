@@ -12,12 +12,10 @@ class UnInstallResource(Resource):
         args = parser.parse_args()
         service = args['service'].upper()
         app = get_app_from_service(service)
-        # TODO: when we have DB to store installed version, we don't need to do this ---
         version = get_extracted_dir(app.get_installation_dir())
         if not version:
             abort(404, message="service {} is not running".format(service))
         app.set_version(version)
-        # -------------------------------------------------------------------------------
         deletion = execute_command(app.get_delete_command(), app.get_cwd())
         existing_apps_deletion = delete_existing_folder(app.get_installation_dir())
         return {'service': service, 'deletion': deletion, 'existing_apps_deletion': existing_apps_deletion}

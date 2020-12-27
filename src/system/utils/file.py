@@ -20,16 +20,6 @@ def delete_existing_folder(dir_) -> bool:
     return False
 
 
-def delete_all_folders_except(parent_dir, dir_) -> None:
-    """It deletes all folders inside the parent_dir except dir_"""
-    dir_path = Path(dir_)
-    if dir_path.exists():
-        dirs = os.listdir(parent_dir)
-        for dir__ in dirs:
-            if dir__ != dir_:
-                os.remove(os.path.join(parent_dir, dir__))
-
-
 def is_dir_exist(dir_) -> bool:
     dir_path = Path(dir_)
     return dir_path.exists()
