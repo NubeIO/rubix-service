@@ -16,5 +16,10 @@ class PointServerApp(InstallableApp):
         return 'point-server'
 
     def port(self) -> int:
-        """port for running app"""
         return 1515
+
+    def url_prefix(self) -> str:
+        return '/ps'
+
+    def min_support_version(self) -> str:
+        return 'v1.1.3'

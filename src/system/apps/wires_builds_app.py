@@ -18,8 +18,13 @@ class WiresBuildsApp(InstallableApp):
         return 'rubix-wires'
 
     def port(self) -> int:
-        """port for running app"""
         return 1313
+
+    def min_support_version(self) -> str:
+        return 'v1.8.7'
+
+    def gateway_access(self) -> bool:
+        return False
 
     def get_cwd(self) -> str:
         return os.path.join(super().get_cwd(), 'rubix-wires/systemd')

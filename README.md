@@ -137,6 +137,18 @@ curl -X POST http://localhost:1616/api/system/service/control -H "Content-Type: 
 - RUBIX_PLAT >=?
 
 
+### Get Releases
+> GET: `api/services/releases/<service>`
+>Examples:
+```bash
+http://localhost:1616/api/services/releases/point_server
+http://localhost:1616/api/services/releases/bacnet_server
+http://localhost:1616/api/services/releases/lora_raw
+http://localhost:1616/api/services/releases/wires
+http://localhost:1616/api/services/releases/rubix_plat
+```
+
+
 ### Download
 > POST: `/api/services/download`
 

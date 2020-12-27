@@ -1,6 +1,5 @@
 import logging
 import os
-import pathlib
 
 from flask import Flask
 from flask_cors import CORS
@@ -8,6 +7,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 
+from src.system.apps.base.installable_app import InstallableApp
+from src.system.apps.lora_raw_app import LoRaRawApp
 from src.system.utils.file import delete_file, write_file, read_file
 
 db = SQLAlchemy()
@@ -88,6 +89,10 @@ def create_app(app_setting) -> Flask:
     cors.init_app(app)
     db.init_app(app)
 
+    # try to import / load gevent and ssl
+    from gevent import monkey as curious_george
+    curious_george.patch_all(thread=False, select=False)
+
     @app.before_first_request
     def create_tables():
         gunicorn_logger = logging.getLogger('gunicorn.error')
@@ -108,11 +113,14 @@ def create_app(app_setting) -> Flask:
         from src.routes import bp_service
         from src.routes import bp_app
         from src.routes import bp_wires
+        from src.reverse_proxy_routes import bp_reverse_proxy
+
         _app.register_blueprint(bp_ping)
         _app.register_blueprint(bp_system)
         _app.register_blueprint(bp_service)
         _app.register_blueprint(bp_app)
         _app.register_blueprint(bp_wires)
+        _app.register_blueprint(bp_reverse_proxy)
         return _app
 
     return register_router(app)
