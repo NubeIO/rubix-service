@@ -3,8 +3,9 @@ name: docker-build-release
 on:
   push:
     branches:
-      - master
+      - dev
       - main
+      - master
     tags:
       - 'v*'
 

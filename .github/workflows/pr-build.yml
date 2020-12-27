@@ -2,9 +2,11 @@ name: pull-request-build
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [ opened, synchronize, reopened, closed ]
     branches:
-      - "master"
+      - dev
+      - main
+      - master
 
 jobs:
 
@@ -95,7 +97,7 @@ jobs:
         run: $HOME/.poetry/bin/poetry install
 
       - name: Packing app
-        run: $HOME/.poetry/bin/poetry run pyinstaller run.py -n rubix-service --clean --onefile
+        run: $HOME/.poetry/bin/poetry run pyinstaller run.py -n ${{ needs.context.outputs.pName }} --clean --onefile
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
