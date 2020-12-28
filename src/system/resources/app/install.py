@@ -1,4 +1,4 @@
-from distutils.dir_util import copy_tree
+import shutil
 
 from flask_restful import Resource, reqparse, abort
 
@@ -21,7 +21,7 @@ class InstallResource(Resource):
         if not is_dir_exist(app.get_downloaded_dir()):
             abort(404, message=str('Please download service {} with version {} at first'.format(service, version)))
         delete_existing_folder(app.get_installation_dir())
-        copy_tree(app.get_downloaded_dir(), app.get_installed_dir())
+        shutil.copytree(app.get_downloaded_dir(), app.get_installed_dir())
         cmd = app.get_install_cmd(lib_dir)
         installation = execute_command(cmd, app.get_cwd())
         delete_existing_folder(app.get_download_dir())
