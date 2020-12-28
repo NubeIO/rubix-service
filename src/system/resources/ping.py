@@ -1,7 +1,6 @@
-import time
 from datetime import datetime
-from logging import Logger
 
+import time
 from flask import current_app
 from flask_restful import Resource
 from werkzeug.local import LocalProxy

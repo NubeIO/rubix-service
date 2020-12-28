@@ -3,6 +3,7 @@ import os
 from flask import current_app
 from flask_restful import Resource, reqparse, abort
 
+from src import AppSetting
 from src.system.resources.app.utils import get_app_from_service
 from src.system.utils.file import download_unzip_service, delete_existing_folder
 
@@ -10,7 +11,7 @@ from src.system.utils.file import download_unzip_service, delete_existing_folder
 class DownloadResource(Resource):
 
     def post(self):
-        app_setting = current_app.config['SETTING']
+        app_setting = current_app.config[AppSetting.KEY]
         parser = reqparse.RequestParser()
         parser.add_argument('service', type=str, required=True)
         parser.add_argument('version', type=str, required=True)

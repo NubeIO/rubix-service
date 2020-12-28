@@ -1,10 +1,9 @@
 import requests
-from requests.exceptions import ConnectionError
 from flask import request, Response, Blueprint
 from flask_restful import abort
-from urllib3.exceptions import NewConnectionError
+from requests.exceptions import ConnectionError
 
-from src import InstallableApp
+from src.system.apps.base.installable_app import InstallableApp
 
 bp_reverse_proxy = Blueprint("reverse_proxy", __name__, url_prefix='/')
 methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE']
