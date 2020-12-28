@@ -4,8 +4,6 @@ import multiprocessing
 import os
 
 import click
-from gunicorn.glogging import Logger
-from gunicorn.workers.ggevent import GeventWorker
 
 from src import AppSetting, GunicornFlaskApplication
 
@@ -34,15 +32,11 @@ def number_of_workers():
 @click.option('--log-level', type=click.Choice(['FATAL', 'ERROR', 'WARN', 'INFO', 'DEBUG'], case_sensitive=False),
               show_default=True, help='Logging level')
 def cli(port, data_dir, global_dir, artifact_dir, token, prod, workers, setting_file, gunicorn_config, log_level):
-    from gevent import monkey as curious_george
-    curious_george.patch_all()
     setting = AppSetting(global_dir=global_dir, data_dir=data_dir, artifact_dir=artifact_dir, token=token,
                          prod=prod).reload(setting_file)
     options = {
         'bind': '%s:%s' % ('0.0.0.0', port),
         'workers': workers if prod else 1,
-        'worker_class': GeventWorker.__module__ + '.' + GeventWorker.__qualname__,
-        'logger_class': Logger.__module__ + '.' + Logger.__name__,
         'log_level': ('INFO' if prod else 'DEBUG' if log_level is None else log_level).lower(),
         'preload_app': True,
         'config': gunicorn_config
