@@ -141,11 +141,11 @@ curl -X POST http://localhost:1616/api/system/service/control -H "Content-Type: 
 > GET: `api/services/releases/<service>`
 >Examples:
 ```bash
-http://localhost:1616/api/services/releases/point_server
-http://localhost:1616/api/services/releases/bacnet_server
-http://localhost:1616/api/services/releases/lora_raw
-http://localhost:1616/api/services/releases/wires
-http://localhost:1616/api/services/releases/rubix_plat
+http://localhost:1616/api/app/releases/point_server
+http://localhost:1616/api/app/releases/bacnet_server
+http://localhost:1616/api/app/releases/lora_raw
+http://localhost:1616/api/app/releases/wires
+http://localhost:1616/api/app/releases/rubix_plat
 ```
 
 
@@ -161,11 +161,11 @@ http://localhost:1616/api/services/releases/rubix_plat
 ```
 >Examples:
 ```bash
-curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.1.3"}'
-curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.2.1"}'
-curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"LORA_RAW","version":"v1.0.0"}'
-curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v1.8.7"}'
-curl -X POST http://localhost:1616/api/services/download -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT","version":"v1.1.5"}'
+curl -X POST http://localhost:1616/api/app/download -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.1.3"}'
+curl -X POST http://localhost:1616/api/app/download -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.2.1"}'
+curl -X POST http://localhost:1616/api/app/download -H "Content-Type: application/json" -d '{"service":"LORA_RAW","version":"v1.0.0"}'
+curl -X POST http://localhost:1616/api/app/download -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v1.8.7"}'
+curl -X POST http://localhost:1616/api/app/download -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT","version":"v1.1.5"}'
 ```
 
 
@@ -182,11 +182,11 @@ curl -X POST http://localhost:1616/api/services/download -H "Content-Type: appli
 ```
 > Examples:
 ```bash
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.1.3","lib_dir":"/home/debian/common-py-libs"}'
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.2.1","lib_dir":"/home/pi/common-py-libs"}'
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"LORA_RAW","version":"v1.0.0","lib_dir":"/home/pi/common-py-libs"}'
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v1.8.7"}'
-curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT","version":"v1.1.5"}'
+curl -X POST http://localhost:1616/api/app/install  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.1.3","lib_dir":"/home/debian/common-py-libs"}'
+curl -X POST http://localhost:1616/api/app/install  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.2.1","lib_dir":"/home/pi/common-py-libs"}'
+curl -X POST http://localhost:1616/api/app/install  -H "Content-Type: application/json" -d '{"service":"LORA_RAW","version":"v1.0.0","lib_dir":"/home/pi/common-py-libs"}'
+curl -X POST http://localhost:1616/api/app/install  -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v1.8.7"}'
+curl -X POST http://localhost:1616/api/app/install  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT","version":"v1.1.5"}'
 ```
 
 
@@ -201,11 +201,11 @@ curl -X POST http://localhost:1616/api/services/install  -H "Content-Type: appli
 ```
 > Examples:
 ```bash
-curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"}'
-curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER"}'
-curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"LORA_RAW"}'
-curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
-curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}'
+curl -X POST http://localhost:1616/api/app/uninstall  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"}'
+curl -X POST http://localhost:1616/api/app/uninstall  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER"}'
+curl -X POST http://localhost:1616/api/app/uninstall  -H "Content-Type: application/json" -d '{"service":"LORA_RAW"}'
+curl -X POST http://localhost:1616/api/app/uninstall  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
+curl -X POST http://localhost:1616/api/app/uninstall  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}'
 ```
 
 
@@ -220,9 +220,9 @@ curl -X POST http://localhost:1616/api/services/uninstall  -H "Content-Type: app
 ```
 > Examples:
 ```bash
-curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"}'
-curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER"}'
-curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"LORA_RAW"}'
-curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
-curl -X POST http://localhost:1616/api/services/delete_data  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}'
+curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"}'
+curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER"}'
+curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: application/json" -d '{"service":"LORA_RAW"}'
+curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
+curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}'
 ```

@@ -2,7 +2,7 @@ import enum
 
 from flask_restful import abort
 
-from src import InstallableApp
+from src.system.apps.base.installable_app import InstallableApp
 
 
 class Services(enum.Enum):
