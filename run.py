@@ -25,7 +25,7 @@ def number_of_workers():
 @click.option('--token', type=str, default=lambda: os.environ.get(AppSetting.TOKEN_ENV),
               help='Service token to download from GitHub private repository')
 @click.option('--prod', is_flag=True, help='Production mode')
-@click.option('-s', '--setting-file', help='Rubix-Service: setting file')
+@click.option('-s', '--setting-file', help='Rubix-Service: setting json file')
 @click.option('--workers', type=int, default=lambda: number_of_workers(),
               help='Gunicorn: The number of worker processes for handling requests.')
 @click.option('-c', '--gunicorn-config', help='Gunicorn: config file(gunicorn.conf.py)')
