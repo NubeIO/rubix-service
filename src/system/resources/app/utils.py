@@ -1,7 +1,7 @@
 from flask_restful import abort
 from packaging import version
 
-from src import InstallableApp
+from src.system.apps.base.installable_app import InstallableApp
 
 
 def get_app_from_service(service, version_='') -> InstallableApp:

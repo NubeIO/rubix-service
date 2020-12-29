@@ -18,7 +18,7 @@ bp_service = Blueprint('service', __name__, url_prefix='/api/system/service')
 bp_app = Blueprint('app', __name__, url_prefix='/api/services')
 bp_wires = Blueprint('wires', __name__, url_prefix='/api/wires')
 
-Api(bp_ping).add_resource(Ping, '/')
+Api(bp_ping).add_resource(Ping, '', '/')
 
 api_system = Api(bp_system)
 api_system.add_resource(GetSystemTime, '/time')

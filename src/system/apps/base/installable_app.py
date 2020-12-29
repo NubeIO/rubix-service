@@ -4,6 +4,8 @@ from abc import abstractmethod
 from flask import current_app
 from werkzeug.local import LocalProxy
 
+from src import AppSetting
+
 # noinspection PyTypeChecker
 logger = LocalProxy(lambda: current_app.logger)
 
@@ -59,7 +61,7 @@ class InstallableApp:
         raise NotImplementedError("min_support_version needs to be overridden")
 
     def get_data_dir(self) -> str:
-        setting = current_app.config['SETTING']
+        setting = current_app.config[AppSetting.KEY]
         return os.path.join(setting.global_dir, self.data_dir_name())
 
     def get_releases_link(self) -> str:
@@ -85,11 +87,11 @@ class InstallableApp:
         return "sudo bash script.bash delete"
 
     def get_download_dir(self) -> str:
-        setting = current_app.config['SETTING']
+        setting = current_app.config[AppSetting.KEY]
         return os.path.join(setting.artifact_dir, 'download', self.name())
 
     def get_installation_dir(self) -> str:
-        setting = current_app.config['SETTING']
+        setting = current_app.config[AppSetting.KEY]
         return os.path.join(setting.artifact_dir, 'install', self.name())
 
     def get_downloaded_dir(self):
