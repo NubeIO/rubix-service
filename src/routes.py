@@ -11,7 +11,9 @@ from src.system.resources.app.status import StatusResource
 from src.system.resources.app.uninstall import UnInstallResource
 from src.system.resources.host_info import GetSystemMem, GetSystemTime, GetSystemDiscUsage
 from src.system.resources.ping import Ping
-from src.system.resources.systemctl_services import SystemctlStatus, SystemctlCommand, SystemctlStatusBool
+from src.system.resources.service.command import SystemctlCommand
+from src.system.resources.service.status import SystemctlStatus
+from src.system.resources.service.status_bool import SystemctlStatusBool
 
 bp_ping = Blueprint('ping', __name__, url_prefix='/api/ping')
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')

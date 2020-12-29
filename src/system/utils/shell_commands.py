@@ -41,7 +41,8 @@ def systemctl_status(service):
             service_status['service'] = service_search.group(1)
 
         elif status_search:
-            service_status['status'] = status_search.group(1).strip()
+            service_status['msg'] = status_search.group(1).strip()
+            service_status['status'] = (status_search.group(1).strip() == "active (running)")
             service_status['date_since'] = status_search.group(2).strip()
             service_status['time_since'] = status_search.group(3).strip()
 
