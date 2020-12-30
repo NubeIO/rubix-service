@@ -1,7 +1,7 @@
-from src.system.apps.base.installable_app import InstallableApp
+from src.system.apps.base.python_app import PythonApp
 
 
-class LoRaRawApp(InstallableApp):
+class LoRaRawApp(PythonApp):
     @classmethod
     def id(cls) -> str:
         return 'LORA_RAW'

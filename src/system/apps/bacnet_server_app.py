@@ -1,7 +1,7 @@
-from src.system.apps.base.installable_app import InstallableApp
+from src.system.apps.base.python_app import PythonApp
 
 
-class BACnetServerApp(InstallableApp):
+class BACnetServerApp(PythonApp):
     @classmethod
     def id(cls) -> str:
         return 'BACNET_SERVER'

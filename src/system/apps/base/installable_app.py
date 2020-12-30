@@ -1,23 +1,24 @@
 import os
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 from flask import current_app
 from werkzeug.local import LocalProxy
 
 from src import AppSetting
-
 # noinspection PyTypeChecker
+from src.inheritors import inheritors
+
 logger = LocalProxy(lambda: current_app.logger)
 
 
-class InstallableApp:
+class InstallableApp(ABC):
 
     def __init__(self):
         self.version = ""
 
     @classmethod
     def get_app(cls, service, version):
-        for subclass in InstallableApp.__subclasses__():
+        for subclass in inheritors(InstallableApp):
             if subclass.id() == service:
                 instance = subclass()
                 instance.version = version
@@ -65,7 +66,7 @@ class InstallableApp:
         return os.path.join(setting.global_dir, self.data_dir_name())
 
     def get_releases_link(self) -> str:
-        return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.name(), self.version)
+        return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.name())
 
     def get_download_link(self) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.name(), self.version)
