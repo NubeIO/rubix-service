@@ -69,10 +69,8 @@ Options:
 Please generate token from [here](https://github.com/settings/tokens) with scope `repo`
 
 ```bash
-sudo bash script.bash start --service-name=<service_name> --dir=<working_dir> --lib-dir=<common-py-libs-dir> -p=<port> -t=<token (when repo is private)>
-sudo bash script.bash start --service-name=nubeio-rubix-service.service --dir=/home/pi/rubix-service --lib-dir=/home/pi/common-py-libs -p=1616
-sudo bash script.bash start --service-name=nubeio-rubix-service.service --dir=/home/debian/rubix-service --lib-dir=/home/debian/common-py-libs -p=1616
-sudo bash script.bash -h
+sudo ./rubix-service -p <port> -d <data_dir> -g <global_dir> -a <artifact_dir> --token <token> --prod --create
+sudo ./rubix-service -p 1616 -d /data/rubix-service -g /data -a /data/rubix-service/apps --prod --create
 ```
 
 ## APIs
