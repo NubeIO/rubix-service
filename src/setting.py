@@ -26,6 +26,7 @@ class AppSetting:
         self.__token = '' if not kwargs.get('token') else kwargs.get('token')
         self.__token_file = os.path.join(self.data_dir, self.default_token_file)
         self.__prod = kwargs.get('prod') or False
+        self.__device_type = kwargs.get('device_type')
 
     @property
     def global_dir(self):
@@ -46,6 +47,10 @@ class AppSetting:
     @property
     def prod(self) -> bool:
         return self.__prod
+
+    @property
+    def device_type(self) -> bool:
+        return self.__device_type
 
     def reload(self, setting_file: str):
         return self

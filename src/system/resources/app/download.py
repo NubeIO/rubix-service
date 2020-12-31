@@ -11,6 +11,7 @@ from src.system.utils.file import download_unzip_service, delete_existing_folder
 
 class DownloadResource(Resource):
 
+    # noinspection DuplicatedCode
     def post(self):
         app_setting = current_app.config[AppSetting.KEY]
         parser = reqparse.RequestParser()

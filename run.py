@@ -32,15 +32,17 @@ def number_of_workers():
 @click.option('-c', '--gunicorn-config', help='Gunicorn: config file(gunicorn.conf.py)')
 @click.option('--log-level', type=click.Choice(['FATAL', 'ERROR', 'WARN', 'INFO', 'DEBUG'], case_sensitive=False),
               show_default=True, help='Logging level')
+@click.option('--device-type', type=click.Choice(['amd64', 'arm64', 'armv7']), default='armv7', show_default=True,
+              help='Device type')
 @click.option('--create', is_flag=True, help='Create auto-restart systemd file')
 def cli(port, data_dir, global_dir, artifact_dir, token, prod, workers, setting_file, gunicorn_config, log_level,
-        create):
+        device_type, create):
     setting = AppSetting(global_dir=global_dir, data_dir=data_dir, artifact_dir=artifact_dir, token=token,
-                         prod=prod).reload(setting_file)
+                         prod=prod, device_type=device_type).reload(setting_file)
 
     if create:
         creator = RubixServiceSystemdCreator(os.getcwd(), port, setting.data_dir, setting.global_dir,
-                                             setting.artifact_dir, setting.token)
+                                             setting.artifact_dir, setting.token, setting.device_type)
         creator.create_and_start_service()
     else:
         options = {

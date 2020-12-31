@@ -2,7 +2,9 @@ import json
 from abc import ABC
 
 import requests
+from flask import current_app
 
+from src import AppSetting
 from src.system.apps.base.installable_app import InstallableApp
 
 
@@ -12,6 +14,7 @@ class PythonApp(InstallableApp, ABC):
         data = json.loads(resp.content)
         for row in data:
             for asset in row.get('assets', []):
-                if 'armv7' in asset.get('browser_download_url'):
+                setting = current_app.config[AppSetting.KEY]
+                if setting.device_type in asset.get('browser_download_url'):
                     return asset.get('browser_download_url')
         return ""

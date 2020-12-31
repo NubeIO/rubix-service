@@ -11,6 +11,7 @@ from src.system.utils.shell import execute_command
 
 
 class InstallResource(Resource):
+    # noinspection DuplicatedCode
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('service', type=str, required=True)

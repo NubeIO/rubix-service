@@ -51,13 +51,14 @@ class SystemdCreator(ABC):
 
 
 class RubixServiceSystemdCreator(SystemdCreator):
-    def __init__(self, wd, port, data_dir, global_dir, artifact_dir, token):
+    def __init__(self, wd, port, data_dir, global_dir, artifact_dir, token, device_type):
         self.__wd = wd
         self.__port = port
         self.__data_dir = data_dir
         self.__global_dir = global_dir
         self.__artifact_dir = artifact_dir
         self.__token = token
+        self.__device_type = device_type
         super().__init__('nubeio-rubix-service.service')
 
     @staticmethod
@@ -71,7 +72,7 @@ class RubixServiceSystemdCreator(SystemdCreator):
             Type=simple
             User=root
             WorkingDirectory=<working_dir>
-            ExecStart=<working_dir>/rubix-service -p <port> -d <data_dir> -g <global_dir> -a <artifact_dir> --token <token> --prod
+            ExecStart=<working_dir>/rubix-service -p <port> -d <data_dir> -g <global_dir> -a <artifact_dir> --token <token> --device-type <device_type> --prod
             Restart=always
             RestartSec=10
             StandardOutput=syslog
@@ -98,6 +99,8 @@ class RubixServiceSystemdCreator(SystemdCreator):
             if ' --token <token>' in line:
                 token = self.__token
                 line = line.replace(' --token <token>', '' if not token else ' --token {}'.format(token))
+            if '<device_type>' in line:
+                line = line.replace('<device_type>', self.__device_type)
             lines.append('{}\n'.format(line))
         return lines
 
