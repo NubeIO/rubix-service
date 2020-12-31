@@ -3,7 +3,7 @@ from flask_restful import Resource
 from src.inheritors import inheritors
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.utils.file import get_extracted_dir
-from src.system.utils.shell_commands import systemctl_status
+from src.system.utils.shell import systemctl_status
 
 
 class StatusResource(Resource):

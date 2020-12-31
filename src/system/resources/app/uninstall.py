@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse, abort
 
 from src.system.resources.app.utils import get_app_from_service
 from src.system.utils.file import get_extracted_dir, delete_existing_folder
-from src.system.utils.shell_commands import execute_command
+from src.system.utils.shell import execute_command
 
 
 class UnInstallResource(Resource):

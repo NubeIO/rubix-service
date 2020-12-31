@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse, marshal_with, fields
 
 from src.system.resources.service.utils import validate_and_create_action, validate_and_create_service
-from src.system.utils.shell_commands import execute_command
+from src.system.utils.shell import execute_command
 
 
 class SystemctlCommand(Resource):

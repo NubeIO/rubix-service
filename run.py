@@ -6,7 +6,7 @@ import os
 import click
 
 from src import AppSetting, GunicornFlaskApplication
-from src.systemd.systemd import RubixServiceSystemdCreator
+from src.system.systemd.systemd import RubixServiceSystemdCreator
 
 CLI_CTX_SETTINGS = dict(help_option_names=["-h", "--help"], max_content_width=120)
 

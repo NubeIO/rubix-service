@@ -5,9 +5,9 @@ from flask_restful import Resource, reqparse, abort
 from src.system.apps.base.frontend_app import FrontendApp
 from src.system.apps.base.python_app import PythonApp
 from src.system.resources.app.utils import get_app_from_service
+from src.system.systemd.systemd import AppSystemdCreator
 from src.system.utils.file import is_dir_exist, delete_existing_folder
-from src.system.utils.shell_commands import execute_command
-from src.systemd.systemd import AppSystemdCreator
+from src.system.utils.shell import execute_command
 
 
 class InstallResource(Resource):

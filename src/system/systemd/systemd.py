@@ -2,7 +2,7 @@ import inspect
 import os
 from abc import ABC, abstractmethod
 
-from src.system.utils.shell_commands import execute_command
+from src.system.utils.shell import execute_command
 
 SERVICE_DIR = '/lib/systemd/system'
 SERVICE_DIR_SOFT_LINK = '/etc/systemd/system/multi-user.target.wants'
