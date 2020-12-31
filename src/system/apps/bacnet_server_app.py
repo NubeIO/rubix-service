@@ -22,4 +22,4 @@ class BACnetServerApp(PythonApp):
         return '/bacnet'
 
     def min_support_version(self) -> str:
-        return 'v1.2.1'
+        return 'v1.3.0'

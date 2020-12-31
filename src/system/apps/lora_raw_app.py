@@ -22,4 +22,4 @@ class LoRaRawApp(PythonApp):
         return '/lora'
 
     def min_support_version(self) -> str:
-        return 'v1.0.0'
+        return 'v1.1.0'

@@ -22,4 +22,4 @@ class PointServerApp(PythonApp):
         return '/ps'
 
     def min_support_version(self) -> str:
-        return 'v1.1.3'
+        return 'v1.2.0'
