@@ -15,6 +15,9 @@ class LoRaRawApp(PythonApp):
     def data_dir_name(self) -> str:
         return 'lora-raw'
 
+    def description(self) -> str:
+        return 'NubeIO LoRa Raw pyserial'
+
     def port(self) -> int:
         return 1919
 

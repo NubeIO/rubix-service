@@ -15,6 +15,9 @@ class BACnetServerApp(PythonApp):
     def data_dir_name(self) -> str:
         return 'bacnet-server'
 
+    def description(self) -> str:
+        return 'Flask Application for Nube BACNET SERVER'
+
     def port(self) -> int:
         return 1717
 

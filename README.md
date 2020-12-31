@@ -180,9 +180,9 @@ curl -X POST http://localhost:1616/api/app/download -H "Content-Type: applicatio
 ```
 > Examples:
 ```bash
-curl -X POST http://localhost:1616/api/app/install  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.1.3","lib_dir":"/home/debian/common-py-libs"}'
-curl -X POST http://localhost:1616/api/app/install  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.2.1","lib_dir":"/home/pi/common-py-libs"}'
-curl -X POST http://localhost:1616/api/app/install  -H "Content-Type: application/json" -d '{"service":"LORA_RAW","version":"v1.0.0","lib_dir":"/home/pi/common-py-libs"}'
+curl -X POST http://localhost:1616/api/app/install  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.1.3"}'
+curl -X POST http://localhost:1616/api/app/install  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.2.1"}'
+curl -X POST http://localhost:1616/api/app/install  -H "Content-Type: application/json" -d '{"service":"LORA_RAW","version":"v1.0.0"}'
 curl -X POST http://localhost:1616/api/app/install  -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v1.8.7"}'
 curl -X POST http://localhost:1616/api/app/install  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT","version":"v1.1.5"}'
 ```

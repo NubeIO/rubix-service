@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 
-from src.system.utils.file import write_file, read_file
+from src.system.utils.file import write_file
 
 
 class AppSetting:
@@ -23,7 +23,7 @@ class AppSetting:
                                              os.path.join(self.global_dir, self.default_data_dir))
         self.__artifact_dir = self.__compute_dir(kwargs.get('artifact_dir'),
                                                  os.path.join(self.data_dir, self.default_artifact_dir))
-        self.__token = None if kwargs.get('token') is None or kwargs.get('token').strip() == '' else kwargs.get('token')
+        self.__token = '' if not kwargs.get('token') else kwargs.get('token')
         self.__token_file = os.path.join(self.data_dir, self.default_token_file)
         self.__prod = kwargs.get('prod') or False
 
@@ -51,7 +51,7 @@ class AppSetting:
         return self
 
     def init_app(self, app: Flask):
-        self.__token = AppSetting.__handle_token(self.__token_file, self.__token)
+        AppSetting.__handle_token(self.__token_file, self.__token)
         app.config[AppSetting.KEY] = self
         return self
 
@@ -64,8 +64,5 @@ class AppSetting:
 
     @staticmethod
     def __handle_token(token_file, token) -> str:
-        if token:
-            write_file(token_file, token)
-            return token
-        else:
-            return read_file(token_file, debug=True)
+        write_file(token_file, token)
+        return token

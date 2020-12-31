@@ -41,7 +41,7 @@ def cli(port, data_dir, global_dir, artifact_dir, token, prod, workers, setting_
     if create:
         creator = RubixServiceSystemdCreator(os.getcwd(), port, setting.data_dir, setting.global_dir,
                                              setting.artifact_dir, setting.token)
-        creator.create_service()
+        creator.create_and_start_service()
     else:
         options = {
             'bind': '%s:%s' % ('0.0.0.0', port),

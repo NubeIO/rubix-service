@@ -30,7 +30,9 @@ class DownloadResource(Resource):
                 # enforcing to extract on version directory
                 dir_with_version = os.path.join(download_dir, version)
                 os.mkdir(dir_with_version)
-                os.rename(extracted_dir, os.path.join(dir_with_version, 'app'))
+                app_file = os.path.join(dir_with_version, 'app')
+                os.rename(extracted_dir, app_file)
+                os.chmod(app_file, 0o744)
             else:
                 # they are already wrapped on folder
                 os.rename(extracted_dir, downloaded_dir)

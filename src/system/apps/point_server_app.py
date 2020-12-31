@@ -15,6 +15,9 @@ class PointServerApp(PythonApp):
     def data_dir_name(self) -> str:
         return 'point-server'
 
+    def description(self) -> str:
+        return 'Flask Application for Nube Rest API'
+
     def port(self) -> int:
         return 1515
 

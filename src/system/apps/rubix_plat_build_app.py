@@ -1,9 +1,9 @@
 import os
 
-from src.system.apps.base.installable_app import InstallableApp
+from src.system.apps.base.frontend_app import FrontendApp
 
 
-class RubixPlatBuildApp(InstallableApp):
+class RubixPlatBuildApp(FrontendApp):
     @classmethod
     def id(cls) -> str:
         return 'RUBIX_PLAT'
