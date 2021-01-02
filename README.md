@@ -217,3 +217,7 @@ curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: applic
 curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
 curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}'
 ```
+
+##### Edit config.json
+
+- Copy config details to location: `/data/<data_dir>/config.json` and restart service

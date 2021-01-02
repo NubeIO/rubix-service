@@ -94,7 +94,7 @@ class RubixServiceSystemd(Systemd):
             Type=simple
             User=root
             WorkingDirectory=<working_dir>
-            ExecStart=<working_dir>/rubix-service -p <port> -d <data_dir> -g <global_dir> -a <artifact_dir> --token <token> --device-type <device_type> --prod
+            ExecStart=<working_dir>/rubix-service -p <port> -d <data_dir> -g <global_dir> -a <artifact_dir> -s config.json --token <token> --device-type <device_type> --prod
             Restart=always
             RestartSec=10
             StandardOutput=syslog
@@ -148,7 +148,7 @@ class AppSystemd(Systemd):
             Type=simple
             User=root
             WorkingDirectory=<working_dir>
-            ExecStart=<working_dir>/app -p <port> -d=<data_dir> --prod
+            ExecStart=<working_dir>/app -p <port> -d=<data_dir> -s config.json --prod
             Restart=always
             RestartSec=10
             StandardOutput=syslog
