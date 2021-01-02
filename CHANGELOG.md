@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [v1.2.1](https://github.com/NubeIO/rubix-service/tree/v1.2.1) (2021-01-02)
+
+### Added
+
+- Add support for downloading and installing binary build [\#32](https://github.com/NubeIO/rubix-service/issues/32)
+
 ## [v1.2.0](https://github.com/NubeIO/rubix-service/tree/v1.2.0) (2020-12-29)
 
 ### Added
