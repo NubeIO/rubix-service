@@ -1,7 +1,7 @@
-from src.system.apps.base.installable_app import InstallableApp
+from src.system.apps.base.python_app import PythonApp
 
 
-class LoRaRawApp(InstallableApp):
+class LoRaRawApp(PythonApp):
     @classmethod
     def id(cls) -> str:
         return 'LORA_RAW'
@@ -15,6 +15,9 @@ class LoRaRawApp(InstallableApp):
     def data_dir_name(self) -> str:
         return 'lora-raw'
 
+    def description(self) -> str:
+        return 'NubeIO LoRa Raw pyserial'
+
     def port(self) -> int:
         return 1919
 
@@ -22,4 +25,4 @@ class LoRaRawApp(InstallableApp):
         return '/lora'
 
     def min_support_version(self) -> str:
-        return 'v1.0.0'
+        return 'v1.1.0'

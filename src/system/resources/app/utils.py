@@ -4,7 +4,7 @@ from packaging import version
 from src.system.apps.base.installable_app import InstallableApp
 
 
-def get_app_from_service(service, version_='') -> InstallableApp:
+def get_app_from_service(service, version_=''):
     try:
         app = InstallableApp.get_app(service, version_)
         if not version_ or version.parse(app.min_support_version()) <= version.parse(version_):

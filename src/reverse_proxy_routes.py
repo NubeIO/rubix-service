@@ -3,6 +3,7 @@ from flask import request, Response, Blueprint
 from flask_restful import abort
 from requests.exceptions import ConnectionError
 
+from src.inheritors import inheritors
 from src.system.apps.base.installable_app import InstallableApp
 
 bp_reverse_proxy = Blueprint("reverse_proxy", __name__, url_prefix='/')
@@ -13,7 +14,7 @@ methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE']
 def reverse_proxy_handler(url):
     url_parts = url.split("/")
     url_prefixes = {}
-    for installable_app in InstallableApp.__subclasses__():
+    for installable_app in inheritors(InstallableApp):
         dummy_app = installable_app()
         if dummy_app.gateway_access():
             url_prefixes[dummy_app.url_prefix()] = dummy_app

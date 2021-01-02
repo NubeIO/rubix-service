@@ -1,7 +1,7 @@
-from src.system.apps.base.installable_app import InstallableApp
+from src.system.apps.base.python_app import PythonApp
 
 
-class BACnetServerApp(InstallableApp):
+class BACnetServerApp(PythonApp):
     @classmethod
     def id(cls) -> str:
         return 'BACNET_SERVER'
@@ -15,6 +15,9 @@ class BACnetServerApp(InstallableApp):
     def data_dir_name(self) -> str:
         return 'bacnet-server'
 
+    def description(self) -> str:
+        return 'Flask Application for Nube BACNET SERVER'
+
     def port(self) -> int:
         return 1717
 
@@ -22,4 +25,4 @@ class BACnetServerApp(InstallableApp):
         return '/bacnet'
 
     def min_support_version(self) -> str:
-        return 'v1.2.1'
+        return 'v1.3.0'

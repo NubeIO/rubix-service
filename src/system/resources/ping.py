@@ -1,11 +1,10 @@
+import time
 from datetime import datetime
 
-import time
 from flask import current_app
 from flask_restful import Resource
 from werkzeug.local import LocalProxy
 
-# noinspection PyTypeChecker
 logger = LocalProxy(lambda: current_app.logger)
 
 startTime = time.time()

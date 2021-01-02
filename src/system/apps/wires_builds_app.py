@@ -1,9 +1,9 @@
 import os
 
-from src.system.apps.base.installable_app import InstallableApp
+from src.system.apps.base.frontend_app import FrontendApp
 
 
-class WiresBuildsApp(InstallableApp):
+class WiresBuildsApp(FrontendApp):
     @classmethod
     def id(cls) -> str:
         return 'WIRES'

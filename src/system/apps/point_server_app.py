@@ -1,7 +1,7 @@
-from src.system.apps.base.installable_app import InstallableApp
+from src.system.apps.base.python_app import PythonApp
 
 
-class PointServerApp(InstallableApp):
+class PointServerApp(PythonApp):
     @classmethod
     def id(cls) -> str:
         return 'POINT_SERVER'
@@ -15,6 +15,9 @@ class PointServerApp(InstallableApp):
     def data_dir_name(self) -> str:
         return 'point-server'
 
+    def description(self) -> str:
+        return 'Flask Application for Nube Rest API'
+
     def port(self) -> int:
         return 1515
 
@@ -22,4 +25,4 @@ class PointServerApp(InstallableApp):
         return '/ps'
 
     def min_support_version(self) -> str:
-        return 'v1.1.3'
+        return 'v1.2.0'

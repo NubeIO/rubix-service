@@ -6,6 +6,7 @@ import os
 import click
 
 from src import AppSetting, GunicornFlaskApplication
+from src.system.systemd.systemd import RubixServiceSystemd
 
 CLI_CTX_SETTINGS = dict(help_option_names=["-h", "--help"], max_content_width=120)
 
@@ -31,17 +32,31 @@ def number_of_workers():
 @click.option('-c', '--gunicorn-config', help='Gunicorn: config file(gunicorn.conf.py)')
 @click.option('--log-level', type=click.Choice(['FATAL', 'ERROR', 'WARN', 'INFO', 'DEBUG'], case_sensitive=False),
               show_default=True, help='Logging level')
-def cli(port, data_dir, global_dir, artifact_dir, token, prod, workers, setting_file, gunicorn_config, log_level):
+@click.option('--device-type', type=click.Choice(['amd64', 'arm64', 'armv7']), default='armv7', show_default=True,
+              help='Device type')
+@click.option('--install', is_flag=True, help='Install rubix-service')
+@click.option('--uninstall', is_flag=True, help='Uninstall rubix-service')
+def cli(port, data_dir, global_dir, artifact_dir, token, prod, workers, setting_file, gunicorn_config, log_level,
+        device_type, install, uninstall):
     setting = AppSetting(global_dir=global_dir, data_dir=data_dir, artifact_dir=artifact_dir, token=token,
-                         prod=prod).reload(setting_file)
-    options = {
-        'bind': '%s:%s' % ('0.0.0.0', port),
-        'workers': workers if prod else 1,
-        'log_level': ('INFO' if prod else 'DEBUG' if log_level is None else log_level).lower(),
-        'preload_app': True,
-        'config': gunicorn_config
-    }
-    GunicornFlaskApplication(setting, options).run()
+                         prod=prod, device_type=device_type).reload(setting_file)
+
+    if install:
+        systemd = RubixServiceSystemd(os.getcwd(), port, setting.data_dir, setting.global_dir, setting.artifact_dir,
+                                      setting.token, setting.device_type)
+        systemd.install()
+    elif uninstall:
+        systemd = RubixServiceSystemd()
+        systemd.uninstall()
+    else:
+        options = {
+            'bind': '%s:%s' % ('0.0.0.0', port),
+            'workers': workers if prod else 1,
+            'log_level': ('INFO' if prod else 'DEBUG' if log_level is None else log_level).lower(),
+            'preload_app': True,
+            'config': gunicorn_config
+        }
+        GunicornFlaskApplication(setting, options).run()
 
 
 if __name__ == '__main__':

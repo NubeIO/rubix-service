@@ -1,7 +1,7 @@
 from flask_restful import Resource, marshal_with, fields
 
 from src.system.resources.service.utils import validate_service
-from src.system.utils.shell_commands import systemctl_status_check
+from src.system.utils.shell import systemctl_status_check
 
 
 class SystemctlStatusBool(Resource):

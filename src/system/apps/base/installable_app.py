@@ -1,23 +1,23 @@
 import os
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 from flask import current_app
 from werkzeug.local import LocalProxy
 
 from src import AppSetting
+from src.inheritors import inheritors
 
-# noinspection PyTypeChecker
 logger = LocalProxy(lambda: current_app.logger)
 
 
-class InstallableApp:
+class InstallableApp(ABC):
 
     def __init__(self):
         self.version = ""
 
     @classmethod
     def get_app(cls, service, version):
-        for subclass in InstallableApp.__subclasses__():
+        for subclass in inheritors(InstallableApp):
             if subclass.id() == service:
                 instance = subclass()
                 instance.version = version
@@ -39,6 +39,10 @@ class InstallableApp:
     def service_file_name(self) -> str:
         """service_file_name for systemd name"""
         raise NotImplementedError("service_file_name needs to be overridden")
+
+    def description(self) -> str:
+        """description for systemd"""
+        return ""
 
     @abstractmethod
     def data_dir_name(self) -> str:
@@ -65,10 +69,10 @@ class InstallableApp:
         return os.path.join(setting.global_dir, self.data_dir_name())
 
     def get_releases_link(self) -> str:
-        return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.name(), self.version)
+        return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.name())
 
     def get_download_link(self) -> str:
-        return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.name(), self.version)
+        raise NotImplementedError("get_download_link logic needs to be overridden")
 
     def get_cwd(self) -> str:
         """current working dir for script.bash execution"""
@@ -77,14 +81,6 @@ class InstallableApp:
     def get_wd(self) -> str:
         """working dir for systemd working directory set"""
         return self.get_installed_dir()
-
-    def get_install_cmd(self, lib_dir=None) -> str:
-        # TODO: remove user and upgrade parameters in future
-        return "sudo bash script.bash start -service_name={} -u={} -dir={} -lib_dir={} -data_dir={} -p={}" \
-            .format(self.service_file_name(), 'root', self.get_wd(), lib_dir, self.get_data_dir(), self.port())
-
-    def get_delete_command(self) -> str:
-        return "sudo bash script.bash delete"
 
     def get_download_dir(self) -> str:
         setting = current_app.config[AppSetting.KEY]
@@ -99,6 +95,3 @@ class InstallableApp:
 
     def get_installed_dir(self):
         return os.path.join(self.get_installation_dir(), self.version)
-
-    def set_version(self, version):
-        self.version = version
