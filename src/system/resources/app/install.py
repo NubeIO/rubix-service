@@ -5,7 +5,7 @@ from flask_restful import Resource, reqparse, abort
 from src.system.apps.base.frontend_app import FrontendApp
 from src.system.apps.base.python_app import PythonApp
 from src.system.resources.app.utils import get_app_from_service
-from src.system.systemd.systemd import AppSystemdCreator
+from src.system.systemd.systemd import AppSystemd
 from src.system.utils.file import is_dir_exist, delete_existing_folder
 from src.system.utils.shell import execute_command
 
@@ -26,10 +26,9 @@ class InstallResource(Resource):
         shutil.copytree(app.get_downloaded_dir(), app.get_installed_dir())
         installation = False
         if isinstance(app, PythonApp):
-            app: PythonApp = app
-            app_creator = AppSystemdCreator(app.get_wd(), app.port(), app.get_data_dir(), app.name(), app.description(),
-                                            app.service_file_name())
-            installation = app_creator.create_and_start_service()
+            systemd = AppSystemd(app.service_file_name(), app.get_wd(), app.port(), app.get_data_dir(), app.name(),
+                                 app.description())
+            installation = systemd.install()
         elif isinstance(app, FrontendApp):
             installation = execute_command(app.get_install_cmd(), app.get_cwd())
         delete_existing_folder(app.get_download_dir())

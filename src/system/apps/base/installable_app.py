@@ -95,6 +95,3 @@ class InstallableApp(ABC):
 
     def get_installed_dir(self):
         return os.path.join(self.get_installation_dir(), self.version)
-
-    def set_version(self, version):
-        self.version = version

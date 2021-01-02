@@ -63,21 +63,25 @@ Options:
                                   Logging level
   --device-type [amd64|arm64|armv7]
                                   Device type  [default: armv7]
-  --create                        Create auto-restart systemd file
+  --install                       Install rubix-service
+  --uninstall                     Uninstall rubix-service
   -h, --help                      Show this message and exit.
 ```
 
-### How To Run:
+### How To Install:
 
 Please generate token from [here](https://github.com/settings/tokens) with scope `repo`
 
 Download appropriate rubix-service file from the [GitHub Release](https://github.com/NubeIO/rubix-service/releases) and 
 extract it, then run following command to start from systemd file:
 
-- Template: `sudo ./rubix-service -p <port> -d <data_dir> -g <global_dir> -a <artifact_dir> --token <token> --device-type <device_type> --prod --create`
-- To Run on BBB & Pi: `sudo ./rubix-service -p 1616 -d /data/rubix-service -g /data -a /data/rubix-service/apps --prod --create`
-- To Run on BBB & Pi with valid token: `sudo ./rubix-service -p 1616 -d /data/rubix-service -g /data -a /data/rubix-service/apps --token f31a04d4424c5eef5be61fc6e30b76aa09c94e10 --prod --create`
+- Template: `sudo ./rubix-service -p <port> -d <data_dir> -g <global_dir> -a <artifact_dir> --token <token> --device-type <device_type> --prod --install`
+- To Run on BBB & Pi: `sudo ./rubix-service -p 1616 -d /data/rubix-service -g /data -a /data/rubix-service/apps --prod --install`
+- To Run on BBB & Pi with valid token: `sudo ./rubix-service -p 1616 -d /data/rubix-service -g /data -a /data/rubix-service/apps --token f31a04d4424c5eef5be61fc6e30b76aa09c94e10 --prod --install`
 
+
+### How To Uninstall:
+- `sudo ./rubix-service --uninstall`
 
 ### APIs
 

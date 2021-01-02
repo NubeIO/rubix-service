@@ -12,5 +12,6 @@ class FrontendApp(InstallableApp, ABC):
         return "sudo bash script.bash start -service_name={} -u={} -dir={} -data_dir={} -p={}".format(
             self.service_file_name(), 'root', self.get_wd(), self.get_data_dir(), self.port())
 
-    def get_delete_command(self) -> str:
+    @staticmethod
+    def get_delete_command() -> str:
         return "sudo bash script.bash delete"

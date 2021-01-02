@@ -6,7 +6,7 @@ import os
 import click
 
 from src import AppSetting, GunicornFlaskApplication
-from src.system.systemd.systemd import RubixServiceSystemdCreator
+from src.system.systemd.systemd import RubixServiceSystemd
 
 CLI_CTX_SETTINGS = dict(help_option_names=["-h", "--help"], max_content_width=120)
 
@@ -34,16 +34,20 @@ def number_of_workers():
               show_default=True, help='Logging level')
 @click.option('--device-type', type=click.Choice(['amd64', 'arm64', 'armv7']), default='armv7', show_default=True,
               help='Device type')
-@click.option('--create', is_flag=True, help='Create auto-restart systemd file')
+@click.option('--install', is_flag=True, help='Install rubix-service')
+@click.option('--uninstall', is_flag=True, help='Uninstall rubix-service')
 def cli(port, data_dir, global_dir, artifact_dir, token, prod, workers, setting_file, gunicorn_config, log_level,
-        device_type, create):
+        device_type, install, uninstall):
     setting = AppSetting(global_dir=global_dir, data_dir=data_dir, artifact_dir=artifact_dir, token=token,
                          prod=prod, device_type=device_type).reload(setting_file)
 
-    if create:
-        creator = RubixServiceSystemdCreator(os.getcwd(), port, setting.data_dir, setting.global_dir,
-                                             setting.artifact_dir, setting.token, setting.device_type)
-        creator.create_and_start_service()
+    if install:
+        systemd = RubixServiceSystemd(os.getcwd(), port, setting.data_dir, setting.global_dir, setting.artifact_dir,
+                                      setting.token, setting.device_type)
+        systemd.install()
+    elif uninstall:
+        systemd = RubixServiceSystemd()
+        systemd.uninstall()
     else:
         options = {
             'bind': '%s:%s' % ('0.0.0.0', port),
