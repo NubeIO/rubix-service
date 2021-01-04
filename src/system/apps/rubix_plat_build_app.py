@@ -4,27 +4,19 @@ from src.system.apps.base.frontend_app import FrontendApp
 
 
 class RubixPlatBuildApp(FrontendApp):
+    def __init__(self):
+        super(RubixPlatBuildApp, self).__init__(
+            display_name='Rubix Plat',
+            repo_name='rubix-plat-build',
+            service_file_name='nubeio-wires-plat.service',
+            data_dir_name='rubix-plat-build',
+            port=1414,
+            min_support_version='v1.1.6'
+        )
+
     @classmethod
-    def id(cls) -> str:
+    def service(cls) -> str:
         return 'RUBIX_PLAT'
-
-    def name(self) -> str:
-        return 'rubix-plat-build'
-
-    def service_file_name(self) -> str:
-        return 'rubix'
-
-    def data_dir_name(self) -> str:
-        return 'rubix-plat-build'
-
-    def port(self) -> int:
-        return 1414
-
-    def min_support_version(self) -> str:
-        return 'v1.1.6'
-
-    def gateway_access(self) -> bool:
-        return False
 
     def get_cwd(self) -> str:
         return os.path.join(super().get_cwd(), 'rubix-plat')

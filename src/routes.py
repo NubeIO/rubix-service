@@ -3,6 +3,7 @@ from flask_restful import Api
 
 from src.platform.resource_wires_plat import WiresPlatResource
 from src.system.networking.network_info import NetworkInfo
+from src.system.resources.app.app import AppResource
 from src.system.resources.app.delete_data import DeleteDataResource
 from src.system.resources.app.download import DownloadResource
 from src.system.resources.app.install import InstallResource
@@ -12,6 +13,7 @@ from src.system.resources.app.uninstall import UnInstallResource
 from src.system.resources.host_info import GetSystemMem, GetSystemTime, GetSystemDiscUsage
 from src.system.resources.ping import Ping
 from src.system.resources.service.command import SystemctlCommand
+from src.system.resources.service.service import ServiceResource
 from src.system.resources.service.status import SystemctlStatus
 from src.system.resources.service.status_bool import SystemctlStatusBool
 
@@ -30,12 +32,14 @@ api_system.add_resource(GetSystemDiscUsage, '/disc')
 api_system.add_resource(NetworkInfo, '/networking')
 
 api_service = Api(bp_service)
+api_service.add_resource(ServiceResource, "/")
 api_service.add_resource(SystemctlCommand, "/control")
 api_service.add_resource(SystemctlStatusBool, '/up/<string:service>')
 api_service.add_resource(SystemctlStatus, '/stats/<string:service>')
 
 # 3
 api_app = Api(bp_app)
+api_app.add_resource(AppResource, '/')
 api_app.add_resource(ReleaseResource, '/releases/<string:service>')
 api_app.add_resource(DownloadResource, '/download')
 api_app.add_resource(InstallResource, '/install')

@@ -6,10 +6,10 @@ from src.system.apps.base.installable_app import InstallableApp
 
 
 class Services(enum.Enum):
-    LORAWAN = 'lorawan-server.service'
-    MOSQUITTO = 'mosquitto.service'
-    BBB = 'nubeio-bbio.service'
-    DRAC = 'nubeio-drac.service'
+    LORAWAN = {'service_file_name': 'lorawan-server.service', 'display_name': 'LoRa WAN Server Service'}
+    MOSQUITTO = {'service_file_name': 'mosquitto.service', 'display_name': 'Mosquitto Service'}
+    BBB = {'service_file_name': 'nubeio-bbio.service', 'display_name': 'BBB IO Service'}
+    DRAC = {'service_file_name': 'nubeio-drac.service', 'display_name': 'DRAC Server Service'}
 
 
 class ServiceAction(enum.Enum):
@@ -22,7 +22,7 @@ class ServiceAction(enum.Enum):
 
 def validate_service(service) -> str:
     if service in Services.__members__.keys():
-        return Services[service].value
+        return Services[service].value.get('service_file_name')
     try:
         app = InstallableApp.get_app(service, "")
         return app.service_file_name()

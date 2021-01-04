@@ -2,27 +2,19 @@ from src.system.apps.base.python_app import PythonApp
 
 
 class PointServerApp(PythonApp):
+    def __init__(self):
+        super(PointServerApp, self).__init__(
+            display_name='Rubix Point Server',
+            repo_name='rubix-point-server',
+            service_file_name='nubeio-point-server.service',
+            data_dir_name='point-server',
+            port=1515,
+            min_support_version='v1.2.0',
+            description='Flask Application for Nube Rest API',
+            gateway_access=True,
+            url_prefix='/ps',
+        )
+
     @classmethod
-    def id(cls) -> str:
+    def service(cls) -> str:
         return 'POINT_SERVER'
-
-    def name(self) -> str:
-        return 'rubix-point-server'
-
-    def service_file_name(self) -> str:
-        return 'nubeio-point-server.service'
-
-    def data_dir_name(self) -> str:
-        return 'point-server'
-
-    def description(self) -> str:
-        return 'Flask Application for Nube Rest API'
-
-    def port(self) -> int:
-        return 1515
-
-    def url_prefix(self) -> str:
-        return '/ps'
-
-    def min_support_version(self) -> str:
-        return 'v1.2.0'
