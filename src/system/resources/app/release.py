@@ -15,6 +15,6 @@ class ReleaseResource(Resource):
         data = json.loads(resp.content)
         releases = []
         for row in data:
-            if version.parse(app.min_support_version()) <= version.parse(row.get('tag_name')):
+            if version.parse(app.min_support_version) <= version.parse(row.get('tag_name')):
                 releases.append(row.get('tag_name'))
         return releases

@@ -7,8 +7,8 @@ from src.system.apps.base.installable_app import InstallableApp
 def get_app_from_service(service, version_=''):
     try:
         app = InstallableApp.get_app(service, version_)
-        if not version_ or version.parse(app.min_support_version()) <= version.parse(version_):
+        if not version_ or version.parse(app.min_support_version) <= version.parse(version_):
             return app
-        abort(400, message='Your version need to be version <= {}'.format(app.min_support_version()))
+        abort(400, message='Your version need to be version <= {}'.format(app.min_support_version))
     except ModuleNotFoundError as e:
         abort(404, message=str(e))

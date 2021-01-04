@@ -6,14 +6,25 @@ from werkzeug.local import LocalProxy
 
 from src import AppSetting
 from src.inheritors import inheritors
+from src.model import BaseModel
 
 logger = LocalProxy(lambda: current_app.logger)
 
 
-class InstallableApp(ABC):
+class InstallableApp(BaseModel, ABC):
 
-    def __init__(self):
-        self.version = ""
+    def __init__(self, repo_name, service_file_name, data_dir_name, port, min_support_version, description='',
+                 gateway_access=False, url_prefix='', version=''):
+
+        self.__repo_name = repo_name
+        self.__service_file_name = service_file_name
+        self.__data_dir_name = data_dir_name
+        self.__port = port
+        self.__min_support_version = min_support_version
+        self.__description = description
+        self.__gateway_access = gateway_access
+        self.__url_prefix = url_prefix
+        self.__version = version
 
     @classmethod
     def get_app(cls, service, version):
@@ -30,46 +41,55 @@ class InstallableApp(ABC):
         """id for mapping frontend request with the App"""
         raise NotImplementedError("id needs to be overridden")
 
-    @abstractmethod
-    def name(self) -> str:
+    @property
+    def repo_name(self):
         """name for installation folder creation and github repo name validation"""
-        raise NotImplementedError("name needs to be overridden")
+        return self.__repo_name
 
-    @abstractmethod
-    def service_file_name(self) -> str:
+    @property
+    def service_file_name(self):
         """service_file_name for systemd name"""
-        raise NotImplementedError("service_file_name needs to be overridden")
+        return self.__service_file_name
 
-    def description(self) -> str:
-        """description for systemd"""
-        return ""
-
-    @abstractmethod
-    def data_dir_name(self) -> str:
+    @property
+    def data_dir_name(self):
         """data_dir_name for making/denoting a valid data dir"""
-        raise NotImplementedError("services needs to be overridden")
+        return self.__data_dir_name
 
-    @abstractmethod
-    def port(self) -> int:
+    @property
+    def port(self):
         """port for running app"""
-        raise NotImplementedError("port needs to be overridden")
+        return self.__port
 
-    def url_prefix(self) -> str:
+    @property
+    def min_support_version(self):
+        return self.__min_support_version
+
+    @property
+    def description(self):
+        """description for systemd"""
+        return self.__description
+
+    @property
+    def app_type(self):
+        """type of app"""
         return ""
 
-    def gateway_access(self) -> bool:
-        return True
+    @property
+    def gateway_access(self):
+        return self.__gateway_access
 
-    @abstractmethod
-    def min_support_version(self) -> str:
-        raise NotImplementedError("min_support_version needs to be overridden")
+    @property
+    def url_prefix(self):
+        """url_prefix for running app"""
+        return self.__url_prefix
 
     def get_data_dir(self) -> str:
         setting = current_app.config[AppSetting.KEY]
-        return os.path.join(setting.global_dir, self.data_dir_name())
+        return os.path.join(setting.global_dir, self.data_dir_name)
 
     def get_releases_link(self) -> str:
-        return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.name())
+        return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.repo_name)
 
     def get_download_link(self) -> str:
         raise NotImplementedError("get_download_link logic needs to be overridden")
@@ -84,14 +104,14 @@ class InstallableApp(ABC):
 
     def get_download_dir(self) -> str:
         setting = current_app.config[AppSetting.KEY]
-        return os.path.join(setting.artifact_dir, 'download', self.name())
+        return os.path.join(setting.artifact_dir, 'download', self.repo_name)
 
     def get_installation_dir(self) -> str:
         setting = current_app.config[AppSetting.KEY]
-        return os.path.join(setting.artifact_dir, 'install', self.name())
+        return os.path.join(setting.artifact_dir, 'install', self.repo_name)
 
     def get_downloaded_dir(self):
-        return os.path.join(self.get_download_dir(), self.version)
+        return os.path.join(self.get_download_dir(), self.__version)
 
     def get_installed_dir(self):
-        return os.path.join(self.get_installation_dir(), self.version)
+        return os.path.join(self.get_installation_dir(), self.__version)

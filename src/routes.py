@@ -3,6 +3,7 @@ from flask_restful import Api
 
 from src.platform.resource_wires_plat import WiresPlatResource
 from src.system.networking.network_info import NetworkInfo
+from src.system.resources.app.apps import AppResource
 from src.system.resources.app.delete_data import DeleteDataResource
 from src.system.resources.app.download import DownloadResource
 from src.system.resources.app.install import InstallResource
@@ -36,6 +37,7 @@ api_service.add_resource(SystemctlStatus, '/stats/<string:service>')
 
 # 3
 api_app = Api(bp_app)
+api_app.add_resource(AppResource, '/')
 api_app.add_resource(ReleaseResource, '/releases/<string:service>')
 api_app.add_resource(DownloadResource, '/download')
 api_app.add_resource(InstallResource, '/install')

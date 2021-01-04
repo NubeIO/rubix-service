@@ -26,8 +26,8 @@ class InstallResource(Resource):
         shutil.copytree(app.get_downloaded_dir(), app.get_installed_dir())
         installation = False
         if isinstance(app, PythonApp):
-            systemd = AppSystemd(app.service_file_name(), app.get_wd(), app.port(), app.get_data_dir(), app.name(),
-                                 app.description())
+            systemd = AppSystemd(app.service_file_name, app.get_wd(), app.port, app.get_data_dir(), app.repo_name,
+                                 app.description)
             installation = systemd.install()
         elif isinstance(app, FrontendApp):
             installation = execute_command(app.get_install_cmd(), app.get_cwd())

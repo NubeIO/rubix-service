@@ -9,6 +9,10 @@ from src.system.apps.base.installable_app import InstallableApp
 
 
 class PythonApp(InstallableApp, ABC):
+    @property
+    def app_type(self):
+        return "PythonApp"
+
     def get_download_link(self) -> str:
         resp = requests.get(self.get_releases_link())
         data = json.loads(resp.content)

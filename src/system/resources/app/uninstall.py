@@ -20,7 +20,7 @@ class UnInstallResource(Resource):
             abort(404, message="service {} is not running".format(service))
         deletion = False
         if isinstance(app, PythonApp):
-            app_creator = AppSystemd(app.service_file_name())
+            app_creator = AppSystemd(app.service_file_name)
             deletion = app_creator.uninstall()
         elif isinstance(app, FrontendApp):
             deletion = execute_command(FrontendApp.get_delete_command(), app.get_cwd())
