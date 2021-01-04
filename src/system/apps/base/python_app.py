@@ -14,10 +14,11 @@ class PythonApp(InstallableApp, ABC):
         return "PythonApp"
 
     def get_download_link(self) -> str:
-        resp = requests.get(self.get_selected_releases_link())
+        release_link = 'https://api.github.com/repos/NubeIO/{}/releases/tags/{}'.format(self.repo_name, self.version())
+        resp = requests.get(release_link)
         row = json.loads(resp.content)
         setting = current_app.config[AppSetting.KEY]
         for asset in row.get('assets', []):
             if setting.device_type in asset.get('browser_download_url'):
                 return asset.get('browser_download_url')
-        raise ModuleNotFoundError('No app for type {} & version {}'.format(setting.device_type, self.__version))
+        raise ModuleNotFoundError('No app for type {} & version {}'.format(setting.device_type, self.version()))

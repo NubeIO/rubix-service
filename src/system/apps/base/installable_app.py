@@ -13,9 +13,10 @@ logger = LocalProxy(lambda: current_app.logger)
 
 class InstallableApp(BaseModel, ABC):
 
-    def __init__(self, repo_name, service_file_name, data_dir_name, port, min_support_version, description='',
-                 gateway_access=False, url_prefix='', version=''):
+    def __init__(self, display_name, repo_name, service_file_name, data_dir_name, port, min_support_version,
+                 description='', gateway_access=False, url_prefix='', version=''):
 
+        self.__display_name = display_name
         self.__repo_name = repo_name
         self.__service_file_name = service_file_name
         self.__data_dir_name = data_dir_name
@@ -29,7 +30,7 @@ class InstallableApp(BaseModel, ABC):
     @classmethod
     def get_app(cls, service, version):
         for subclass in inheritors(InstallableApp):
-            if subclass.id() == service:
+            if subclass.service() == service:
                 instance = subclass()
                 instance.__version = version
                 return instance
@@ -37,9 +38,14 @@ class InstallableApp(BaseModel, ABC):
 
     @classmethod
     @abstractmethod
-    def id(cls) -> str:
-        """id for mapping frontend request with the App"""
-        raise NotImplementedError("id needs to be overridden")
+    def service(cls) -> str:
+        """service for mapping frontend request with the App"""
+        raise NotImplementedError("service needs to be overridden")
+
+    @property
+    def display_name(self):
+        """display_name for frontend side"""
+        return self.__display_name
 
     @property
     def repo_name(self):
@@ -84,15 +90,15 @@ class InstallableApp(BaseModel, ABC):
         """url_prefix for running app"""
         return self.__url_prefix
 
+    def version(self):
+        return self.__version
+
     def get_data_dir(self) -> str:
         setting = current_app.config[AppSetting.KEY]
         return os.path.join(setting.global_dir, self.data_dir_name)
 
     def get_releases_link(self) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.repo_name)
-
-    def get_selected_releases_link(self) -> str:
-        return 'https://api.github.com/repos/NubeIO/{}/releases/tags/{}'.format(self.repo_name, self.__version)
 
     def get_download_link(self) -> str:
         raise NotImplementedError("get_download_link logic needs to be overridden")
@@ -114,7 +120,7 @@ class InstallableApp(BaseModel, ABC):
         return os.path.join(setting.install_dir, self.repo_name)
 
     def get_downloaded_dir(self):
-        return os.path.join(self.get_download_dir(), self.__version)
+        return os.path.join(self.get_download_dir(), self.version())
 
     def get_installed_dir(self):
-        return os.path.join(self.get_installation_dir(), self.__version)
+        return os.path.join(self.get_installation_dir(), self.version())

@@ -6,6 +6,7 @@ from src.system.apps.base.frontend_app import FrontendApp
 class WiresBuildsApp(FrontendApp):
     def __init__(self):
         super(WiresBuildsApp, self).__init__(
+            display_name='Rubix Wires',
             repo_name='wires-builds',
             service_file_name='nubeio-rubix-wires.service',
             data_dir_name='rubix-wires',
@@ -14,7 +15,7 @@ class WiresBuildsApp(FrontendApp):
         )
 
     @classmethod
-    def id(cls) -> str:
+    def service(cls) -> str:
         return 'WIRES'
 
     def get_cwd(self) -> str:

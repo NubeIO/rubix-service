@@ -11,6 +11,6 @@ class AppResource(Resource):
         for subclass in inheritors(InstallableApp):
             instance = subclass()
             app = instance.to_property_dict()
-            app['service'] = instance.id()
+            app['service'] = instance.service()
             apps.append(app)
         return apps

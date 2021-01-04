@@ -6,6 +6,7 @@ from src.system.apps.base.frontend_app import FrontendApp
 class RubixPlatBuildApp(FrontendApp):
     def __init__(self):
         super(RubixPlatBuildApp, self).__init__(
+            display_name='Rubix Plat',
             repo_name='rubix-plat-build',
             service_file_name='nubeio-wires-plat.service',
             data_dir_name='rubix-plat-build',
@@ -14,7 +15,7 @@ class RubixPlatBuildApp(FrontendApp):
         )
 
     @classmethod
-    def id(cls) -> str:
+    def service(cls) -> str:
         return 'RUBIX_PLAT'
 
     def get_cwd(self) -> str:

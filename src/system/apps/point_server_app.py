@@ -4,6 +4,7 @@ from src.system.apps.base.python_app import PythonApp
 class PointServerApp(PythonApp):
     def __init__(self):
         super(PointServerApp, self).__init__(
+            display_name='Rubix Point Server',
             repo_name='rubix-point-server',
             service_file_name='nubeio-point-server.service',
             data_dir_name='point-server',
@@ -15,5 +16,5 @@ class PointServerApp(PythonApp):
         )
 
     @classmethod
-    def id(cls) -> str:
+    def service(cls) -> str:
         return 'POINT_SERVER'
