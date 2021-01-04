@@ -14,11 +14,10 @@ class PythonApp(InstallableApp, ABC):
         return "PythonApp"
 
     def get_download_link(self) -> str:
-        resp = requests.get(self.get_releases_link())
-        data = json.loads(resp.content)
-        for row in data:
-            for asset in row.get('assets', []):
-                setting = current_app.config[AppSetting.KEY]
-                if setting.device_type in asset.get('browser_download_url'):
-                    return asset.get('browser_download_url')
-        return ""
+        resp = requests.get(self.get_selected_releases_link())
+        row = json.loads(resp.content)
+        setting = current_app.config[AppSetting.KEY]
+        for asset in row.get('assets', []):
+            if setting.device_type in asset.get('browser_download_url'):
+                return asset.get('browser_download_url')
+        raise ModuleNotFoundError('No app for type {} & version {}'.format(setting.device_type, self.__version))

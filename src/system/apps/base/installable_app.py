@@ -31,7 +31,7 @@ class InstallableApp(BaseModel, ABC):
         for subclass in inheritors(InstallableApp):
             if subclass.id() == service:
                 instance = subclass()
-                instance.version = version
+                instance.__version = version
                 return instance
         raise ModuleNotFoundError("service {} does not exist in our system".format(service))
 
@@ -91,6 +91,9 @@ class InstallableApp(BaseModel, ABC):
     def get_releases_link(self) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.repo_name)
 
+    def get_selected_releases_link(self) -> str:
+        return 'https://api.github.com/repos/NubeIO/{}/releases/tags/{}'.format(self.repo_name, self.__version)
+
     def get_download_link(self) -> str:
         raise NotImplementedError("get_download_link logic needs to be overridden")
 
@@ -104,11 +107,11 @@ class InstallableApp(BaseModel, ABC):
 
     def get_download_dir(self) -> str:
         setting = current_app.config[AppSetting.KEY]
-        return os.path.join(setting.artifact_dir, 'download', self.repo_name)
+        return os.path.join(setting.download_dir, self.repo_name)
 
     def get_installation_dir(self) -> str:
         setting = current_app.config[AppSetting.KEY]
-        return os.path.join(setting.artifact_dir, 'install', self.repo_name)
+        return os.path.join(setting.install_dir, self.repo_name)
 
     def get_downloaded_dir(self):
         return os.path.join(self.get_download_dir(), self.__version)

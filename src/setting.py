@@ -23,6 +23,8 @@ class AppSetting:
                                              os.path.join(self.global_dir, self.default_data_dir))
         self.__artifact_dir = self.__compute_dir(kwargs.get('artifact_dir'),
                                                  os.path.join(self.data_dir, self.default_artifact_dir))
+        self.__download_dir = self.__compute_dir('', os.path.join(self.__artifact_dir, 'download'))
+        self.__install_dir = self.__compute_dir('', os.path.join(self.__artifact_dir, 'install'))
         self.__token = '' if not kwargs.get('token') else kwargs.get('token')
         self.__token_file = os.path.join(self.data_dir, self.default_token_file)
         self.__prod = kwargs.get('prod') or False
@@ -39,6 +41,14 @@ class AppSetting:
     @property
     def artifact_dir(self) -> str:
         return self.__artifact_dir
+
+    @property
+    def download_dir(self) -> str:
+        return self.__download_dir
+
+    @property
+    def install_dir(self) -> str:
+        return self.__install_dir
 
     @property
     def token(self) -> str:
