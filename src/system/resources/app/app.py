@@ -4,7 +4,7 @@ from src.inheritors import inheritors
 from src.system.apps.base.installable_app import InstallableApp
 
 
-class AppsResource(Resource):
+class AppResource(Resource):
     @classmethod
     def get(cls):
         apps = []
