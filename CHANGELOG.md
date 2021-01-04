@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [v1.2.2](https://github.com/NubeIO/rubix-service/tree/v1.2.2) (2021-01-04)
+
+### Added
+
+- Feature: List app and services [\#41](https://github.com/NubeIO/rubix-service/pull/41) ([RaiBnod](https://github.com/RaiBnod))
+
 ## [v1.2.1](https://github.com/NubeIO/rubix-service/tree/v1.2.1) (2021-01-02)
 
 ### Added
