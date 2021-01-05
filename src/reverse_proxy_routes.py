@@ -23,7 +23,7 @@ def reverse_proxy_handler(url):
         abort(404)
     app_to_redirect = url_prefixes[requested_url_prefix]
     del url_parts[0]
-    actual_url = 'http://0.0.0.0:{}/{}'.format(app_to_redirect.port(), "/".join(url_parts))
+    actual_url = 'http://0.0.0.0:{}/{}'.format(app_to_redirect.port, "/".join(url_parts))
     try:
         resp = requests.request(request.method, actual_url, json=request.get_json())
         response = Response(resp.content, resp.status_code, resp.raw.headers.items())
