@@ -94,7 +94,7 @@ class InstallableApp(BaseModel, ABC):
         return self.__version
 
     def get_data_dir(self) -> str:
-        setting = current_app.config[AppSetting.KEY]
+        setting = current_app.config[AppSetting.FLASK_KEY]
         return os.path.join(setting.global_dir, self.data_dir_name)
 
     def get_releases_link(self) -> str:
@@ -112,11 +112,11 @@ class InstallableApp(BaseModel, ABC):
         return self.get_installed_dir()
 
     def get_download_dir(self) -> str:
-        setting = current_app.config[AppSetting.KEY]
+        setting = current_app.config[AppSetting.FLASK_KEY]
         return os.path.join(setting.download_dir, self.repo_name)
 
     def get_installation_dir(self) -> str:
-        setting = current_app.config[AppSetting.KEY]
+        setting = current_app.config[AppSetting.FLASK_KEY]
         return os.path.join(setting.install_dir, self.repo_name)
 
     def get_downloaded_dir(self):

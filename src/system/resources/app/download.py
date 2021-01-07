@@ -13,7 +13,7 @@ class DownloadResource(Resource):
 
     # noinspection DuplicatedCode
     def post(self):
-        app_setting = current_app.config[AppSetting.KEY]
+        app_setting = current_app.config[AppSetting.FLASK_KEY]
         parser = reqparse.RequestParser()
         parser.add_argument('service', type=str, required=True)
         parser.add_argument('version', type=str, required=True)

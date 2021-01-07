@@ -6,11 +6,12 @@ from src.system.utils.file import write_file
 
 
 class AppSetting:
+    PORT = 1616
     TOKEN_ENV = 'RUBIX_SERVICE_TOKEN'
     DATA_DIR_ENV = 'RUBIX_SERVICE_DATA'
     ARTIFACT_DIR_ENV = 'ARTIFACT_DIR'
     GLOBAL_DATA_DIR_ENV = 'GLOBAL_DATA'
-    KEY: str = 'APP_SETTING'
+    FLASK_KEY: str = 'APP_SETTING'
 
     default_global_dir: str = 'out'
     default_data_dir: str = 'rubix-service'
@@ -67,7 +68,7 @@ class AppSetting:
 
     def init_app(self, app: Flask):
         AppSetting.__handle_token(self.__token_file, self.__token)
-        app.config[AppSetting.KEY] = self
+        app.config[AppSetting.FLASK_KEY] = self
         return self
 
     @staticmethod
