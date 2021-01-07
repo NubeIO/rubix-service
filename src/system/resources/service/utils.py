@@ -25,7 +25,7 @@ def validate_service(service) -> str:
         return Services[service].value.get('service_file_name')
     try:
         app = InstallableApp.get_app(service, "")
-        return app.service_file_name()
+        return app.service_file_name
     except ModuleNotFoundError:
         return ""
 
