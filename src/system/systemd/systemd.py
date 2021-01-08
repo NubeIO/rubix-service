@@ -148,7 +148,7 @@ class AppSystemd(Systemd):
             Type=simple
             User=root
             WorkingDirectory=<working_dir>
-            ExecStart=<working_dir>/app -p <port> -d=<data_dir> -s config.json --prod
+            ExecStart=<working_dir>/app -p <port> -d <data_dir> -s config.json --prod
             Restart=always
             RestartSec=10
             StandardOutput=syslog
