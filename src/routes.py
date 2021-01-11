@@ -17,11 +17,13 @@ from src.system.resources.service.command import SystemctlCommand
 from src.system.resources.service.service import ServiceResource
 from src.system.resources.service.status import SystemctlStatus
 from src.system.resources.service.status_bool import SystemctlStatusBool
+from src.users.resource_users import UsersResource
 
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')
 bp_service = Blueprint('service', __name__, url_prefix='/api/system/service')
 bp_app = Blueprint('app', __name__, url_prefix='/api/app')
 bp_wires = Blueprint('wires', __name__, url_prefix='/api/wires')
+bp_users = Blueprint('users', __name__, url_prefix='/api/users')
 
 api_system = Api(bp_system)
 api_system.add_resource(Ping, '/ping')
@@ -50,3 +52,7 @@ api_app.add_resource(ServiceStatusResource, '/stats/<string:service>')
 # 4
 api_wires = Api(bp_wires)
 api_wires.add_resource(WiresPlatResource, '/plat')
+
+# 5
+api_users = Api(bp_users)
+api_users.add_resource(UsersResource, '')

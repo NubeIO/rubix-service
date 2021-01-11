@@ -1,6 +1,8 @@
 import logging
 import os
+import uuid
 from functools import partial
+from werkzeug.security import generate_password_hash
 
 from flask import Flask
 from flask_cors import CORS
@@ -38,6 +40,16 @@ def create_app(app_setting: AppSetting) -> Flask:
         cursor = dbapi_connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
+
+    @app.before_first_request
+    def create_default_user():
+        from src.users.model_users import UsersModel
+        if not UsersModel.query.first():
+            hashed_password = generate_password_hash('admin', method='sha256')
+            _uuid = str(uuid.uuid4())
+            default_user = UsersModel(uuid=_uuid, user_name='admin', password=hashed_password)
+            db.session.add(default_user)
+            db.session.commit()
 
     def register_router(_app: Flask) -> Flask:
         from src.routes import bp_system, bp_service, bp_app, bp_wires
