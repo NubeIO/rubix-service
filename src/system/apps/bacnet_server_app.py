@@ -18,3 +18,7 @@ class BACnetServerApp(PythonApp):
     @classmethod
     def service(cls) -> str:
         return 'BACNET_SERVER'
+
+    @property
+    def pre_start_sleep(self):
+        return 60

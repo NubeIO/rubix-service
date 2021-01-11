@@ -51,7 +51,7 @@ def cli(port, data_dir, global_dir, artifact_dir, token, prod, workers, setting_
         options = {
             'bind': '%s:%s' % ('0.0.0.0', port),
             'workers': workers if workers is not None else number_of_workers() if prod else 1,
-            'loglevel': (log_level if log_level is not None else 'INFO' if prod else 'DEBUG').lower(),
+            'loglevel': (log_level if log_level is not None else 'ERROR' if prod else 'DEBUG').lower(),
             'preload_app': True,
             'config': gunicorn_config
         }
