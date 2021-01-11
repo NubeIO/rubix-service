@@ -58,6 +58,11 @@ class InstallableApp(BaseModel, ABC):
         return self.__service_file_name
 
     @property
+    def pre_start_sleep(self):
+        """pre_start_sleep for pausing process"""
+        return 0
+
+    @property
     def data_dir_name(self):
         """data_dir_name for making/denoting a valid data dir"""
         return self.__data_dir_name

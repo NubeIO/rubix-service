@@ -129,8 +129,10 @@ class RubixServiceSystemd(Systemd):
 
 
 class AppSystemd(Systemd):
-    def __init__(self, service_file_name, wd=None, port=None, data_dir=None, name=None, description=None):
+    def __init__(self, service_file_name, pre_start_sleep=0, wd=None, port=None, data_dir=None, name=None,
+                 description=None):
         super().__init__(service_file_name)
+        self.__pre_start_sleep = pre_start_sleep
         self.__wd = wd
         self.__port = port
         self.__data_dir = data_dir
@@ -145,6 +147,7 @@ class AppSystemd(Systemd):
             After=network.target
             
             [Service]
+            ExecStartPre=/bin/sleep <pre_start_sleep>
             Type=simple
             User=root
             WorkingDirectory=<working_dir>
@@ -163,6 +166,8 @@ class AppSystemd(Systemd):
     def create_service(self):
         lines = []
         for line in AppSystemd.template():
+            if '<pre_start_sleep>' in line:
+                line = line.replace('<pre_start_sleep>', str(self.__pre_start_sleep))
             if '<working_dir>' in line and self.__wd:
                 line = line.replace('<working_dir>', self.__wd)
             if '<port>' in line and self.__port:
