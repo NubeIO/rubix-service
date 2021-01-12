@@ -52,7 +52,7 @@ def create_app(app_setting: AppSetting) -> Flask:
             db.session.commit()
 
     def register_router(_app: Flask) -> Flask:
-        from src.routes import bp_system, bp_service, bp_app, bp_wires
+        from src.routes import bp_system, bp_service, bp_app, bp_wires, bp_users
         from src.reverse_proxy_routes import bp_reverse_proxy
 
         _app.register_blueprint(bp_system)
@@ -60,6 +60,7 @@ def create_app(app_setting: AppSetting) -> Flask:
         _app.register_blueprint(bp_app)
         _app.register_blueprint(bp_wires)
         _app.register_blueprint(bp_reverse_proxy)
+        _app.register_blueprint(bp_users)
         return _app
 
     app.setup = partial(setup, app)

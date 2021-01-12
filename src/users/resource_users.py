@@ -1,8 +1,8 @@
 from flask_restful import Resource, reqparse, marshal_with, abort
+from werkzeug.security import generate_password_hash
 
 from src.users.model_users import UsersModel
 from src.users.schema_users import users_all_attributes, users_all_fields
-from werkzeug.security import generate_password_hash
 
 
 class UsersResource(Resource):
@@ -26,6 +26,7 @@ class UsersResource(Resource):
     @marshal_with(users_all_fields)
     def put(cls):
         data = UsersResource.parser.parse_args()
+        print(data['password'])
         data['password'] = generate_password_hash(data['password'])
         user = UsersModel.query.first()
         try:
