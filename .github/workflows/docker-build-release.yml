@@ -111,7 +111,7 @@ jobs:
           file: docker/build.Dockerfile
           platforms: ${{ env.PLATFORMS }}
           build-args: |
-            BASE_IMAGE_VERSION=3.9
+            BASE_IMAGE_VERSION=3.7
             APP_VERSION=${{ needs.context.outputs.version }}
             COMMIT_SHA=${{ needs.context.outputs.sha }}
           cache-from: type=registry,ref=localhost:5000/${{ needs.context.outputs.name }}:buildcache
@@ -151,7 +151,7 @@ jobs:
           file: docker/runtime.Dockerfile
           platforms: ${{ env.PLATFORMS }}
           build-args: |
-            BASE_IMAGE_VERSION=3.9
+            BASE_IMAGE_VERSION=3.7
             APP_VERSION=${{ needs.context.outputs.version }}
             COMMIT_SHA=${{ needs.context.outputs.sha }}
           cache-from: type=registry,ref=localhost:5000/${{ needs.context.outputs.name }}:buildcache
