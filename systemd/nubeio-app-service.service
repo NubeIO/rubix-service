@@ -1,0 +1,18 @@
+[Unit]
+Description=<description>
+After=network.target
+
+[Service]
+ExecStartPre=/bin/sleep <pre_start_sleep>
+Type=simple
+User=root
+WorkingDirectory=<working_dir>
+ExecStart=<working_dir>/app -p <port> -d <data_dir> -s config.json -l logging.conf --prod
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=<name>
+
+[Install]
+WantedBy=multi-user.target
