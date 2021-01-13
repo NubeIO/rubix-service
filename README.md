@@ -218,6 +218,15 @@ curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: applic
 curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}'
 ```
 
+# Install on Ubuntu
+```
+wget https://github.com/NubeIO/rubix-service/releases/download/v1.2.6/rubix-service-1.2.6-ab671cf.amd64.zip
+unzip rubix-service-1.2.6-ab671cf.amd64.zip
+sudo ./rubix-service -p 1616 -d /data/rubix-service -g /data -a /data/rubix-service/apps --device-type amd64 --prod --install
+curl -X POST http://localhost:1616/api/app/download -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.3.5"}'
+curl -X POST http://localhost:1616/api/app/install -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.3.5"}'
+```
+
 ##### Edit config.json
 
 - Copy config details to location: `/data/<data_dir>/config.json` and restart service
