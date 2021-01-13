@@ -3,9 +3,9 @@ from datetime import datetime
 
 from flask import current_app
 from flask_restful import Resource
-from werkzeug.local import LocalProxy
 
-logger = LocalProxy(lambda: current_app.logger)
+from src import AppSetting
+from src.system.utils.project import get_version
 
 startTime = time.time()
 up_time_date = str(datetime.now())
@@ -25,9 +25,12 @@ class Ping(Resource):
         up_min = "{:.2f}".format(up_min)
         up_hour = up_time / 3600
         up_hour = "{:.2f}".format(up_hour)
-        logger.info('ping here')
+        setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
+        deployment_mode = 'production' if setting.prod else 'development'
         return {
+            'version': get_version(),
             'up_time_date': up_time_date,
             'up_min': up_min,
-            'up_hour': up_hour
+            'up_hour': up_hour,
+            'deployment_mode': deployment_mode,
         }

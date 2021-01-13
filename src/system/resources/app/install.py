@@ -12,7 +12,8 @@ from src.system.utils.shell import execute_command
 
 class InstallResource(Resource):
     # noinspection DuplicatedCode
-    def post(self):
+    @classmethod
+    def post(cls):
         parser = reqparse.RequestParser()
         parser.add_argument('service', type=str, required=True)
         parser.add_argument('version', type=str, required=True)
@@ -28,7 +29,10 @@ class InstallResource(Resource):
         if isinstance(app, PythonApp):
             systemd = AppSystemd(app.service_file_name, app.pre_start_sleep, app.get_wd(), app.port, app.get_data_dir(),
                                  app.repo_name, app.description)
-            installation = systemd.install()
+            try:
+                installation = systemd.install()
+            except Exception as e:
+                abort(501, message=str(e))
         elif isinstance(app, FrontendApp):
             installation = execute_command(app.get_install_cmd(), app.get_cwd())
         delete_existing_folder(app.get_download_dir())

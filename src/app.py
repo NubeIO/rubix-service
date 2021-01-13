@@ -40,10 +40,9 @@ def create_app(app_setting: AppSetting) -> Flask:
         cursor.close()
 
     def register_router(_app: Flask) -> Flask:
-        from src.routes import bp_ping, bp_system, bp_service, bp_app, bp_wires
+        from src.routes import bp_system, bp_service, bp_app, bp_wires
         from src.reverse_proxy_routes import bp_reverse_proxy
 
-        _app.register_blueprint(bp_ping)
         _app.register_blueprint(bp_system)
         _app.register_blueprint(bp_service)
         _app.register_blueprint(bp_app)

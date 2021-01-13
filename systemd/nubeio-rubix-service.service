@@ -1,0 +1,18 @@
+[Unit]
+Description=Flask Application for Nube System Monitoring
+After=network.target
+
+[Service]
+ExecStartPre=/bin/sleep 10
+Type=simple
+User=root
+WorkingDirectory=<working_dir>
+ExecStart=<working_dir>/rubix-service -p <port> -d <data_dir> -g <global_dir> -a <artifact_dir> -s config.json --token <token> --device-type <device_type> --prod
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=rubix-service
+
+[Install]
+WantedBy=multi-user.target
