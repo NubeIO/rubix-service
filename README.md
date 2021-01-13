@@ -18,7 +18,7 @@
 - Build local binary
 
     ```bash
-    poetry run pyinstaller run.py -n rubix-service --clean --onefile
+    poetry run pyinstaller run.py -n rubix-service --clean --onefile --add-data pyproject.toml:.
     ```
 
   The output is: `dist/rubix-service`

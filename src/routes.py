@@ -17,15 +17,13 @@ from src.system.resources.service.service import ServiceResource
 from src.system.resources.service.status import SystemctlStatus
 from src.system.resources.service.status_bool import SystemctlStatusBool
 
-bp_ping = Blueprint('ping', __name__, url_prefix='/api/ping')
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')
 bp_service = Blueprint('service', __name__, url_prefix='/api/system/service')
 bp_app = Blueprint('app', __name__, url_prefix='/api/app')
 bp_wires = Blueprint('wires', __name__, url_prefix='/api/wires')
 
-Api(bp_ping).add_resource(Ping, '', '/')
-
 api_system = Api(bp_system)
+api_system.add_resource(Ping, '/ping')
 api_system.add_resource(GetSystemTime, '/time')
 api_system.add_resource(GetSystemMem, '/memory')
 api_system.add_resource(GetSystemDiscUsage, '/disc')

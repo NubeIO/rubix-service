@@ -11,7 +11,7 @@ RUN $HOME/.poetry/bin/poetry install
 
 ADD src src
 ADD run.py ./
-RUN $HOME/.poetry/bin/poetry run pyinstaller run.py -n rubix-service --clean --onefile
+RUN $HOME/.poetry/bin/poetry run pyinstaller run.py -n rubix-service --clean --onefile --add-data pyproject.toml:.
 
 FROM python:$BASE_IMAGE_VERSION-slim
 
