@@ -72,6 +72,8 @@ class Systemd(ABC):
 
 
 class RubixServiceSystemd(Systemd):
+    SERVICE_FILE_NAME = 'nubeio-rubix-service.service'
+
     def __init__(self, wd=None, port=None, data_dir=None, global_dir=None, artifact_dir=None, token=None,
                  device_type=None):
         self.__wd = wd
@@ -81,7 +83,7 @@ class RubixServiceSystemd(Systemd):
         self.__artifact_dir = artifact_dir
         self.__token = token
         self.__device_type = device_type
-        super().__init__('nubeio-rubix-service.service')
+        super().__init__(RubixServiceSystemd.SERVICE_FILE_NAME)
 
     # noinspection DuplicatedCode
     def create_service(self):
