@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [v1.2.7](https://github.com/NubeIO/rubix-service/tree/v1.2.2) (2021-01-14)
+
+### Added
+
+- Improvement/misc [\#51] ([RaiBnod](https://github.com/RaiBnod))
+
+
 ## [v1.2.2](https://github.com/NubeIO/rubix-service/tree/v1.2.2) (2021-01-04)
 
 ### Added
