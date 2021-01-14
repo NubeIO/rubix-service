@@ -1,8 +1,9 @@
 from flask_restful import Resource, reqparse, marshal_with, abort
 from werkzeug.security import generate_password_hash
 
+from src.users.authorize_users import authorize
 from src.users.model_users import UsersModel
-from src.users.schema_users import users_all_attributes, users_all_fields
+from src.users.schema_users import users_all_attributes, users_return_fields
 
 
 class UsersResource(Resource):
@@ -15,18 +16,19 @@ class UsersResource(Resource):
                             store_missing=False)
 
     @classmethod
-    @marshal_with(users_all_fields)
+    @marshal_with(users_return_fields)
+    @authorize
     def get(cls):
         users = UsersModel.query.all()
-        if len(users) > 0:
+        if len(users) == 0:
             abort(404, message='Users not found')
         return users
 
     @classmethod
-    @marshal_with(users_all_fields)
+    @marshal_with(users_return_fields)
+    @authorize
     def put(cls):
         data = UsersResource.parser.parse_args()
-        print(data['password'])
         data['password'] = generate_password_hash(data['password'])
         user = UsersModel.query.first()
         try:
@@ -37,3 +39,5 @@ class UsersResource(Resource):
                 return UsersModel.find_by_uuid(user.uuid)
         except Exception as e:
             abort(500, message=str(e))
+
+

@@ -14,4 +14,3 @@ class UsersModel(ModelBase):
     @classmethod
     def find_by_user_name(cls, user_uuid):
         return cls.query.filter_by(uuid=user_uuid).first()
-

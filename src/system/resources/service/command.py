@@ -2,6 +2,7 @@ from flask_restful import Resource, reqparse, marshal_with, fields
 
 from src.system.resources.service.utils import validate_and_create_action, validate_and_create_service
 from src.system.utils.shell import execute_command
+from src.users.authorize_users import authorize
 
 
 class SystemctlCommand(Resource):
@@ -12,6 +13,7 @@ class SystemctlCommand(Resource):
 
     @classmethod
     @marshal_with(fields)
+    @authorize
     def post(cls):
         parser = reqparse.RequestParser()
         parser.add_argument('action',

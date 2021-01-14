@@ -4,6 +4,8 @@ from collections import namedtuple
 from datetime import datetime
 import time
 
+from src.users.authorize_users import authorize
+
 
 def host_time():
     return {
@@ -62,16 +64,19 @@ def convert_bytes(num):
 
 
 class GetSystemTime(Resource):
+    @authorize
     def get(self):
         return host_time()
 
 
 class GetSystemMem(Resource):
+    @authorize
     def get(self):
         return get_current_memory_usage()
 
 
 class GetSystemDiscUsage(Resource):
+    @authorize
     def get(self):
         path = '/'
         du = disk_usage(path)

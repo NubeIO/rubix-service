@@ -23,6 +23,8 @@ def create_app(app_setting: AppSetting) -> Flask:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}/data.db?timeout=60'.format(app_setting.data_dir)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ECHO'] = False
+    app.config['SECRET_KEY'] = 'lB0YZkBexl9sH7zklYeaobVwoGJbQRalWkTHKNJhy/A='
+
     cors = CORS()
     cors.init_app(app)
     db.init_app(app)

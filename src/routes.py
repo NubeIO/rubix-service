@@ -18,6 +18,7 @@ from src.system.resources.service.service import ServiceResource
 from src.system.resources.service.status import SystemctlStatus
 from src.system.resources.service.status_bool import SystemctlStatusBool
 from src.users.resource_users import UsersResource
+from src.users.resource_login_users import UsersLoginResource
 
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')
 bp_service = Blueprint('service', __name__, url_prefix='/api/system/service')
@@ -56,3 +57,4 @@ api_wires.add_resource(WiresPlatResource, '/plat')
 # 5
 api_users = Api(bp_users)
 api_users.add_resource(UsersResource, '')
+api_users.add_resource(UsersLoginResource, '/login')

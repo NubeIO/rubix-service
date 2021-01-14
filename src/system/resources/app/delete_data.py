@@ -2,9 +2,11 @@ from flask_restful import Resource, reqparse
 
 from src.system.resources.app.utils import get_app_from_service
 from src.system.utils.file import delete_existing_folder
+from src.users.authorize_users import authorize
 
 
 class DeleteDataResource(Resource):
+    @authorize
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('service', type=str, required=True)

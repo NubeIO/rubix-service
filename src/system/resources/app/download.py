@@ -7,11 +7,13 @@ from src import AppSetting
 from src.system.apps.base.python_app import PythonApp
 from src.system.resources.app.utils import get_app_from_service
 from src.system.utils.file import download_unzip_service, delete_existing_folder
+from src.users.authorize_users import authorize
 
 
 class DownloadResource(Resource):
 
     # noinspection DuplicatedCode
+    @authorize
     def post(self):
         app_setting = current_app.config[AppSetting.FLASK_KEY]
         parser = reqparse.RequestParser()
