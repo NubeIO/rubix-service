@@ -2,7 +2,7 @@ from flask_restful import Resource, marshal_with, fields, abort
 
 from src.inheritors import inheritors
 from src.system.apps.base.installable_app import InstallableApp
-from src.system.apps.constants.types import OTHERS
+from src.system.apps.enums.types import Types
 from src.system.resources.service.utils import Services
 from src.system.utils.shell import systemctl_status
 
@@ -34,7 +34,7 @@ class ServiceResource(Resource):
             status = systemctl_status(Services[service].value.get('service_file_name'))
             services.append({
                 'display_name': Services[service].value.get('display_name'),
-                'app_type': OTHERS,
+                'app_type': Types.OTHERS.value,
                 'installable': False,
                 **status
             })

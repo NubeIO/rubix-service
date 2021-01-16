@@ -2,7 +2,7 @@ from flask_restful import Resource, abort, fields, marshal_with
 
 from src.inheritors import inheritors
 from src.system.apps.base.installable_app import InstallableApp
-from src.system.apps.constants.types import INSTALLER
+from src.system.apps.enums.types import Types
 from src.system.systemd.systemd import RubixServiceSystemd
 from src.system.utils.file import get_extracted_dir
 from src.system.utils.project import get_version
@@ -36,7 +36,7 @@ class StatusResource(Resource):
         installed_apps.append({
             'version': get_version(),
             'display_name': 'Rubix Service',
-            'app_type': INSTALLER,
+            'app_type': Types.INSTALLER.value,
             **status
         })
         for installable_app in inheritors(InstallableApp):
