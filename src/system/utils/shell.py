@@ -1,6 +1,8 @@
 import re
 import subprocess
 
+from src.system.apps.constants.states import ACTIVE, INACTIVE
+
 
 def execute_command(cmd, cwd=None):
     """Run command line"""
@@ -33,7 +35,12 @@ def systemctl_status(service):
     output = output.decode('utf-8')
     service_regx = r"Loaded:.*\/(.*service);"
     status_regx = r"Active:(.*) since (.*);(.*)"
-    service_status = {}
+    service_status = {
+        'service': service,
+        'state': INACTIVE,
+        'status': False
+    }
+
     for line in output.splitlines():
         service_search = re.search(service_regx, line)
         status_search = re.search(status_regx, line)
@@ -41,8 +48,9 @@ def systemctl_status(service):
             service_status['service'] = service_search.group(1)
 
         elif status_search:
-            service_status['msg'] = status_search.group(1).strip()
-            service_status['status'] = (status_search.group(1).strip() == "active (running)")
+            state = status_search.group(1).strip().split(" ")[0]
+            service_status['state'] = state
+            service_status['status'] = (state == ACTIVE)
             service_status['date_since'] = status_search.group(2).strip()
             service_status['time_since'] = status_search.group(3).strip()
 
