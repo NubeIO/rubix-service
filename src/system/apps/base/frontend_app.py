@@ -1,12 +1,13 @@
 from abc import ABC
 
 from src.system.apps.base.installable_app import InstallableApp
+from src.system.apps.constants.types import FRONTEND_APP
 
 
 class FrontendApp(InstallableApp, ABC):
     @property
     def app_type(self):
-        return "FrontendApp"
+        return FRONTEND_APP
 
     def get_download_link(self) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.repo_name, self.version())
