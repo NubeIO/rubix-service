@@ -6,13 +6,13 @@ from flask import current_app
 
 from src import AppSetting
 from src.system.apps.base.installable_app import InstallableApp
-from src.system.apps.constants.types import PYTHON_APP
+from src.system.apps.enums.types import Types
 
 
 class PythonApp(InstallableApp, ABC):
     @property
     def app_type(self):
-        return PYTHON_APP
+        return Types.PYTHON_APP.value
 
     def get_download_link(self) -> str:
         release_link = 'https://api.github.com/repos/NubeIO/{}/releases/tags/{}'.format(self.repo_name, self.version())
