@@ -2,7 +2,7 @@ ARG BASE_IMAGE_VERSION
 FROM python:$BASE_IMAGE_VERSION-alpine as build
 
 RUN apk add git curl \
-        gcc g++ make file musl-dev linux-headers \
+        gcc make file musl-dev linux-headers \
         libc-dev zlib zlib-dev libffi libffi-dev \
     && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 

@@ -1,4 +1,4 @@
-import toml
+from pip._vendor import toml
 
 from src.pyinstaller import resource_path
 

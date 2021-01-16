@@ -42,7 +42,7 @@ def systemctl_status(service):
     status_regx = r"Active:(.*) since (.*);(.*)"
     service_status = {
         'service': service,
-        'state': States.INACTIVE,
+        'state': States.INACTIVE.value,
         'status': False
     }
 
@@ -55,7 +55,7 @@ def systemctl_status(service):
         elif status_search:
             state = status_search.group(1).strip().split(" ")[0]
             service_status['state'] = state
-            service_status['status'] = (state == States.ACTIVE)
+            service_status['status'] = (state == States.ACTIVE.value)
             service_status['date_since'] = status_search.group(2).strip()
             service_status['time_since'] = status_search.group(3).strip()
 
