@@ -21,6 +21,7 @@ def create_app(app_setting: AppSetting) -> Flask:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}/data.db?timeout=60'.format(app_setting.data_dir)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ECHO'] = False
+
     cors = CORS()
     cors.init_app(app)
     db.init_app(app)
@@ -39,8 +40,18 @@ def create_app(app_setting: AppSetting) -> Flask:
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
 
+    @app.before_first_request
+    def create_default_user():
+        from src.users.model_users import UsersModel
+        UsersModel.create_user()
+
+    @app.before_request
+    def before_request_fn():
+        from src.users.model_users import UsersModel
+        UsersModel.authorize()
+
     def register_router(_app: Flask) -> Flask:
-        from src.routes import bp_system, bp_service, bp_app, bp_wires
+        from src.routes import bp_system, bp_service, bp_app, bp_wires, bp_users
         from src.reverse_proxy_routes import bp_reverse_proxy
 
         _app.register_blueprint(bp_system)
@@ -48,6 +59,7 @@ def create_app(app_setting: AppSetting) -> Flask:
         _app.register_blueprint(bp_app)
         _app.register_blueprint(bp_wires)
         _app.register_blueprint(bp_reverse_proxy)
+        _app.register_blueprint(bp_users)
         return _app
 
     app.setup = partial(setup, app)
