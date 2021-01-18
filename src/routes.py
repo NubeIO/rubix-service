@@ -8,6 +8,7 @@ from src.system.resources.app.delete_data import DeleteDataResource
 from src.system.resources.app.download import DownloadResource
 from src.system.resources.app.install import InstallResource
 from src.system.resources.app.release import ReleaseResource
+from src.system.resources.app.service_status import ServiceStatusResource
 from src.system.resources.app.status import StatusResource
 from src.system.resources.app.uninstall import UnInstallResource
 from src.system.resources.host_info import GetSystemMem, GetSystemTime, GetSystemDiscUsage
@@ -44,6 +45,7 @@ api_app.add_resource(InstallResource, '/install')
 api_app.add_resource(UnInstallResource, '/uninstall')
 api_app.add_resource(DeleteDataResource, '/delete_data')
 api_app.add_resource(StatusResource, '/stats')
+api_app.add_resource(ServiceStatusResource, '/stats/<string:service>')
 
 # 4
 api_wires = Api(bp_wires)

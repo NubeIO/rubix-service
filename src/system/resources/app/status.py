@@ -2,11 +2,7 @@ from flask_restful import Resource, abort, fields, marshal_with
 
 from src.inheritors import inheritors
 from src.system.apps.base.installable_app import InstallableApp
-from src.system.apps.enums.types import Types
-from src.system.systemd.systemd import RubixServiceSystemd
-from src.system.utils.file import get_extracted_dir
-from src.system.utils.project import get_version
-from src.system.utils.shell import systemctl_status
+from src.system.resources.app.utils import get_installed_app_details
 
 
 class StatusResource(Resource):
@@ -32,23 +28,17 @@ class StatusResource(Resource):
     @classmethod
     def get_installed_apps(cls):
         installed_apps = []
-        status = systemctl_status(RubixServiceSystemd.SERVICE_FILE_NAME)
-        installed_apps.append({
-            'version': get_version(),
-            'display_name': 'Rubix Service',
-            'app_type': Types.INSTALLER.value,
-            **status
-        })
+        # TODO: have this one after self update integration
+        # status = systemctl_status(RubixServiceSystemd.SERVICE_FILE_NAME)
+        # installed_apps.append({
+        #     'version': get_version(),
+        #     'display_name': 'Rubix Service',
+        #     'app_type': Types.INSTALLER.value,
+        #     **status
+        # })
         for installable_app in inheritors(InstallableApp):
             dummy_app = installable_app()
-            version = get_extracted_dir(dummy_app.get_installation_dir())
-            if version:
-                status = systemctl_status(dummy_app.service_file_name)
-                if status:
-                    installed_apps.append({
-                        'version': version.split("/")[-1],
-                        'display_name': dummy_app.display_name,
-                        'app_type': dummy_app.app_type,
-                        **status
-                    })
+            details = get_installed_app_details(dummy_app)
+            if details:
+                installed_apps.append(details)
         return installed_apps
