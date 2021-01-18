@@ -36,6 +36,7 @@ class ServiceResource(Resource):
                 'display_name': Services[service].value.get('display_name'),
                 'app_type': Types.OTHERS.value,
                 'installable': False,
+                'service': service,
                 **status
             })
         for subclass in inheritors(InstallableApp):
@@ -45,6 +46,7 @@ class ServiceResource(Resource):
                 'display_name': dummy_app.display_name,
                 'app_type': dummy_app.app_type,
                 'installable': True,
+                'service': dummy_app.service(),
                 **status
             })
         return services

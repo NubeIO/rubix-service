@@ -25,6 +25,7 @@ def get_installed_app_details(dummy_app):
                 'version': version_.split("/")[-1],
                 'display_name': dummy_app.display_name,
                 'app_type': dummy_app.app_type,
+                'service': dummy_app.service(),
                 **status
             }
     return None

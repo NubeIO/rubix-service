@@ -11,6 +11,7 @@ class StatusResource(Resource):
         'display_name': fields.String,
         'app_type': fields.String,
         'service': fields.String,
+        'service_file': fields.String,
         'state': fields.String,
         'status': fields.Boolean,
         'date_since': fields.String,

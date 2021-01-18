@@ -41,7 +41,7 @@ def systemctl_status(service):
     service_regx = r"Loaded:.*\/(.*service);"
     status_regx = r"Active:(.*) since (.*);(.*)"
     service_status = {
-        'service': service,
+        'service_file': service,
         'state': States.INACTIVE.value,
         'status': False
     }
@@ -50,7 +50,7 @@ def systemctl_status(service):
         service_search = re.search(service_regx, line)
         status_search = re.search(status_regx, line)
         if service_search:
-            service_status['service'] = service_search.group(1)
+            service_status['service_file'] = service_search.group(1)
 
         elif status_search:
             state = status_search.group(1).strip().split(" ")[0]

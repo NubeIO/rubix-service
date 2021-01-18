@@ -7,6 +7,7 @@ from src.system.utils.shell import systemctl_status
 class SystemctlStatus(Resource):
     fields = {
         'service': fields.String,
+        'service_file': fields.String,
         'msg': fields.String,
         'status': fields.Boolean,
         'date_since': fields.String,
@@ -22,7 +23,10 @@ class SystemctlStatus(Resource):
             try:
                 status = systemctl_status(service_name)
                 if status:
-                    return {**status}
+                    return {
+                        'service': service,
+                        **status
+                    }
                 else:
                     msg = "{} is not running".format(service)
                     return {'msg': msg, 'status': False}
