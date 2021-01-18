@@ -78,12 +78,25 @@ Download appropriate rubix-service file from the [GitHub Release](https://github
 extract it, then run following command to start from systemd file:
 
 - Template: `sudo ./rubix-service -p <port> -d <data_dir> -g <global_dir> -a <artifact_dir> --token <token> --device-type <device_type> --prod --install`
+- Template2 (with JWT authorization): `sudo ./rubix-service -p <port> -d <data_dir> -g <global_dir> -a <artifact_dir> --token <token> --device-type <device_type> --prod --install --auth`
 - To Run on BBB & Pi: `sudo ./rubix-service -p 1616 -d /data/rubix-service -g /data -a /data/rubix-service/apps --prod --install`
 - To Run on BBB & Pi with valid token: `sudo ./rubix-service -p 1616 -d /data/rubix-service -g /data -a /data/rubix-service/apps --token f31a04d4424c5eef5be61fc6e30b76aa09c94e10 --prod --install`
-
+- To Run on BBB & Pi with valid token and auth restriction: `sudo ./rubix-service -p 1616 -d /data/rubix-service -g /data -a /data/rubix-service/apps --token f31a04d4424c5eef5be61fc6e30b76aa09c94e10 --prod --install --auth`
 
 ### How To Uninstall:
 - `sudo ./rubix-service --uninstall`
+
+### Authentication
+
+> POST: `/api/users/login`
+> Body
+```json
+{
+    "username": "<username>",
+    "password": "<password>"
+}
+```
+> Use that `access_token` on header of each request
 
 ### APIs
 

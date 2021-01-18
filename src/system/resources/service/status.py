@@ -2,7 +2,6 @@ from flask_restful import Resource, marshal_with, fields
 
 from src.system.resources.service.utils import validate_service
 from src.system.utils.shell import systemctl_status
-from src.users.authorize_users import authorize
 
 
 class SystemctlStatus(Resource):
@@ -17,7 +16,6 @@ class SystemctlStatus(Resource):
 
     @classmethod
     @marshal_with(fields)
-    @authorize
     def get(cls, service):
         service = service.upper()
         service_name = validate_service(service)

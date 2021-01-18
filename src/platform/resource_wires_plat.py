@@ -3,7 +3,6 @@ from flask_restful import Resource, reqparse, marshal_with, abort
 
 from src.platform.model_wires_plat import WiresPlatModel
 from src.platform.schema_wires_plat import wires_plat_all_attributes, wires_plat_all_fields
-from src.users.authorize_users import authorize
 
 
 class WiresPlatResource(Resource):
@@ -17,7 +16,6 @@ class WiresPlatResource(Resource):
 
     @classmethod
     @marshal_with(wires_plat_all_fields)
-    @authorize
     def get(cls):
         wires = WiresPlatModel.query.all()
         if len(wires) == 0:
@@ -26,7 +24,6 @@ class WiresPlatResource(Resource):
 
     @classmethod
     @marshal_with(wires_plat_all_fields)
-    @authorize
     def put(cls):
         data = WiresPlatResource.parser.parse_args()
         wire = WiresPlatModel.query.first()
@@ -42,7 +39,6 @@ class WiresPlatResource(Resource):
         except Exception as e:
             abort(500, message=str(e))
 
-    @authorize
     def delete(self):
         WiresPlatModel.delete_from_db()
         return '', 204

@@ -6,11 +6,9 @@ from src.system.resources.app.utils import get_app_from_service
 from src.system.systemd.systemd import AppSystemd
 from src.system.utils.file import get_extracted_dir, delete_existing_folder
 from src.system.utils.shell import execute_command
-from src.users.authorize_users import authorize
 
 
 class UnInstallResource(Resource):
-    @authorize
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('service', type=str, required=True)

@@ -57,4 +57,4 @@ api_wires.add_resource(WiresPlatResource, '/plat')
 # 5
 api_users = Api(bp_users)
 api_users.add_resource(UsersResource, '')
-api_users.add_resource(UsersLoginResource, '/login')
+api_users.add_resource(UsersLoginResource, '/login', endpoint="login")

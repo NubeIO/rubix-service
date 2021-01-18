@@ -1,7 +1,7 @@
 from src.platform.schema_wires_plat import map_rest_schema
 
 users_all_attributes = {
-    'user_name': {
+    'username': {
         'type': str,
         'required': True,
         'help': '',
@@ -14,7 +14,7 @@ users_all_attributes = {
 }
 
 users_return_attributes = {
-    'user_name': {
+    'username': {
         'type': str,
         'required': True,
         'help': '',

@@ -3,8 +3,6 @@ from flask import current_app
 from flask_restful import Resource
 from werkzeug.local import LocalProxy
 
-from src.users.authorize_users import authorize
-
 logger = LocalProxy(lambda: current_app.logger)
 
 
@@ -43,7 +41,6 @@ def get_all_interfaces():
 
 
 class NetworkInfo(Resource):
-    @authorize
     def get(self):
         mem = get_all_interfaces()
         return mem

@@ -35,10 +35,11 @@ def number_of_workers():
               help='Device type')
 @click.option('--install', is_flag=True, help='Install rubix-service')
 @click.option('--uninstall', is_flag=True, help='Uninstall rubix-service')
+@click.option('--auth', is_flag=True, help='Enable JWT authentication.')
 def cli(port, data_dir, global_dir, artifact_dir, token, prod, workers, setting_file, gunicorn_config, log_level,
-        device_type, install, uninstall):
-    setting = AppSetting(global_dir=global_dir, data_dir=data_dir, artifact_dir=artifact_dir, token=token,
-                         prod=prod, device_type=device_type).reload(setting_file)
+        device_type, install, uninstall, auth):
+    setting = AppSetting(global_dir=global_dir, data_dir=data_dir, artifact_dir=artifact_dir, token=token, prod=prod,
+                         device_type=device_type, auth=auth).reload(setting_file)
 
     if install:
         systemd = RubixServiceSystemd(os.getcwd(), port, setting.data_dir, setting.global_dir, setting.artifact_dir,

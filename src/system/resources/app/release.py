@@ -5,11 +5,9 @@ from flask_restful import Resource
 from packaging import version
 
 from src.system.resources.app.utils import get_app_from_service
-from src.users.authorize_users import authorize
 
 
 class ReleaseResource(Resource):
-    @authorize
     def get(self, service):
         service = service.upper()
         app = get_app_from_service(service)
