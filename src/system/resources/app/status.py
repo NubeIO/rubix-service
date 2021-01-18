@@ -3,8 +3,8 @@ from flask_restful import Resource, abort, fields, marshal_with
 from src.inheritors import inheritors
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.apps.enums.types import Types
+from src.system.resources.app.utils import get_installed_app_details
 from src.system.systemd.systemd import RubixServiceSystemd
-from src.system.utils.file import get_extracted_dir
 from src.system.utils.project import get_version
 from src.system.utils.shell import systemctl_status
 
@@ -15,6 +15,7 @@ class StatusResource(Resource):
         'display_name': fields.String,
         'app_type': fields.String,
         'service': fields.String,
+        'service_file': fields.String,
         'state': fields.String,
         'status': fields.Boolean,
         'date_since': fields.String,
@@ -41,14 +42,7 @@ class StatusResource(Resource):
         })
         for installable_app in inheritors(InstallableApp):
             dummy_app = installable_app()
-            version = get_extracted_dir(dummy_app.get_installation_dir())
-            if version:
-                status = systemctl_status(dummy_app.service_file_name)
-                if status:
-                    installed_apps.append({
-                        'version': version.split("/")[-1],
-                        'display_name': dummy_app.display_name,
-                        'app_type': dummy_app.app_type,
-                        **status
-                    })
+            details = get_installed_app_details(dummy_app)
+            if details:
+                installed_apps.append(details)
         return installed_apps

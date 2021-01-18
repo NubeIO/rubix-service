@@ -19,7 +19,7 @@
 
     ```bash
     poetry run pyinstaller run.py -n rubix-service --clean --onefile \
-        --add-data pyproject.toml:. \
+        --add-data VERSION:. \
         --add-data systemd:systemd
     ```
 
