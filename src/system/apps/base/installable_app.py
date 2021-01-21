@@ -95,6 +95,7 @@ class InstallableApp(BaseModel, ABC):
         """url_prefix for running app"""
         return self.__url_prefix
 
+    @property
     def version(self):
         return self.__version
 
@@ -125,7 +126,10 @@ class InstallableApp(BaseModel, ABC):
         return os.path.join(setting.install_dir, self.repo_name)
 
     def get_downloaded_dir(self):
-        return os.path.join(self.get_download_dir(), self.version())
+        return os.path.join(self.get_download_dir(), self.version)
 
     def get_installed_dir(self):
-        return os.path.join(self.get_installation_dir(), self.version())
+        return os.path.join(self.get_installation_dir(), self.version)
+
+    def set_version(self, _version):
+        self.__version = _version

@@ -23,6 +23,7 @@ class UnInstallResource(Resource):
             app_creator = AppSystemd(app.service_file_name)
             deletion = app_creator.uninstall()
         elif isinstance(app, FrontendApp):
+            app.set_version(version)
             deletion = execute_command(FrontendApp.get_delete_command(), app.get_cwd())
         existing_apps_deletion = delete_existing_folder(app.get_installation_dir())
         return {'service': service, 'deletion': deletion, 'existing_apps_deletion': existing_apps_deletion}
