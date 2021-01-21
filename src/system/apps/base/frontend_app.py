@@ -10,7 +10,7 @@ class FrontendApp(InstallableApp, ABC):
         return Types.FRONTEND_APP.value
 
     def get_download_link(self) -> str:
-        return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.repo_name, self.version())
+        return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.repo_name, self.version)
 
     def get_install_cmd(self) -> str:
         # TODO: remove user and upgrade parameters in future
