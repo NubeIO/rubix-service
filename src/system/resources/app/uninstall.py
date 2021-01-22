@@ -5,11 +5,11 @@ from src.system.apps.base.python_app import PythonApp
 from src.system.resources.app.utils import get_app_from_service
 from src.system.systemd.systemd import AppSystemd
 from src.system.utils.file import get_extracted_dir, delete_existing_folder
-from src.system.utils.shell import execute_command
 
 
 class UnInstallResource(Resource):
-    def post(self):
+    @classmethod
+    def post(cls):
         parser = reqparse.RequestParser()
         parser.add_argument('service', type=str, required=True)
         args = parser.parse_args()
@@ -24,6 +24,6 @@ class UnInstallResource(Resource):
             deletion = app_creator.uninstall()
         elif isinstance(app, FrontendApp):
             app.set_version(version)
-            deletion = execute_command(FrontendApp.get_delete_command(), app.get_cwd())
+            deletion = app.execute_uninstall()
         existing_apps_deletion = delete_existing_folder(app.get_installation_dir())
         return {'service': service, 'deletion': deletion, 'existing_apps_deletion': existing_apps_deletion}

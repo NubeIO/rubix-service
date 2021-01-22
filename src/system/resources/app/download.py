@@ -2,6 +2,7 @@ import os
 from io import BytesIO
 from zipfile import ZipFile
 
+import requests
 from flask import current_app
 from flask_restful import Resource, reqparse, abort
 
@@ -26,7 +27,8 @@ class DownloadResource(Resource):
         app = get_app_from_service(service, version)
         download_dir = app.get_download_dir()
         try:
-            name = _download_unzip_service(app.get_download_link(app_setting.token), download_dir, app_setting.token)
+            name = _download_unzip_service(app.get_download_link(app_setting.token), download_dir, app_setting.token,
+                                           app.is_asset)
             downloaded_dir = app.get_downloaded_dir()
             existing_app_deletion = delete_existing_folder(downloaded_dir)
             extracted_dir = os.path.join(download_dir, name)
@@ -46,9 +48,10 @@ class DownloadResource(Resource):
             abort(501, message=str(e))
 
 
-def _download_unzip_service(download_link, directory, token) -> str:
-    import requests
-    headers = {"Accept": "application/octet-stream"}
+def _download_unzip_service(download_link, directory, token, is_asset) -> str:
+    headers: dict = {}
+    if is_asset:
+        headers["Accept"] = "application/octet-stream"
     if token:
         headers['Authorization'] = f'Bearer {token}'
     r = requests.get(download_link, headers=headers)

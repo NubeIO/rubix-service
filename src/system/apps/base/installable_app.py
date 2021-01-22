@@ -1,14 +1,13 @@
+import json
 import os
 from abc import abstractmethod, ABC
 
+import requests
 from flask import current_app
-from werkzeug.local import LocalProxy
 
 from src import AppSetting
 from src.inheritors import inheritors
 from src.model import BaseModel
-
-logger = LocalProxy(lambda: current_app.logger)
 
 
 class InstallableApp(BaseModel, ABC):
@@ -99,6 +98,16 @@ class InstallableApp(BaseModel, ABC):
     def version(self):
         return self.__version
 
+    @property
+    def is_asset(self):
+        """Accept: "application/octet-stream" needs to be added on headers if it is downloading from assets list"""
+        return True
+
+    @abstractmethod
+    def select_asset(self, row: any):
+        """select_asset for selecting builds from GitHub"""
+        raise NotImplementedError("select_asset needs to be overridden")
+
     def get_data_dir(self) -> str:
         setting = current_app.config[AppSetting.FLASK_KEY]
         return os.path.join(setting.global_dir, self.data_dir_name)
@@ -107,7 +116,18 @@ class InstallableApp(BaseModel, ABC):
         return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.repo_name)
 
     def get_download_link(self, token: str) -> str:
-        raise NotImplementedError("get_download_link logic needs to be overridden")
+        headers = {}
+        if token:
+            headers['Authorization'] = f'Bearer {token}'
+        release_link: str = f'https://api.github.com/repos/NubeIO/{self.repo_name}/releases/tags/{self.version}'
+        resp = requests.get(release_link, headers=headers)
+        row: str = json.loads(resp.content)
+        setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
+        download_link: str = self.select_asset(row)
+        if not download_link:
+            raise ModuleNotFoundError(
+                f'No app for type {setting.device_type} & version {self.version}, check your token & repo')
+        return download_link
 
     def get_cwd(self) -> str:
         """current working dir for script.bash execution"""
