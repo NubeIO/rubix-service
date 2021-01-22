@@ -48,4 +48,4 @@ def validate_and_create_service(action, service) -> str:
 def validate_host_restart(action) -> str:
     if action == 'restart':
         return "sudo reboot"
-    abort(400, message="incorrect command to restart host try: restart {}".format(action))
+    abort(400, message="incorrect command to restart host try: `restart` not:`{}`".format(action))
