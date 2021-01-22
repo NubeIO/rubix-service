@@ -78,44 +78,6 @@ class Systemd(ABC):
         raise NotImplementedError('Need to be implemented')
 
 
-class RubixServiceSystemd(Systemd):
-    SERVICE_FILE_NAME = 'nubeio-rubix-service.service'
-
-    def __init__(self, wd=None, port=None, data_dir=None, global_dir=None, artifact_dir=None, token=None,
-                 device_type=None):
-        self.__wd = wd
-        self.__port = port
-        self.__data_dir = data_dir
-        self.__global_dir = global_dir
-        self.__artifact_dir = artifact_dir
-        self.__token = token
-        self.__device_type = device_type
-        super().__init__(RubixServiceSystemd.SERVICE_FILE_NAME)
-
-    # noinspection DuplicatedCode
-    def create_service(self):
-        lines = []
-        with open(resource_path('systemd/nubeio-rubix-service.service')) as systemd_file:
-            for line in systemd_file.readlines():
-                if '<working_dir>' in line and self.__wd:
-                    line = line.replace('<working_dir>', self.__wd)
-                if '<port>' in line and self.__port:
-                    line = line.replace('<port>', str(self.__port))
-                if '<data_dir>' in line and self.__data_dir:
-                    line = line.replace('<data_dir>', self.__data_dir)
-                if '<global_dir>' in line and self.__global_dir:
-                    line = line.replace('<global_dir>', self.__global_dir)
-                if '<artifact_dir>' in line and self.__artifact_dir:
-                    line = line.replace('<artifact_dir>', self.__artifact_dir)
-                if ' --token <token>' in line:
-                    token = self.__token
-                    line = line.replace(' --token <token>', '' if not token else ' --token {}'.format(token))
-                if '<device_type>' in line and self.__device_type:
-                    line = line.replace('<device_type>', self.__device_type)
-                lines.append(line)
-        return lines
-
-
 class AppSystemd(Systemd):
     def __init__(self, service_file_name, pre_start_sleep=0, wd=None, port=None, data_dir=None, name=None,
                  description=None):
@@ -127,7 +89,6 @@ class AppSystemd(Systemd):
         self.__name = name
         self.__description = description
 
-    # noinspection DuplicatedCode
     def create_service(self):
         lines = []
         with open(resource_path('systemd/nubeio-app-service.service')) as systemd_file:

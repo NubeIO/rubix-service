@@ -4,7 +4,6 @@ from src.inheritors import inheritors
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.apps.enums.types import Types
 from src.system.resources.app.utils import get_installed_app_details
-from src.system.systemd.systemd import RubixServiceSystemd
 from src.system.utils.project import get_version
 from src.system.utils.shell import systemctl_status
 
@@ -33,7 +32,8 @@ class StatusResource(Resource):
     @classmethod
     def get_installed_apps(cls):
         installed_apps = []
-        status = systemctl_status(RubixServiceSystemd.SERVICE_FILE_NAME)
+        # TODO: we will remove out from here and will depend on ping
+        status = systemctl_status('nubeio-rubix-service.service')
         installed_apps.append({
             'version': get_version(),
             'display_name': 'Rubix Service',
