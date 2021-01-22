@@ -66,6 +66,13 @@ class Systemd(ABC):
         print('Service is deleted.')
         return True
 
+    def restart(self) -> bool:
+        print('Restarting Linux Service...')
+        if not execute_command('sudo systemctl restart {}'.format(self.__service_file_name)):
+            return False
+        print('Successfully restarted service')
+        return True
+
     @abstractmethod
     def create_service(self):
         raise NotImplementedError('Need to be implemented')

@@ -20,3 +20,7 @@ class FrontendApp(InstallableApp, ABC):
     @staticmethod
     def get_delete_command() -> str:
         return "sudo bash script.bash delete"
+
+    @staticmethod
+    def get_restart_command() -> str:
+        return "sudo bash script.bash restart"
