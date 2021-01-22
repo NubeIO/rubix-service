@@ -1,12 +1,16 @@
+import json
 import os
 from abc import abstractmethod, ABC
 
+import requests
 from flask import current_app
 from werkzeug.local import LocalProxy
 
 from src import AppSetting
 from src.inheritors import inheritors
 from src.model import BaseModel
+from src.system.utils.file import delete_existing_folder, download_unzip_service
+from src.system.utils.shell import execute_command
 
 logger = LocalProxy(lambda: current_app.logger)
 
@@ -99,6 +103,45 @@ class InstallableApp(BaseModel, ABC):
     def version(self):
         return self.__version
 
+    @property
+    def is_asset(self):
+        """Accept: "application/octet-stream" needs to be added on headers if it is downloading from assets list"""
+        return True
+
+    @abstractmethod
+    def select_asset(self, row: any):
+        """select_asset for selecting builds from GitHub"""
+        raise NotImplementedError("select_asset needs to be overridden")
+
+    def download(self) -> dict:
+        app_setting = current_app.config[AppSetting.FLASK_KEY]
+        download_name = download_unzip_service(self.get_download_link(app_setting.token), self.get_download_dir(),
+                                               app_setting.token, self.is_asset)
+        existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
+        self.after_download(download_name)
+        return {'service': self.service(), 'version': self.version, 'existing_app_deletion': existing_app_deletion}
+
+    def after_download(self, download_name: str):
+        # they are already wrapped on folder
+        download_dir: str = self.get_download_dir()
+        extracted_dir = os.path.join(download_dir, download_name)
+        os.rename(extracted_dir, self.get_downloaded_dir())
+
+    @abstractmethod
+    def install(self) -> bool:
+        raise NotImplementedError("install needs to be overridden")
+
+    @abstractmethod
+    def uninstall(self) -> bool:
+        raise NotImplementedError("uninstall needs to be overridden")
+
+    def restart(self) -> bool:
+        logger.info('Restarting Linux Service...')
+        if not execute_command('sudo systemctl restart {}'.format(self.service_file_name)):
+            return False
+        logger.info('Successfully restarted service.')
+        return True
+
     def get_data_dir(self) -> str:
         setting = current_app.config[AppSetting.FLASK_KEY]
         return os.path.join(setting.global_dir, self.data_dir_name)
@@ -106,8 +149,19 @@ class InstallableApp(BaseModel, ABC):
     def get_releases_link(self) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.repo_name)
 
-    def get_download_link(self) -> str:
-        raise NotImplementedError("get_download_link logic needs to be overridden")
+    def get_download_link(self, token: str) -> str:
+        headers = {}
+        if token:
+            headers['Authorization'] = f'Bearer {token}'
+        release_link: str = f'https://api.github.com/repos/NubeIO/{self.repo_name}/releases/tags/{self.version}'
+        resp = requests.get(release_link, headers=headers)
+        row: str = json.loads(resp.content)
+        setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
+        download_link: str = self.select_asset(row)
+        if not download_link:
+            raise ModuleNotFoundError(
+                f'No app for type {setting.device_type} & version {self.version}, check your token & repo')
+        return download_link
 
     def get_cwd(self) -> str:
         """current working dir for script.bash execution"""

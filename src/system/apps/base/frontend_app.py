@@ -2,6 +2,7 @@ from abc import ABC
 
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.apps.enums.types import Types
+from src.system.utils.shell import execute_command
 
 
 class FrontendApp(InstallableApp, ABC):
@@ -9,18 +10,19 @@ class FrontendApp(InstallableApp, ABC):
     def app_type(self):
         return Types.FRONTEND_APP.value
 
-    def get_download_link(self) -> str:
-        return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.repo_name, self.version)
+    @property
+    def is_asset(self):
+        return False
 
-    def get_install_cmd(self) -> str:
+    def select_asset(self, row: any):
+        return row.get('zipball_url')
+
+    def install(self) -> bool:
         # TODO: remove user and upgrade parameters in future
-        return "sudo bash script.bash start -service_name={} -u={} -dir={} -data_dir={} -p={}".format(
+        install_cmd: str = "sudo bash script.bash start -service_name={} -u={} -dir={} -data_dir={} -p={}".format(
             self.service_file_name, 'root', self.get_wd(), self.get_data_dir(), self.port)
+        return execute_command(install_cmd, self.get_cwd())
 
-    @staticmethod
-    def get_delete_command() -> str:
-        return "sudo bash script.bash delete"
-
-    @staticmethod
-    def get_restart_command() -> str:
-        return "sudo bash script.bash restart"
+    def uninstall(self) -> bool:
+        uninstall_cmd: str = "sudo bash script.bash delete"
+        return execute_command(uninstall_cmd, self.get_cwd())

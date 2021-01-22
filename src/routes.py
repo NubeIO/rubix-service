@@ -10,6 +10,7 @@ from src.system.resources.app.install import InstallResource
 from src.system.resources.app.release import ReleaseResource
 from src.system.resources.app.service_status import ServiceStatusResource
 from src.system.resources.app.status import StatusResource
+from src.system.resources.app.token import TokenResource
 from src.system.resources.app.uninstall import UnInstallResource
 from src.system.resources.host_info import GetSystemMem, GetSystemTime, GetSystemDiscUsage
 from src.system.resources.host_reboot import HostReboot
@@ -18,8 +19,8 @@ from src.system.resources.service.command import SystemctlCommand
 from src.system.resources.service.service import ServiceResource
 from src.system.resources.service.status import SystemctlStatus
 from src.system.resources.service.status_bool import SystemctlStatusBool
-from src.users.resource_users import UsersResource
 from src.users.resource_login_users import UsersLoginResource
+from src.users.resource_users import UsersResource
 
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')
 bp_service = Blueprint('service', __name__, url_prefix='/api/system/service')
@@ -44,6 +45,7 @@ api_service.add_resource(SystemctlStatus, '/stats/<string:service>')
 # 3
 api_app = Api(bp_app)
 api_app.add_resource(AppResource, '/')
+api_app.add_resource(TokenResource, '/token')
 api_app.add_resource(ReleaseResource, '/releases/<string:service>')
 api_app.add_resource(DownloadResource, '/download')
 api_app.add_resource(InstallResource, '/install')

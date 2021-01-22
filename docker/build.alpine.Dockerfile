@@ -27,7 +27,7 @@ ARG COMMIT_SHA=$COMMIT_SHA
 
 LABEL maintainer=$MAINTAINER version=$APP_VERSION commit=$COMMIT_SHA
 
-ENV GLOBAL_DATA=/data RUBIX_SERVICE_DATA=/data/rubix-service ARTIFACT_DIR=/data/apps RUBIX_SERVICE_TOKEN=''
+ENV GLOBAL_DATA=/data RUBIX_SERVICE_DATA=/data/rubix-service ARTIFACT_DIR=/data/apps
 
 RUN addgroup --system --gid $NUBEIO_GID nubeio \
     && adduser --system -G nubeio --uid $RUBIX_UID rubix \

@@ -47,16 +47,13 @@ docker run --rm -it -p 1616:1616 -p 1313:1313 -v rubix-service-data:/data --name
 - Download release artifact
 - Review help and start
 ```bash
-./rubix-service -h
-
-Usage: rubix-service [OPTIONS]
+Usage: run.py [OPTIONS]
 
 Options:
   -p, --port INTEGER              Port  [default: 1616]
   -d, --data-dir PATH             Application data dir
   -g, --global-dir PATH           Global data dir
   -a, --artifact-dir PATH         Artifact downloaded dir
-  --token TEXT                    Service token to download from GitHub private repository
   --prod                          Production mode
   -s, --setting-file TEXT         Rubix-Service: setting json file
   --workers INTEGER               Gunicorn: The number of worker processes for handling requests.
@@ -65,26 +62,14 @@ Options:
                                   Logging level
   --device-type [amd64|arm64|armv7]
                                   Device type  [default: armv7]
-  --install                       Install rubix-service
-  --uninstall                     Uninstall rubix-service
+  --auth                          Enable JWT authentication.
   -h, --help                      Show this message and exit.
 ```
 
 ### How To Install:
 
-Please generate token from [here](https://github.com/settings/tokens) with scope `repo`
+Install through [rubix-bios](https://github.com/NubeIO/rubix-bios)
 
-Download appropriate rubix-service file from the [GitHub Release](https://github.com/NubeIO/rubix-service/releases) and 
-extract it, then run following command to start from systemd file:
-
-- Template: `sudo ./rubix-service -p <port> -d <data_dir> -g <global_dir> -a <artifact_dir> --token <token> --device-type <device_type> --prod --install`
-- Template2 (with JWT authorization): `sudo ./rubix-service -p <port> -d <data_dir> -g <global_dir> -a <artifact_dir> --token <token> --device-type <device_type> --prod --install --auth`
-- To Run on BBB & Pi: `sudo ./rubix-service -p 1616 -d /data/rubix-service -g /data -a /data/rubix-service/apps --prod --install`
-- To Run on BBB & Pi with valid token: `sudo ./rubix-service -p 1616 -d /data/rubix-service -g /data -a /data/rubix-service/apps --token f31a04d4424c5eef5be61fc6e30b76aa09c94e10 --prod --install`
-- To Run on BBB & Pi with valid token and auth restriction: `sudo ./rubix-service -p 1616 -d /data/rubix-service -g /data -a /data/rubix-service/apps --token f31a04d4424c5eef5be61fc6e30b76aa09c94e10 --prod --install --auth`
-
-### How To Uninstall:
-- `sudo ./rubix-service --uninstall`
 
 ### Authentication
 
@@ -105,18 +90,6 @@ extract it, then run following command to start from systemd file:
 - For returning an uptime: `/api/system/service/stats/<service>`
 - For returning a `true|false`: `/api/system/service/up/<service>`
 
-Options for the `<service>` are:
-```
-- POINT_SERVER
-- BACNET_SERVER
-- LORA_RAW
-- WIRES
-- RUBIX_PLAT
-- LORAWAN = 'lorawan-server'
-- MOSQUITTO = 'mosquitto.service'
-- BBB = 'nubeio-wires-plat.service'  # TODO
-- DRAC = 'nubeio-wires-plat.service'  # TODO
-```
 
 Example is top get the status of `rubix-wires`:
 ```
@@ -231,15 +204,6 @@ curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: applic
 curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: application/json" -d '{"service":"LORA_RAW"}'
 curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
 curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}'
-```
-
-# Install on Ubuntu
-```
-wget https://github.com/NubeIO/rubix-service/releases/download/v1.2.6/rubix-service-1.2.6-ab671cf.amd64.zip
-unzip rubix-service-1.2.6-ab671cf.amd64.zip
-sudo ./rubix-service -p 1616 -d /data/rubix-service -g /data -a /data/rubix-service/apps --device-type amd64 --prod --install
-curl -X POST http://localhost:1616/api/app/download -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.3.5"}'
-curl -X POST http://localhost:1616/api/app/install -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER","version":"v1.3.5"}'
 ```
 
 ##### Edit config.json

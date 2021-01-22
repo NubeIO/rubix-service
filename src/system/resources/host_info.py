@@ -1,8 +1,9 @@
-from flask_restful import Resource
 import os
+import time
 from collections import namedtuple
 from datetime import datetime
-import time
+
+from flask_restful import Resource
 
 
 def host_time():
@@ -10,7 +11,6 @@ def host_time():
         'time_utc': str(datetime.now()),
         'time_local': str(datetime.utcnow()),
         'tz_local': time.tzname
-
     }
 
 

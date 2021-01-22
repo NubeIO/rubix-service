@@ -8,7 +8,6 @@ from src.system.utils.file import write_file, read_file
 
 class AppSetting:
     PORT = 1616
-    TOKEN_ENV = 'RUBIX_SERVICE_TOKEN'
     DATA_DIR_ENV = 'RUBIX_SERVICE_DATA'
     ARTIFACT_DIR_ENV = 'ARTIFACT_DIR'
     GLOBAL_DATA_DIR_ENV = 'GLOBAL_DATA'
@@ -17,8 +16,8 @@ class AppSetting:
     default_global_dir: str = 'out'
     default_data_dir: str = 'rubix-service'
     default_artifact_dir: str = 'apps'
-    default_token_file = 'auth.txt'
     default_secret_key_file = 'secret_key.txt'
+    default_token_file = 'token.txt'
 
     def __init__(self, **kwargs):
         self.__global_dir = self.__compute_dir(kwargs.get('global_dir'), self.default_global_dir, 0o777)
@@ -28,7 +27,6 @@ class AppSetting:
                                                  os.path.join(self.data_dir, self.default_artifact_dir))
         self.__download_dir = self.__compute_dir('', os.path.join(self.__artifact_dir, 'download'))
         self.__install_dir = self.__compute_dir('', os.path.join(self.__artifact_dir, 'install'))
-        self.__token = '' if not kwargs.get('token') else kwargs.get('token')
         self.__token_file = os.path.join(self.data_dir, self.default_token_file)
         self.__prod = kwargs.get('prod') or False
         self.__device_type = kwargs.get('device_type')
@@ -58,7 +56,7 @@ class AppSetting:
 
     @property
     def token(self) -> str:
-        return self.__token
+        return read_file(os.path.join(self.data_dir, self.default_token_file))
 
     @property
     def prod(self) -> bool:
@@ -80,7 +78,6 @@ class AppSetting:
         return self
 
     def init_app(self, app: Flask):
-        self.__token = AppSetting.__handle_token(self.__token_file, self.__token)
         self.__secret_key = AppSetting.__handle_secret_key(self.__secret_key_file)
         app.config[AppSetting.FLASK_KEY] = self
         return self
@@ -91,11 +88,6 @@ class AppSetting:
         d = d if os.path.isabs(d) else os.path.join(os.getcwd(), d)
         os.makedirs(d, mode, True)
         return d
-
-    @staticmethod
-    def __handle_token(token_file, token) -> str:
-        write_file(token_file, token)
-        return token
 
     @staticmethod
     def __handle_secret_key(secret_key_file) -> str:
