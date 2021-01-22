@@ -10,6 +10,11 @@ class Services(enum.Enum):
     MOSQUITTO = {'service_file_name': 'mosquitto.service', 'display_name': 'Mosquitto Service'}
     BBB = {'service_file_name': 'nubeio-bbio.service', 'display_name': 'BBB IO Service'}
     DRAC = {'service_file_name': 'nubeio-drac.service', 'display_name': 'DRAC Server Service'}
+    NODE_RED = {'service_file_name': 'nodered.service', 'display_name': 'node-red'}  # node-red
+    # https://raw.githubusercontent.com/node-red/linux-installers/master/resources/nodered.service
+    GRAFANA = {'service_file_name': 'grafana-server', 'display_name': 'Grafana Service'}
+    INFLUX_DB = {'service_file_name': 'influxdb', 'display_name': 'Influx-DB Service'}
+
 
 
 class ServiceAction(enum.Enum):
