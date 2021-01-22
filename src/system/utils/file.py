@@ -1,7 +1,9 @@
 import os
 import shutil
+from io import BytesIO
 from logging import Logger
 from pathlib import Path
+from zipfile import ZipFile
 
 from flask import current_app
 from werkzeug.local import LocalProxy
@@ -48,3 +50,17 @@ def get_extracted_dir(parent_dir) -> str:
         if len(dirs):
             return os.path.join(parent_dir, dirs[0])
     return ""
+
+
+def download_unzip_service(download_link, directory, token, is_asset) -> str:
+    import requests
+
+    headers: dict = {}
+    if is_asset:
+        headers["Accept"] = "application/octet-stream"
+    if token:
+        headers['Authorization'] = f'Bearer {token}'
+    r = requests.get(download_link, headers=headers)
+    with ZipFile(BytesIO(r.content)) as z_file:
+        z_file.extractall(directory)
+    return z_file.namelist()[0]

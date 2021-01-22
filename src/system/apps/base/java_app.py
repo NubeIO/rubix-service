@@ -19,11 +19,14 @@ class JavaApp(InstallableApp, ABC):
     def name_contains(self) -> str:
         raise NotImplementedError("name_contains needs to be overridden")
 
-    def execute_install(self):
+    def after_download(self, download_name: str):
         pass
 
-    def execute_uninstall(self):
+    def install(self):
         pass
 
-    def execute_delete(self):
+    def uninstall(self):
+        pass
+
+    def restart(self):
         pass

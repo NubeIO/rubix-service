@@ -8,6 +8,7 @@ from flask import current_app
 from src import AppSetting
 from src.inheritors import inheritors
 from src.model import BaseModel
+from src.system.utils.file import delete_existing_folder, download_unzip_service
 
 
 class InstallableApp(BaseModel, ABC):
@@ -107,6 +108,31 @@ class InstallableApp(BaseModel, ABC):
     def select_asset(self, row: any):
         """select_asset for selecting builds from GitHub"""
         raise NotImplementedError("select_asset needs to be overridden")
+
+    def download(self) -> dict:
+        app_setting = current_app.config[AppSetting.FLASK_KEY]
+        download_name = download_unzip_service(self.get_download_link(app_setting.token), self.get_download_dir(),
+                                               app_setting.token, self.is_asset)
+        existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
+        self.after_download(download_name)
+        return {'service': self.service(), 'version': self.version, 'existing_app_deletion': existing_app_deletion}
+
+    @abstractmethod
+    def after_download(self, download_name: str):
+        """after_download for doing some work after downloading"""
+        raise NotImplementedError("after_download needs to be overridden")
+
+    @abstractmethod
+    def install(self) -> bool:
+        raise NotImplementedError("install needs to be overridden")
+
+    @abstractmethod
+    def uninstall(self) -> bool:
+        raise NotImplementedError("uninstall needs to be overridden")
+
+    @abstractmethod
+    def restart(self) -> bool:
+        raise NotImplementedError("restart needs to be overridden")
 
     def get_data_dir(self) -> str:
         setting = current_app.config[AppSetting.FLASK_KEY]
