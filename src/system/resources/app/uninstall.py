@@ -17,6 +17,7 @@ class UnInstallResource(Resource):
         if not version:
             abort(404, message="service {} is not running".format(service))
         try:
+            app.set_version(version)
             deletion: bool = app.uninstall()
             existing_apps_deletion: bool = delete_existing_folder(app.get_installation_dir())
             return {'service': service, 'deletion': deletion, 'existing_apps_deletion': existing_apps_deletion}

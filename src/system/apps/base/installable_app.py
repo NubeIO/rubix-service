@@ -4,11 +4,15 @@ from abc import abstractmethod, ABC
 
 import requests
 from flask import current_app
+from werkzeug.local import LocalProxy
 
 from src import AppSetting
 from src.inheritors import inheritors
 from src.model import BaseModel
 from src.system.utils.file import delete_existing_folder, download_unzip_service
+from src.system.utils.shell import execute_command
+
+logger = LocalProxy(lambda: current_app.logger)
 
 
 class InstallableApp(BaseModel, ABC):
@@ -117,10 +121,11 @@ class InstallableApp(BaseModel, ABC):
         self.after_download(download_name)
         return {'service': self.service(), 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
-    @abstractmethod
     def after_download(self, download_name: str):
-        """after_download for doing some work after downloading"""
-        raise NotImplementedError("after_download needs to be overridden")
+        # they are already wrapped on folder
+        download_dir: str = self.get_download_dir()
+        extracted_dir = os.path.join(download_dir, download_name)
+        os.rename(extracted_dir, self.get_downloaded_dir())
 
     @abstractmethod
     def install(self) -> bool:
@@ -130,9 +135,12 @@ class InstallableApp(BaseModel, ABC):
     def uninstall(self) -> bool:
         raise NotImplementedError("uninstall needs to be overridden")
 
-    @abstractmethod
     def restart(self) -> bool:
-        raise NotImplementedError("restart needs to be overridden")
+        logger.info('Restarting Linux Service...')
+        if not execute_command('sudo systemctl restart {}'.format(self.service_file_name)):
+            return False
+        logger.info('Successfully restarted service.')
+        return True
 
     def get_data_dir(self) -> str:
         setting = current_app.config[AppSetting.FLASK_KEY]
