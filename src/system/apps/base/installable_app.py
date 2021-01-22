@@ -106,7 +106,7 @@ class InstallableApp(BaseModel, ABC):
     def get_releases_link(self) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.repo_name)
 
-    def get_download_link(self) -> str:
+    def get_download_link(self, token: str) -> str:
         raise NotImplementedError("get_download_link logic needs to be overridden")
 
     def get_cwd(self) -> str:

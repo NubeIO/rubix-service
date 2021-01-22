@@ -9,7 +9,7 @@ class FrontendApp(InstallableApp, ABC):
     def app_type(self):
         return Types.FRONTEND_APP.value
 
-    def get_download_link(self) -> str:
+    def get_download_link(self, token: str = None) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/zipball/{}'.format(self.repo_name, self.version)
 
     def get_install_cmd(self) -> str:
