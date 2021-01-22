@@ -43,3 +43,9 @@ def validate_and_create_service(action, service) -> str:
     if service_name:
         return "sudo systemctl {} {}".format(action, service_name)
     abort(400, message="service {} does not exist in our system".format(service))
+
+
+def validate_host_restart(action) -> str:
+    if action == 'restart':
+        return "sudo reboot"
+    abort(400, message="incorrect command to restart host try: restart {}".format(action))

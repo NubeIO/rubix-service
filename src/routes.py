@@ -12,6 +12,7 @@ from src.system.resources.app.service_status import ServiceStatusResource
 from src.system.resources.app.status import StatusResource
 from src.system.resources.app.uninstall import UnInstallResource
 from src.system.resources.host_info import GetSystemMem, GetSystemTime, GetSystemDiscUsage
+from src.system.resources.host_reboot import HostReboot
 from src.system.resources.ping import Ping
 from src.system.resources.service.command import SystemctlCommand
 from src.system.resources.service.service import ServiceResource
@@ -32,6 +33,7 @@ api_system.add_resource(GetSystemTime, '/time')
 api_system.add_resource(GetSystemMem, '/memory')
 api_system.add_resource(GetSystemDiscUsage, '/disc')
 api_system.add_resource(NetworkInfo, '/networking')
+api_system.add_resource(HostReboot, '/host/restart')
 
 api_service = Api(bp_service)
 api_service.add_resource(ServiceResource, "/")
