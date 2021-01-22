@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [v1.3.3](https://github.com/NubeIO/rubix-service/tree/v1.3.3) (2021-01-22)
+
+### Added
+
+- BACNET_MASTER JavaApp addition
+- Improvement/misc [\#69] ([RaiBnod](https://github.com/RaiBnod))
+
 ## [v1.2.7](https://github.com/NubeIO/rubix-service/tree/v1.2.2) (2021-01-14)
 
 ### Added
