@@ -22,8 +22,6 @@ def number_of_workers():
               help='Global data dir')
 @click.option('-a', '--artifact-dir', type=click.Path(), default=lambda: os.environ.get(AppSetting.ARTIFACT_DIR_ENV),
               help='Artifact downloaded dir')
-@click.option('--token', type=str, default=lambda: os.environ.get(AppSetting.TOKEN_ENV),
-              help='Service token to download from GitHub private repository')
 @click.option('--prod', is_flag=True, help='Production mode')
 @click.option('-s', '--setting-file', help='Rubix-Service: setting json file')
 @click.option('--workers', type=int, help='Gunicorn: The number of worker processes for handling requests.')
@@ -33,9 +31,9 @@ def number_of_workers():
 @click.option('--device-type', type=click.Choice(['amd64', 'arm64', 'armv7']), default='armv7', show_default=True,
               help='Device type')
 @click.option('--auth', is_flag=True, help='Enable JWT authentication.')
-def cli(port, data_dir, global_dir, artifact_dir, token, prod, workers, setting_file, gunicorn_config, log_level,
-        device_type, auth):
-    setting = AppSetting(global_dir=global_dir, data_dir=data_dir, artifact_dir=artifact_dir, token=token, prod=prod,
+def cli(port, data_dir, global_dir, artifact_dir, prod, workers, setting_file, gunicorn_config, log_level, device_type,
+        auth):
+    setting = AppSetting(global_dir=global_dir, data_dir=data_dir, artifact_dir=artifact_dir, prod=prod,
                          device_type=device_type, auth=auth).reload(setting_file)
     options = {
         'bind': '%s:%s' % ('0.0.0.0', port),
