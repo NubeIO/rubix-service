@@ -60,3 +60,19 @@ def systemctl_status(service):
             service_status['time_since'] = status_search.group(3).strip()
 
     return service_status
+
+
+def systemctl_installed(service):
+    """
+       Return True if systemd service is installed
+       example: check = systemctl_installed('mosquitto')
+       """
+    try:
+        cmd = "systemctl list-units --full -all | grep -Fq {} && echo TRUE || echo FALSE".format(service)
+        completed = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE)
+    except subprocess.CalledProcessError:
+        return False
+    for line in completed.stdout.decode('utf-8').splitlines():
+        if 'TRUE' in line:
+            return True
+    return False
