@@ -1,16 +1,11 @@
-from flask_restful import Resource, reqparse, marshal_with, fields
+from flask_restful import Resource, reqparse, abort
+
 from src.system.resources.service.utils import validate_host_restart
-from src.system.utils.shell import execute_command
+from src.system.utils.shell import execute_command_with_exception
 
 
 class HostReboot(Resource):
-    fields = {
-        'msg': fields.String,
-        'status': fields.Boolean,
-    }
-
     @classmethod
-    @marshal_with(fields)
     def post(cls):
         parser = reqparse.RequestParser()
         parser.add_argument('action',
@@ -20,9 +15,8 @@ class HostReboot(Resource):
         args = parser.parse_args()
         action = args['action']
         service = validate_host_restart(action)
-        call = execute_command(service)
-        if call:
-            msg = "success: {}".format(service)
-            return {'msg': msg, 'status': True}
-        msg = "failed: {}".format(service)
-        return {'msg': msg, 'status': False}
+        try:
+            execute_command_with_exception(service)
+            return {}
+        except Exception as e:
+            abort(501, message=str(e))

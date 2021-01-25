@@ -9,6 +9,10 @@ class States(enum.Enum):
     ACTIVATING = 'activating'
 
 
+def execute_command_with_exception(cmd, cwd=None):
+    subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, cwd=cwd)
+
+
 def execute_command(cmd, cwd=None):
     """Run command line"""
     try:
@@ -39,10 +43,7 @@ def systemctl_status(service):
     (output, err) = p.communicate()
     output = output.decode('utf-8')
     status_regx = r"Active:(.*) since (.*);(.*)"
-    service_status = {
-        'state': States.INACTIVE.value,
-        'status': False
-    }
+    service_status = {}
 
     for line in output.splitlines():
         status_search = re.search(status_regx, line)
