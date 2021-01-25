@@ -13,7 +13,7 @@ class BACnetMasterApp(JavaApp):
         super(BACnetMasterApp, self).__init__(
             display_name='BACnet Master',
             repo_name='iot-engine',
-            service_file_name='nubeio-bacnet-server.service',
+            service_file_name='nubeio-bacnet-master.service',
             data_dir_name='bacnet-master',
             port=8888,
             min_support_version='v0.2.0',
