@@ -9,6 +9,10 @@ class States(enum.Enum):
     ACTIVATING = 'activating'
 
 
+def execute_command_with_exception(cmd, cwd=None):
+    subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, cwd=cwd)
+
+
 def execute_command(cmd, cwd=None):
     """Run command line"""
     try:
@@ -38,21 +42,12 @@ def systemctl_status(service):
     p = subprocess.Popen(["systemctl", "status", service], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
     output = output.decode('utf-8')
-    service_regx = r"Loaded:.*\/(.*service);"
     status_regx = r"Active:(.*) since (.*);(.*)"
-    service_status = {
-        'service_file': service,
-        'state': States.INACTIVE.value,
-        'status': False
-    }
+    service_status = {}
 
     for line in output.splitlines():
-        service_search = re.search(service_regx, line)
         status_search = re.search(status_regx, line)
-        if service_search:
-            service_status['service_file'] = service_search.group(1)
-
-        elif status_search:
+        if status_search:
             state = status_search.group(1).strip().split(" ")[0]
             service_status['state'] = state
             service_status['status'] = (state == States.ACTIVE.value)
