@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [v1.3.4](https://github.com/NubeIO/rubix-service/tree/v1.3.3) (2021-01-22)
+
+### Added
+
+- Change BACnetMaster service_file_name (conflict)
+
 ## [v1.3.3](https://github.com/NubeIO/rubix-service/tree/v1.3.3) (2021-01-22)
 
 ### Added
