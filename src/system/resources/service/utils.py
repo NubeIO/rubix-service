@@ -2,8 +2,6 @@ import enum
 
 from flask_restful import abort
 
-from src.system.apps.base.installable_app import InstallableApp
-
 
 class Services(enum.Enum):
     LORAWAN = {'service_file_name': 'lorawan-server.service', 'display_name': 'LoRa WAN Server Service'}
@@ -24,29 +22,16 @@ class ServiceAction(enum.Enum):
     ENABLE = 5
 
 
-def validate_service(service) -> str:
+def validate_service(service: str) -> bool:
     if service in Services.__members__.keys():
-        return Services[service].value.get('service_file_name')
-    try:
-        app = InstallableApp.get_app(service, "")
-        return app.service_file_name
-    except ModuleNotFoundError:
-        return ""
+        return True
+    abort(400, message="service {} does not exist in our system".format(service))
 
 
 def validate_and_create_action(action) -> str:
     if action.upper() in ServiceAction.__members__.keys():
         return action.lower()
-    else:
-        abort(400, message='action should be `start | stop | restart | disable | enable`')
-
-
-def validate_and_create_service(action, service) -> str:
-    service = service.upper()
-    service_name = validate_service(service)
-    if service_name:
-        return "sudo systemctl {} {}".format(action, service_name)
-    abort(400, message="service {} does not exist in our system".format(service))
+    abort(400, message='action should be `start | stop | restart | disable | enable`')
 
 
 def validate_host_restart(action) -> str:

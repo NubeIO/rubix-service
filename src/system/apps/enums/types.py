@@ -6,4 +6,3 @@ class Types(enum.Enum):
     FRONTEND_APP = 'FrontendApp'
     PYTHON_APP = 'PythonApp'
     JAVA_APP = 'JavaApp'
-    OTHERS = 'Others'

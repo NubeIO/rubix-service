@@ -17,7 +17,6 @@ class ReleaseResource(Resource):
         headers = {}
         if token:
             headers['Authorization'] = f'Bearer {token}'
-        service = service.upper()
         app = get_app_from_service(service)
         resp = requests.get(app.get_releases_link(), headers=headers)
         data = json.loads(resp.content)
