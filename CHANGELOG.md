@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [v1.4.0](https://github.com/NubeIO/rubix-service/tree/v1.3.3) (2021-01-27)
+
+### Added
+
+- App & Services APIs separation
+
+# CHANGELOG
+
 ## [v1.3.4](https://github.com/NubeIO/rubix-service/tree/v1.3.3) (2021-01-22)
 
 ### Added
