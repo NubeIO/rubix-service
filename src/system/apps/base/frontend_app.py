@@ -14,7 +14,13 @@ class FrontendApp(InstallableApp, ABC):
     def is_asset(self):
         return False
 
-    def select_asset(self, row: any):
+    def select_link(self, row: any, is_browser_downloadable: bool):
+        if is_browser_downloadable:
+            return {
+                'name': row.get('name'),
+                'created_at': row.get('created_at'),
+                'browser_download_url': row.get('zipball_url')
+            }
         return row.get('zipball_url')
 
     def install(self) -> bool:
