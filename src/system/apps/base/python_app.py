@@ -17,10 +17,16 @@ class PythonApp(SystemdApp, ABC):
     def app_type(self):
         return Types.PYTHON_APP.value
 
-    def select_asset(self, row: any):
+    def select_link(self, row: any, is_browser_downloadable: bool):
         setting = current_app.config[AppSetting.FLASK_KEY]
         for asset in row.get('assets', []):
             if setting.device_type in asset.get('name'):
+                if is_browser_downloadable:
+                    return {
+                        'name': row.get('name'),
+                        'created_at': row.get('created_at'),
+                        'browser_download_url': asset.get('browser_download_url')
+                    }
                 return asset.get('url')
 
     def after_download(self, download_name: str):

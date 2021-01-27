@@ -109,14 +109,14 @@ class InstallableApp(BaseModel, ABC):
         return True
 
     @abstractmethod
-    def select_asset(self, row: any):
-        """select_asset for selecting builds from GitHub"""
-        raise NotImplementedError("select_asset needs to be overridden")
+    def select_link(self, row: any, is_browser_downloadable: bool):
+        """select_link for selecting builds from GitHub"""
+        raise NotImplementedError("select_link needs to be overridden")
 
     def download(self) -> dict:
         app_setting = current_app.config[AppSetting.FLASK_KEY]
-        download_name = download_unzip_service(self.get_download_link(app_setting.token), self.get_download_dir(),
-                                               app_setting.token, self.is_asset)
+        download_name = download_unzip_service(self.get_download_link(app_setting.token), self.get_download_dir()
+                                               , app_setting.token, self.is_asset)
         existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
         self.after_download(download_name)
         return {'service': self.service(), 'version': self.version, 'existing_app_deletion': existing_app_deletion}
@@ -149,7 +149,7 @@ class InstallableApp(BaseModel, ABC):
     def get_releases_link(self) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.repo_name)
 
-    def get_download_link(self, token: str) -> str:
+    def get_download_link(self, token: str, is_browser_downloadable: bool = False):
         headers = {}
         if token:
             headers['Authorization'] = f'Bearer {token}'
@@ -157,7 +157,7 @@ class InstallableApp(BaseModel, ABC):
         resp = requests.get(release_link, headers=headers)
         row: str = json.loads(resp.content)
         setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
-        download_link: str = self.select_asset(row)
+        download_link = self.select_link(row, is_browser_downloadable)
         if not download_link:
             raise ModuleNotFoundError(
                 f'No app for type {setting.device_type} & version {self.version}, check your token & repo')
