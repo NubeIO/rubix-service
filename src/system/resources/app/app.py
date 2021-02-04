@@ -1,5 +1,6 @@
 from flask import current_app
 from flask_restful import Resource, abort, fields, marshal_with
+from werkzeug.local import LocalProxy
 
 from src import AppSetting
 from src.inheritors import inheritors
@@ -7,6 +8,8 @@ from src.system.apps.base.installable_app import InstallableApp
 from src.system.resources.app.utils import get_installed_app_details, get_app_from_service
 from src.system.resources.fields import service_fields
 from src.system.utils.shell import systemctl_installed
+
+logger = LocalProxy(lambda: current_app.logger)
 
 
 class AppResource(Resource):
@@ -44,6 +47,10 @@ class AppResource(Resource):
             if details:
                 app = get_app_from_service(details['service'], details['version'])
                 app_setting = current_app.config[AppSetting.FLASK_KEY]
-                browser_download_url = app.get_download_link(app_setting.token, True)
+                browser_download_url = {}
+                try:
+                    browser_download_url = app.get_download_link(app_setting.token, True)
+                except Exception as e:
+                    logger.error(str(e))
                 return {**details, 'is_installed': True, **browser_download_url}
-        return {**app.to_property_dict(), 'service': app.service(), 'is_installed': False, 'browser_download_url': ''}
+        return {**app.to_property_dict(), 'service': app.service(), 'is_installed': False}
