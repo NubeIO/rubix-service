@@ -20,11 +20,11 @@ def get_installed_app_details(dummy_app: InstallableApp):
     _version: str = get_extracted_dir(dummy_app.get_installation_dir())
     if _version:
         status = systemctl_status(dummy_app.service_file_name)
-        if status:
-            return {
-                **dummy_app.to_property_dict(),
-                **status,
-                'version': _version.split("/")[-1],
-                'service': dummy_app.service(),
-            }
+        return {
+            **dummy_app.to_property_dict(),
+            **status,
+            'version': _version.split("/")[-1],
+            'service': dummy_app.service(),
+        }
+
     return None
