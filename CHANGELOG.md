@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [v1.4.2](https://github.com/NubeIO/rubix-service/tree/v1.4.2) (2021-02-04)
+### Added
+- Make apps don't start on reboot which is in stopped mode
+- Make Apps status available even when there is no internet connectivity
+
+
 ## [v1.4.1](https://github.com/NubeIO/rubix-service/tree/v1.4.1) (2021-01-30)
 ### Added
 - Add download zip build endpoint
