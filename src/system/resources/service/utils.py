@@ -38,3 +38,12 @@ def validate_host_restart(action) -> str:
     if action == 'restart':
         return "sudo reboot"
     abort(400, message="incorrect command to restart host try: `restart` not:`{}`".format(action))
+
+
+def create_service_cmd(action, service_file_name) -> str:
+    cmd: str = ""
+    if action == "start":
+        cmd = f"sudo systemctl enable {service_file_name} &&"
+    elif action == "stop":
+        cmd = f"sudo systemctl disable {service_file_name} &&"
+    return f"{cmd} sudo systemctl {action} {service_file_name}".strip()
