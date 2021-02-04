@@ -44,6 +44,10 @@ class AppResource(Resource):
             if details:
                 app = get_app_from_service(details['service'], details['version'])
                 app_setting = current_app.config[AppSetting.FLASK_KEY]
-                browser_download_url = app.get_download_link(app_setting.token, True)
+                browser_download_url = {}
+                try:
+                    browser_download_url = app.get_download_link(app_setting.token, True)
+                except:
+                    pass
                 return {**details, 'is_installed': True, **browser_download_url}
-        return {**app.to_property_dict(), 'service': app.service(), 'is_installed': False, 'browser_download_url': ''}
+        return {**app.to_property_dict(), 'service': app.service(), 'is_installed': False}
