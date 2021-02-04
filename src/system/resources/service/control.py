@@ -29,5 +29,10 @@ class ServiceControl(Resource):
     def validate_and_create_service_cmd(cls, action: str, service: str) -> str:
         if service in Services.__members__.keys():
             service_file_name = Services[service].value.get('service_file_name')
-            return "sudo systemctl {} {}".format(action, service_file_name)
+            cmd = ""
+            if action == "start":
+                cmd = "sudo systemctl enable {} && ".format(service_file_name)
+            elif action == "stop":
+                cmd = "sudo systemctl disable {} && ".format(service_file_name)
+            return cmd + "sudo systemctl {} {}".format(action, service_file_name)
         abort(400, message="service {} does not exist in our system".format(service))
