@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.4.3](https://github.com/NubeIO/rubix-service/tree/v1.4.3) (2021-02-05)
+### Added
+- Issue fix on slow response of `/api/app/` & `/api/system/service/`
 
 ## [v1.4.2](https://github.com/NubeIO/rubix-service/tree/v1.4.2) (2021-02-04)
 ### Added
