@@ -63,7 +63,7 @@ def systemctl_installed(service):
        example: check = systemctl_installed('mosquitto')
        """
     try:
-        cmd = "systemctl list-unit-files | grep -Fq {} && echo TRUE || echo FALSE".format(service)
+        cmd: str = "systemctl status {} | wc -l | grep -Fq 0 && echo FALSE || echo TRUE".format(service)
         completed = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE)
     except subprocess.CalledProcessError:
         return False
