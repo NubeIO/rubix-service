@@ -31,8 +31,9 @@ def number_of_workers():
 @click.option('--device-type', type=click.Choice(['amd64', 'arm64', 'armv7']), default='armv7', show_default=True,
               help='Device type')
 @click.option('--auth', is_flag=True, help='Enable JWT authentication.')
+@click.option('-l', '--logging-conf', help='Rubix-Service: logging config file')
 def cli(port, data_dir, global_dir, artifact_dir, prod, workers, setting_file, gunicorn_config, log_level, device_type,
-        auth):
+        auth, logging_conf):
     setting = AppSetting(global_dir=global_dir, data_dir=data_dir, artifact_dir=artifact_dir, prod=prod,
                          device_type=device_type, auth=auth).reload(setting_file)
     options = {
@@ -40,7 +41,8 @@ def cli(port, data_dir, global_dir, artifact_dir, prod, workers, setting_file, g
         'workers': workers if workers is not None else number_of_workers() if prod else 1,
         'loglevel': (log_level if log_level is not None else 'ERROR' if prod else 'DEBUG').lower(),
         'preload_app': True,
-        'config': gunicorn_config
+        'config': gunicorn_config,
+        'logconfig': logging_conf
     }
     GunicornFlaskApplication(setting, options).run()
 

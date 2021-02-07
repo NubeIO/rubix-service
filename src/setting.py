@@ -18,6 +18,9 @@ class AppSetting:
     default_artifact_dir: str = 'apps'
     default_secret_key_file = 'secret_key.txt'
     default_token_file = 'token.txt'
+    default_logging_conf: str = 'logging.conf'
+    fallback_logging_conf: str = 'config/logging.example.conf'
+    fallback_prod_logging_conf: str = 'config/logging.prod.example.conf'
 
     def __init__(self, **kwargs):
         self.__global_dir = self.__compute_dir(kwargs.get('global_dir'), self.default_global_dir, 0o777)
