@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.4.4](https://github.com/NubeIO/rubix-service/tree/v1.4.4) (2021-02-09)
+### Added
+- Add identifier in App start
+
 ## [v1.4.3](https://github.com/NubeIO/rubix-service/tree/v1.4.3) (2021-02-05)
 ### Added
 - Issue fix on slow response of `/api/app/` & `/api/system/service/`
