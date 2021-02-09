@@ -12,7 +12,7 @@ class PointServerApp(PythonApp):
             min_support_version='v1.2.0',
             description='Flask Application for Nube Rest API',
             gateway_access=True,
-            url_prefix='/ps',
+            url_prefix='ps',
         )
 
     @classmethod

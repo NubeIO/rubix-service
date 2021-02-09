@@ -54,6 +54,8 @@ class PythonApp(SystemdApp, ABC):
                     line = line.replace('<port>', str(self.port))
                 if '<data_dir>' in line and data_dir:
                     line = line.replace('<data_dir>', data_dir)
+                if '<identifier>' in line and data_dir:
+                    line = line.replace('<identifier>', self.url_prefix)
                 if '<name>' in line and self.repo_name:
                     line = line.replace('<name>', self.repo_name)
                 if '<description>' in line and self.description:

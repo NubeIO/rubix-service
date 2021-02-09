@@ -12,7 +12,7 @@ class LoRaRawApp(PythonApp):
             min_support_version='v1.1.0',
             description='NubeIO LoRa Raw pyserial',
             gateway_access=True,
-            url_prefix='/lora',
+            url_prefix='lora',
         )
 
     @classmethod
