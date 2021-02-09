@@ -11,10 +11,12 @@ ADD poetry.lock pyproject.toml ./
 RUN $HOME/.poetry/bin/poetry install
 
 ADD src src
+ADD config config
 ADD systemd systemd
 ADD run.py VERSION ./
 RUN $HOME/.poetry/bin/poetry run pyinstaller run.py -n rubix-service --clean --onefile \
     --add-data VERSION:. \
+    --add-data config:config \
     --add-data systemd:systemd
 
 FROM python:$BASE_IMAGE_VERSION-alpine

@@ -19,7 +19,7 @@ class BACnetMasterApp(JavaApp):
             min_support_version='v0.2.0',
             description='BACnet Master for BACnet discovery',
             gateway_access=True,
-            url_prefix='/bm',
+            url_prefix='bm',
         )
 
     @classmethod

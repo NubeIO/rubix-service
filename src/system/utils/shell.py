@@ -13,7 +13,7 @@ def execute_command_with_exception(cmd, cwd=None):
     subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, cwd=cwd)
 
 
-def execute_command(cmd, cwd=None):
+def execute_command(cmd, cwd=None) -> bool:
     """Run command line"""
     try:
         subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, cwd=cwd)
@@ -22,7 +22,7 @@ def execute_command(cmd, cwd=None):
     return True
 
 
-def systemctl_status_check(service):
+def systemctl_status_check(service) -> bool:
     """
     Return True if systemd service is running
     example: check = systemctl_exists('mosquitto')
@@ -38,7 +38,7 @@ def systemctl_status_check(service):
     return False
 
 
-def systemctl_status(service):
+def systemctl_status(service) -> dict:
     p = subprocess.Popen(["systemctl", "status", service], stdout=subprocess.PIPE)
     (output, err) = p.communicate()
     output = output.decode('utf-8')
@@ -57,13 +57,13 @@ def systemctl_status(service):
     return service_status
 
 
-def systemctl_installed(service):
+def systemctl_installed(service) -> bool:
     """
-       Return True if systemd service is installed
-       example: check = systemctl_installed('mosquitto')
-       """
+    Return True if systemd service is installed
+    example: check = systemctl_installed('mosquitto')
+    """
     try:
-        cmd: str = "systemctl status {} | wc -l | grep -Fq 0 && echo FALSE || echo TRUE".format(service)
+        cmd: str = "systemctl status {} | wc -l | grep -w -Fq 0 && echo FALSE || echo TRUE".format(service)
         completed = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE)
     except subprocess.CalledProcessError:
         return False
