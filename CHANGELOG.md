@@ -2,6 +2,7 @@
 ## [v1.4.4](https://github.com/NubeIO/rubix-service/tree/v1.4.4) (2021-02-09)
 ### Added
 - Add identifier in App start
+- Installed App listing issue fix (sometimes used to show)
 
 ## [v1.4.3](https://github.com/NubeIO/rubix-service/tree/v1.4.3) (2021-02-05)
 ### Added
