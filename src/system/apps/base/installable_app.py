@@ -1,6 +1,7 @@
 import json
 import os
 from abc import abstractmethod, ABC
+from packaging import version as packaging_version
 
 import requests
 from flask import current_app
@@ -163,6 +164,22 @@ class InstallableApp(BaseModel, ABC):
                 f'No app for type {setting.device_type} & version {self.version}, check your token & repo')
         return download_link
 
+    def get_latest_release(self, token: str):
+        headers = {}
+        if token:
+            headers['Authorization'] = f'Bearer {token}'
+        release_link: str = f'https://api.github.com/repos/NubeIO/{self.repo_name}/releases'
+        resp = requests.get(release_link, headers=headers)
+        data = json.loads(resp.content)
+        latest_release = ''
+        for row in data:
+            release = row.get('tag_name', '') if type(row) is dict else ''
+            if not latest_release or packaging_version.parse(latest_release) <= packaging_version.parse(release):
+                latest_release = release
+        if not latest_release:
+            raise ModuleNotFoundError('No version found, check your token & repo')
+        return latest_release
+
     def get_cwd(self) -> str:
         """current working dir for script.bash execution"""
         return self.get_installed_dir()
@@ -187,3 +204,5 @@ class InstallableApp(BaseModel, ABC):
 
     def set_version(self, _version):
         self.__version = _version
+
+
