@@ -22,7 +22,8 @@ class AppResource(Resource):
         **service_fields,
         'name': fields.String,
         'created_at': fields.String,
-        'browser_download_url': fields.String
+        'browser_download_url': fields.String,
+        'latest_version': fields.String
     }
 
     @classmethod
@@ -48,9 +49,14 @@ class AppResource(Resource):
                 app = get_app_from_service(details['service'], details['version'])
                 app_setting = current_app.config[AppSetting.FLASK_KEY]
                 browser_download_url = {}
+                latest_version = None
                 try:
                     browser_download_url = app.get_download_link(app_setting.token, True)
                 except Exception as e:
                     logger.error(str(e))
-                return {**details, 'is_installed': True, **browser_download_url}
+                try:
+                    latest_version = app.get_latest_release(app_setting.token)
+                except Exception as e:
+                    logger.error(str(e))
+                return {**details, 'is_installed': True, **browser_download_url, 'latest_version': latest_version}
         return {**app.to_property_dict(), 'service': app.service(), 'is_installed': False}
