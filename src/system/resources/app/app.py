@@ -42,27 +42,28 @@ class AppResource(Resource):
     def get_installed_apps_stat(cls, browser_download_url, latest_version):
         installed_apps = []
         for installable_app in inheritors(InstallableApp):
-            installed_apps.append(cls.get_installed_app_stat(installable_app(),browser_download_url,latest_version))
+            installed_apps.append(cls.get_installed_app_stat(installable_app(), browser_download_url, latest_version))
         return installed_apps
 
     @classmethod
     def get_installed_app_stat(cls, app: InstallableApp, browser_download_url, latest_version) -> dict:
+        app_setting = current_app.config[AppSetting.FLASK_KEY]
+        _latest_version = None
+        if latest_version:
+            try:
+                _latest_version = app.get_latest_release(app_setting.token)
+            except Exception as e:
+                logger.error(str(e))
         if systemctl_installed(app.service_file_name):
             details: dict = get_installed_app_details(app)
             if details:
                 app = get_app_from_service(details['service'], details['version'])
-                app_setting = current_app.config[AppSetting.FLASK_KEY]
-                __browser_download_url = {}
-                __latest_version = None
+                _browser_download_url = {}
                 if browser_download_url:
                     try:
-                        __browser_download_url = app.get_download_link(app_setting.token, True)
+                        _browser_download_url = app.get_download_link(app_setting.token, True)
                     except Exception as e:
                         logger.error(str(e))
-                if latest_version:
-                    try:
-                        __latest_version = app.get_latest_release(app_setting.token)
-                    except Exception as e:
-                        logger.error(str(e))
-                return {**details, 'is_installed': True, **__browser_download_url, 'latest_version': __latest_version}
-        return {**app.to_property_dict(), 'service': app.service(), 'is_installed': False}
+                return {**details, 'is_installed': True, **_browser_download_url, 'latest_version': _latest_version}
+        return {**app.to_property_dict(), 'service': app.service(), 'is_installed': False,
+                'latest_version': _latest_version}
