@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.4.5](https://github.com/NubeIO/rubix-service/tree/v1.4.5) (2021-02-10)
+### Added
+- Add latest_version field on app listing
+
 ## [v1.4.4](https://github.com/NubeIO/rubix-service/tree/v1.4.4) (2021-02-09)
 ### Added
 - Add identifier in App start
