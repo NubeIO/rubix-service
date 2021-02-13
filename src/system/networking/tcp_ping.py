@@ -68,6 +68,6 @@ def tcpping(d_host, d_port=80, maxCount=10, DEBUG=False):
             'average': round(AVG, 3), 'lost_rate': lRate}
 
 
-# Dummy destination for local test
+# Dummy destination for local test.dhcpcd.conf
 if __name__ == "__main__":
     tcpping(d_host='192.168.0.102', d_port=502, maxCount=10, DEBUG=True)
