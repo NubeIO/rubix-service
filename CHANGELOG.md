@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.4.7](https://github.com/NubeIO/rubix-service/tree/v1.4.7) (2021-02-15)
+### Added
+- Added network ping and port ping
+
 ## [v1.4.6](https://github.com/NubeIO/rubix-service/tree/v1.4.6) (2021-02-14)
 ### Added
 - Add api to update ip address
