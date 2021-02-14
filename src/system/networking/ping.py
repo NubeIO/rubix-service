@@ -1,4 +1,6 @@
 from subprocess import Popen, DEVNULL
+import os
+import socket
 
 
 def network_ping_range(address: str, start: int, finish: int, timeout_seconds: int) -> dict:
@@ -24,3 +26,24 @@ def network_ping_range(address: str, start: int, finish: int, timeout_seconds: i
                     host_error.append({"ip": ip, "status": False})
                 break
     return {"host_alive": host_alive, "host_dead": host_dead, "host_error": host_error}
+
+
+def port_check_udp(host: str, port: int):
+    try:
+        res = os.system("nc -vnzu " + str(host) + " " + str(port) + " > /dev/null 2>&1")
+        if res == 0:
+            return True
+        else:
+            return False
+    except:
+        return False
+
+
+def port_check_tcp(host: str, port: int):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.connect((host, int(port)))
+        s.shutdown(2)
+        return True
+    except:
+        return False

@@ -4,7 +4,7 @@ from werkzeug.local import LocalProxy
 from flask_restful import Resource, reqparse, abort
 
 from src.system.networking.ip import dhcpcdManager
-from src.system.networking.ping import network_ping_range
+from src.system.networking.ping import network_ping_range, port_check_udp, port_check_tcp
 from src.system.networking.utils import is_valid_ip, is_interface_up
 
 logger = LocalProxy(lambda: current_app.logger)
@@ -173,5 +173,33 @@ class NetworkPingRange(Resource):
         timeout_seconds = args['timeout_seconds']
         try:
             return network_ping_range(address, start, finish, timeout_seconds)
+        except Exception as e:
+            abort(501, message=str(e))
+
+
+class NetworkCheckPort(Resource):
+    def post(cls):
+        parser = reqparse.RequestParser()
+        parser.add_argument('host',
+                            type=str,
+                            help='example `start a 1 192.168.15.1`',
+                            required=True)
+        parser.add_argument('port',
+                            type=int,
+                            help='example `502`',
+                            required=True)
+        parser.add_argument('type_udp',
+                            type=bool,
+                            help='set to true for port type UDP`',
+                            required=True)
+        args = parser.parse_args()
+        host = args['host']
+        port = args['port']
+        type_udp = args['type_udp']
+        try:
+            if type_udp:
+                return port_check_udp(host, port)
+            else:
+                return port_check_tcp(host, port)
         except Exception as e:
             abort(501, message=str(e))
