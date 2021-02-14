@@ -2,11 +2,10 @@ import subprocess
 import time
 from ipaddress import IPv4Network
 
-
 class dhcpcdManager:
     def __init__(self):
-        # self._filePath = '/etc/dhcpcd.conf'
-        self._filePath = 'src/system/networking/test.dhcpcd.conf'
+        self._filePath = '/etc/dhcpcd.conf'
+        # self._filePath = 'src/system/networking/test.dhcpcd.conf'
         with open(self._filePath, 'r') as fp:
             self._lines = fp.readlines()
 
