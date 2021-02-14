@@ -6,7 +6,7 @@ from ipaddress import IPv4Network
 class dhcpcdManager:
     def __init__(self):
         # self._filePath = '/etc/dhcpcd.conf'
-        self._filePath = 'lib/test.dhcpcd.conf.dhcpcd.conf'
+        self._filePath = 'src/system/networking/test.dhcpcd.conf'
         with open(self._filePath, 'r') as fp:
             self._lines = fp.readlines()
 
@@ -40,7 +40,7 @@ class dhcpcdManager:
         return -1
 
     def set_static_info(self, interface: str, ip_address: str, routers: str, domain_name_server: str,
-                        netmask: str) -> int:
+                        netmask: str):
         try:
             iface_index = self.find_interface_line(interface)
             netmask_number = IPv4Network(f"0.0.0.0/{netmask}").prefixlen
@@ -65,10 +65,10 @@ class dhcpcdManager:
                     fp.write(line)
 
             return 0
-        except:
-            return -1
+        except Exception as e:
+            return e
 
-    def remove_static_info(self, interface: str) -> int:
+    def remove_static_info(self, interface: str):
         try:
             iface_index = self.find_interface_line(interface)
             if iface_index == -1:
@@ -89,19 +89,10 @@ class dhcpcdManager:
                     fp.write(line)
 
             return 0
-        except:
-            return -1
+        except Exception as e:
+            return e
 
-
-def refresh_dhcpcd(interface: str):
-    subprocess.call(['sudo dhcpcd -n ' + interface], shell=True)
-
-
-def refresh_wireless(interface: str):
-    subprocess.call(['sudo', 'ifdown', interface])
-    time.sleep(1)
-    subprocess.call(['sudo', 'ifdown', interface])
-
-
-def restart_network():
-    subprocess.call(['sudo', 'service', 'networking', 'restart'])
+    def restart_interface(self,  interface: str):
+        subprocess.call(["sudo", "ifconfig", interface, "down"])
+        time.sleep(1)
+        subprocess.call(["sudo", "ifconfig", interface, "up"])
