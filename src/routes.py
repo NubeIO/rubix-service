@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_restful import Api
 
 from src.platform.resource_wires_plat import WiresPlatResource
-from src.system.networking.network_info import NetworkInfo
+from src.system.networking.network import NetworkInfo, NetworkSetStaticIP, NetworkSetDHCP
 from src.system.resources.app.app import AppResource
 from src.system.resources.app.control import ControlResource
 from src.system.resources.app.delete_data import DeleteDataResource
@@ -33,6 +33,8 @@ api_system.add_resource(GetSystemTime, '/time')
 api_system.add_resource(GetSystemMem, '/memory')
 api_system.add_resource(GetSystemDiscUsage, '/disc')
 api_system.add_resource(NetworkInfo, '/networking')
+api_system.add_resource(NetworkSetStaticIP, '/networking/static')
+api_system.add_resource(NetworkSetDHCP, '/networking/dhcp')
 api_system.add_resource(HostReboot, '/host/restart')
 
 api_service = Api(bp_service)
