@@ -4,6 +4,7 @@ from werkzeug.local import LocalProxy
 from flask_restful import Resource, reqparse, abort
 
 from src.system.networking.ip import dhcpcdManager
+from src.system.networking.ping import network_ping_range
 from src.system.networking.utils import is_valid_ip, is_interface_up
 
 logger = LocalProxy(lambda: current_app.logger)
@@ -53,6 +54,7 @@ class NetworkSetStaticIP(Resource):
     """
     ip.set_static_info(iface, "192.168.15.7", "192.168.15.1", "8.8.8.8", "255.255.255.0")  # add a static ip
     """
+
     def post(cls):
         parser = reqparse.RequestParser()
         parser.add_argument('interface',
@@ -116,11 +118,12 @@ class NetworkSetDHCP(Resource):
     """
     ip.set_static_info('eth0', true)  # add a static ip
     """
+
     def post(cls):
         parser = reqparse.RequestParser()
         parser.add_argument('interface',
                             type=str,
-                            help='example `eth0`',
+                            help='example `192.168.15`',
                             required=True)
         parser.add_argument('network_reset',
                             type=bool,
@@ -140,5 +143,35 @@ class NetworkSetDHCP(Resource):
                 except Exception as e:
                     abort(501, message=str(e))
             return True
+        except Exception as e:
+            abort(501, message=str(e))
+
+
+class NetworkPingRange(Resource):
+    def post(cls):
+        parser = reqparse.RequestParser()
+        parser.add_argument('address',
+                            type=str,
+                            help='example `start a 1 192.168.15.x(1)`',
+                            required=True)
+        parser.add_argument('start_address',
+                            type=int,
+                            help='example `start a 1 192.168.15.x(1)`',
+                            required=True)
+        parser.add_argument('end_address',
+                            type=int,
+                            help='example `finish a 10 192.168.15.x(10)`',
+                            required=True)
+        parser.add_argument('timeout_seconds',
+                            type=int,
+                            help='time out to wait for replay',
+                            required=True)
+        args = parser.parse_args()
+        address = args['address']
+        start = args['start_address']
+        finish = args['end_address']
+        timeout_seconds = args['timeout_seconds']
+        try:
+            return network_ping_range(address, start, finish, timeout_seconds)
         except Exception as e:
             abort(501, message=str(e))
