@@ -1,4 +1,9 @@
 # CHANGELOG
+## [v1.4.6](https://github.com/NubeIO/rubix-service/tree/v1.4.6) (2021-02-14)
+### Added
+- Add api to update ip address
+- Fix host time display and mem usage
+
 ## [v1.4.5](https://github.com/NubeIO/rubix-service/tree/v1.4.5) (2021-02-10)
 ### Added
 - Add latest_version field on app listing
