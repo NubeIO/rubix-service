@@ -47,3 +47,6 @@ def create_service_cmd(action, service_file_name) -> str:
     elif action == "stop":
         cmd = f"sudo systemctl disable {service_file_name} &&"
     return f"{cmd} sudo systemctl {action} {service_file_name}".strip()
+
+
+
