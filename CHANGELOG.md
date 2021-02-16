@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.4.8](https://github.com/NubeIO/rubix-service/tree/v1.4.8) (2021-02-16)
+### Added
+- Added api for setting timezone
+
 ## [v1.4.7](https://github.com/NubeIO/rubix-service/tree/v1.4.7) (2021-02-15)
 ### Added
 - Added network ping and port ping
