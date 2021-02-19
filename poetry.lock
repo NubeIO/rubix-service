@@ -331,6 +331,21 @@ security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
 socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 
 [[package]]
+name = "rubix-registry"
+version = "1.0.0"
+description = "Rubix Registry"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+develop = false
+
+[package.source]
+type = "git"
+url = "https://github.com/NubeIO/rubix-registry"
+reference = "master"
+resolved_reference = "41d8dd58dcf600f4333e692cc16dc02d099fc537"
+
+[[package]]
 name = "six"
 version = "1.15.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -411,7 +426,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "c259c47f7e92db37c11ee3945b5d099c04dd923b3f7cc60d1a645ea60d696457"
+content-hash = "dbe97bdedb8f467a7b67d7dc485353b246a50a43b94073117e226d0e5769b26c"
 
 [metadata.files]
 altgraph = [
@@ -654,6 +669,7 @@ requests = [
     {file = "requests-2.25.1-py2.py3-none-any.whl", hash = "sha256:c210084e36a42ae6b9219e00e48287def368a26d03a048ddad7bfee44f75871e"},
     {file = "requests-2.25.1.tar.gz", hash = "sha256:27973dd4a904a4f13b263a19c866c13b92a39ed1c964655f025f3f8d3d75b804"},
 ]
+rubix-registry = []
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
     {file = "six-1.15.0.tar.gz", hash = "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"},

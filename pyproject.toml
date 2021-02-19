@@ -21,6 +21,7 @@ gevent = [
 ]
 packaging = "^20.8"
 PyJWT = "^2.0.1"
+rubix-registry = { git = "https://github.com/NubeIO/rubix-registry", rev = "master" }
 
 [tool.poetry.dev-dependencies]
 pyinstaller = "^4.1"
