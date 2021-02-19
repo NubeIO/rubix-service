@@ -342,8 +342,8 @@ develop = false
 [package.source]
 type = "git"
 url = "https://github.com/NubeIO/rubix-registry"
-reference = "master"
-resolved_reference = "41d8dd58dcf600f4333e692cc16dc02d099fc537"
+reference = "v1.0.0"
+resolved_reference = "cbd039aac2eafc3bdeb10aead8a3180f86335a1b"
 
 [[package]]
 name = "six"
@@ -426,7 +426,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "dbe97bdedb8f467a7b67d7dc485353b246a50a43b94073117e226d0e5769b26c"
+content-hash = "db05fa14dd9c97fe39b9c7422e40e40bf166cd2c039314c845ab99f2a1ce64f8"
 
 [metadata.files]
 altgraph = [
