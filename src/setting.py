@@ -21,6 +21,7 @@ class AppSetting:
     default_logging_conf: str = 'logging.conf'
     fallback_logging_conf: str = 'config/logging.example.conf'
     fallback_prod_logging_conf: str = 'config/logging.prod.example.conf'
+    default_users_file = 'users.txt'
 
     def __init__(self, **kwargs):
         self.__global_dir = self.__compute_dir(kwargs.get('global_dir'), self.default_global_dir, 0o777)
@@ -35,6 +36,7 @@ class AppSetting:
         self.__device_type = kwargs.get('device_type')
         self.__secret_key = ''
         self.__secret_key_file = os.path.join(self.data_dir, self.default_secret_key_file)
+        self.__users_file = os.path.join(self.data_dir, self.default_users_file)
         self.__auth = kwargs.get('auth') or False
 
     @property
@@ -76,6 +78,10 @@ class AppSetting:
     @property
     def auth(self) -> bool:
         return self.__auth
+
+    @property
+    def users_file(self) -> str:
+        return self.__users_file
 
     def reload(self, setting_file: str):
         return self

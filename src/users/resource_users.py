@@ -1,40 +1,32 @@
-from flask_restful import Resource, reqparse, marshal_with, abort
-from werkzeug.security import generate_password_hash
+from flask_restful import Resource, reqparse, marshal_with, abort, fields
 
-from src.users.model_users import UsersModel
-from src.users.schema_users import users_all_attributes, users_return_fields
+from src.users.model_users import UserModel
 
 
 class UsersResource(Resource):
-    parser = reqparse.RequestParser()
-    for attr in users_all_attributes:
-        parser.add_argument(attr,
-                            type=users_all_attributes[attr]['type'],
-                            required=users_all_attributes[attr].get('required', False),
-                            help=users_all_attributes[attr].get('help', None),
-                            store_missing=False)
+    return_fields = {
+        'username': fields.String
+    }
 
     @classmethod
-    @marshal_with(users_return_fields)
+    @marshal_with(return_fields)
     def get(cls):
-        users = UsersModel.query.all()
-        if len(users) == 0:
+        user = UserModel.get_user()
+        if not user:
             abort(404, message='Users not found')
-        return users
+        return user
 
     @classmethod
-    @marshal_with(users_return_fields)
+    @marshal_with(return_fields)
     def put(cls):
-        data = UsersResource.parser.parse_args()
-        data['password'] = generate_password_hash(data['password'])
-        user = UsersModel.query.first()
+        parser = reqparse.RequestParser()
+        parser.add_argument('username', type=str, required=True)
+        parser.add_argument('password', type=str, required=True)
+        data = parser.parse_args()
         try:
-            if not user:
-                abort(404, message='User is invalid')
-            else:
-                user.update(**{**data, "uuid": user.uuid})
-                return UsersModel.find_by_uuid(user.uuid)
+            UserModel.update_user(data['username'], data['password'])
+            return UserModel.get_user()
+        except ValueError as e:
+            abort(400, message=str(e))
         except Exception as e:
             abort(500, message=str(e))
-
-
