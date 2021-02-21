@@ -11,11 +11,13 @@ class AppSetting:
     DATA_DIR_ENV = 'RUBIX_SERVICE_DATA'
     ARTIFACT_DIR_ENV = 'ARTIFACT_DIR'
     GLOBAL_DATA_DIR_ENV = 'GLOBAL_DATA'
+    BACKUP_DATA_DIR_ENV = 'BACKUP_DATA'
     FLASK_KEY: str = 'APP_SETTING'
 
     default_global_dir: str = 'out'
     default_data_dir: str = 'rubix-service'
     default_artifact_dir: str = 'apps'
+    default_backup_dir: str = 'backup'
     default_secret_key_file = 'secret_key.txt'
     default_token_file = 'token.txt'
     default_logging_conf: str = 'logging.conf'
@@ -28,6 +30,7 @@ class AppSetting:
                                              os.path.join(self.global_dir, self.default_data_dir))
         self.__artifact_dir = self.__compute_dir(kwargs.get('artifact_dir'),
                                                  os.path.join(self.data_dir, self.default_artifact_dir))
+        self.__backup_dir = self.__compute_dir(kwargs.get('backup_dir'), self.default_backup_dir, 0o777)
         self.__download_dir = self.__compute_dir('', os.path.join(self.__artifact_dir, 'download'))
         self.__install_dir = self.__compute_dir('', os.path.join(self.__artifact_dir, 'install'))
         self.__token_file = os.path.join(self.data_dir, self.default_token_file)
@@ -48,6 +51,10 @@ class AppSetting:
     @property
     def artifact_dir(self) -> str:
         return self.__artifact_dir
+
+    @property
+    def backup_dir(self):
+        return self.__backup_dir
 
     @property
     def download_dir(self) -> str:

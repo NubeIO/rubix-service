@@ -22,6 +22,8 @@ def number_of_workers():
               help='Global data dir')
 @click.option('-a', '--artifact-dir', type=click.Path(), default=lambda: os.environ.get(AppSetting.ARTIFACT_DIR_ENV),
               help='Artifact downloaded dir')
+@click.option('-b', '--backup-dir', type=click.Path(), default=lambda: os.environ.get(AppSetting.BACKUP_DATA_DIR_ENV),
+              help='Backup dir')
 @click.option('--prod', is_flag=True, help='Production mode')
 @click.option('-s', '--setting-file', help='Rubix-Service: setting json file')
 @click.option('--workers', type=int, help='Gunicorn: The number of worker processes for handling requests.')
@@ -32,10 +34,10 @@ def number_of_workers():
               help='Device type')
 @click.option('--auth', is_flag=True, help='Enable JWT authentication.')
 @click.option('-l', '--logging-conf', help='Rubix-Service: logging config file')
-def cli(port, data_dir, global_dir, artifact_dir, prod, workers, setting_file, gunicorn_config, log_level, device_type,
-        auth, logging_conf):
-    setting = AppSetting(global_dir=global_dir, data_dir=data_dir, artifact_dir=artifact_dir, prod=prod,
-                         device_type=device_type, auth=auth).reload(setting_file)
+def cli(port, data_dir, global_dir, artifact_dir, backup_dir, prod, workers, setting_file, gunicorn_config, log_level,
+        device_type, auth, logging_conf):
+    setting = AppSetting(global_dir=global_dir, data_dir=data_dir, artifact_dir=artifact_dir, backup_dir=backup_dir,
+                         prod=prod, device_type=device_type, auth=auth).reload(setting_file)
     options = {
         'bind': '%s:%s' % ('0.0.0.0', port),
         'workers': workers if workers is not None else number_of_workers() if prod else 1,
