@@ -1,42 +1,49 @@
 import datetime
-import uuid
+import re
+from typing import Dict
 
 import jwt
 from flask import current_app, request
 from flask_restful import abort
 from werkzeug.security import generate_password_hash
 
-from src import db, AppSetting
-from src.platform.model_base import ModelBase
+from src.setting import AppSetting
+from src.system.utils.file import read_file, write_file
 
 
-class UsersModel(ModelBase):
-    __tablename__ = 'users'
-    uuid = db.Column(db.String(80), primary_key=True, nullable=False)
-    username = db.Column(db.String(80), nullable=False)
-    password = db.Column(db.String(80), nullable=False)
-
-    def __repr__(self):
-        return "Users({})".format(self.uuid)
-
-    @classmethod
-    def find_by_username(cls, user_uuid):
-        return cls.query.filter_by(uuid=user_uuid).first()
-
+class UserModel:
     @classmethod
     def create_user(cls, username='admin', password='admin'):
-        if not UsersModel.query.first():
-            hashed_password = generate_password_hash(password, method='sha256')
-            _uuid = str(uuid.uuid4())
-            default_user = UsersModel(uuid=_uuid, username=username, password=hashed_password)
-            db.session.add(default_user)
-            db.session.commit()
+        app_setting = current_app.config[AppSetting.FLASK_KEY]
+        existing_users = read_file(app_setting.users_file).split()
+        if not existing_users:
+            UserModel.update_user(username, password)
+
+    @classmethod
+    def update_user(cls, username, password):
+        if not re.match("^([A-Za-z0-9_-])+$", username):
+            raise ValueError("username should be alphanumeric and can contain '_', '-'")
+        app_setting = current_app.config[AppSetting.FLASK_KEY]
+        hashed_password = generate_password_hash(password, method='sha256')
+        default_user = f'{username}:{hashed_password}'
+        write_file(app_setting.users_file, default_user)
+
+    @classmethod
+    def get_user(cls) -> Dict:
+        app_setting = current_app.config[AppSetting.FLASK_KEY]
+        user = read_file(app_setting.users_file).split(":")
+        if len(user) >= 2:
+            return {
+                'username': user[0],
+                'password': user[1]
+            }
+        return {}
 
     @staticmethod
     def encode_jwt_token(username):
         app_setting = current_app.config[AppSetting.FLASK_KEY]
         payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, hours=0, seconds=0),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=30, hours=0, seconds=0),
             'iat': datetime.datetime.utcnow(),
             'sub': username
         }
@@ -62,6 +69,6 @@ class UsersModel(ModelBase):
             data = request.headers['Authorization']
             access_token = str.replace(str(data), 'Bearer ', '')
             try:
-                UsersModel.decode_jwt_token(access_token)
+                UserModel.decode_jwt_token(access_token)
             except Exception as e:
                 abort(401, message=str(e))

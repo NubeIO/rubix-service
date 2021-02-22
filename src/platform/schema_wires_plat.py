@@ -1,16 +1,6 @@
 from src.platform.utils import map_rest_schema
 
 wires_plat_all_attributes = {
-    'device_id': {
-        'type': str,
-        'required': True,
-        'help': '',
-    },
-    'device_name': {
-        'type': str,
-        'required': True,
-        'help': '',
-    },
     'client_id': {
         'type': str,
         'required': True,
@@ -27,6 +17,16 @@ wires_plat_all_attributes = {
         'help': '',
     },
     'site_name': {
+        'type': str,
+        'required': True,
+        'help': '',
+    },
+    'device_id': {
+        'type': str,
+        'required': True,
+        'help': '',
+    },
+    'device_name': {
         'type': str,
         'required': True,
         'help': '',
@@ -69,11 +69,6 @@ wires_plat_all_attributes = {
 }
 
 wires_plat_return_attributes = {
-    'uuid': {
-        'type': str,
-        'required': False,
-        'help': '',
-    },
     'created_on': {
         'type': str,
         'help': '',
