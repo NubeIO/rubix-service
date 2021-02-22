@@ -3,7 +3,8 @@ import json
 import os
 import subprocess
 
-from flask_restful import Resource, reqparse, abort
+from flask_restful import reqparse
+from rubix_http.resource import RubixResource
 
 FNULL = open(os.devnull, "w")
 GETENT = "/usr/bin/getent"
@@ -65,27 +66,21 @@ def _set_default(obj):
     raise TypeError
 
 
-class UFWRuleList(Resource):
+class UFWRuleList(RubixResource):
     @classmethod
     def get(cls):
-        try:
-            _ = get_rule_index()
-            result = json.dumps(_, default=_set_default)
-            return json.loads(result)
-        except Exception as e:
-            abort(501, message=str(e))
+        _ = get_rule_index()
+        result = json.dumps(_, default=_set_default)
+        return json.loads(result)
 
 
-class UFWStatus(Resource):
+class UFWStatus(RubixResource):
     @classmethod
     def get(cls):
-        try:
-            return ufw_is_enabled()
-        except Exception as e:
-            abort(501, message=str(e))
+        return ufw_is_enabled()
 
 
-class UFWEnable(Resource):
+class UFWEnable(RubixResource):
     @classmethod
     def post(cls):
         parser = reqparse.RequestParser()
@@ -95,10 +90,7 @@ class UFWEnable(Resource):
                             required=True)
         args = parser.parse_args()
         enable = str(args['enable'])
-        try:
-            if enable == "enable":
-                return enable_ufw()
-            elif enable == "disable":
-                return disable_ufw()
-        except Exception as e:
-            abort(501, message=str(e))
+        if enable == "enable":
+            return enable_ufw()
+        elif enable == "disable":
+            return disable_ufw()
