@@ -1,11 +1,12 @@
-from flask_restful import Resource, reqparse, abort
+from flask_restful import reqparse
+from rubix_http.resource import RubixResource
 
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.resources.app.utils import get_app_from_service
 from src.system.utils.file import delete_existing_folder
 
 
-class DeleteDataResource(Resource):
+class DeleteDataResource(RubixResource):
     @classmethod
     def post(cls):
         parser = reqparse.RequestParser()
@@ -13,9 +14,6 @@ class DeleteDataResource(Resource):
         args = parser.parse_args()
         service: str = args['service'].upper()
         app: InstallableApp = get_app_from_service(service)
-        try:
-            deletion: bool = delete_existing_folder(app.get_data_dir())
-            restart: bool = app.restart()
-            return {'service': service, 'deletion': deletion, 'restart': restart}
-        except Exception as e:
-            abort(501, message=str(e))
+        deletion: bool = delete_existing_folder(app.get_data_dir())
+        restart: bool = app.restart()
+        return {'service': service, 'deletion': deletion, 'restart': restart}

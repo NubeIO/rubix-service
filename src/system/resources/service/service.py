@@ -1,18 +1,16 @@
-from flask_restful import Resource, marshal_with, abort
+from flask_restful import marshal_with
+from rubix_http.resource import RubixResource
 
 from src.system.resources.fields import service_fields
 from src.system.resources.service.utils import Services
 from src.system.utils.shell import systemctl_status, systemctl_installed
 
 
-class ServiceResource(Resource):
+class ServiceResource(RubixResource):
     @classmethod
     @marshal_with(service_fields)
     def get(cls):
-        try:
-            return cls.get_services_stat()
-        except Exception as e:
-            abort(501, message=str(e))
+        return cls.get_services_stat()
 
     @classmethod
     def get_services_stat(cls):

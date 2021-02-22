@@ -1,5 +1,5 @@
-from flask_restful import abort
 from packaging import version
+from rubix_http.exceptions.exception import NotFoundException
 
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.utils.file import get_extracted_dir
@@ -11,9 +11,9 @@ def get_app_from_service(service, version_=''):
         app: InstallableApp = InstallableApp.get_app(service, version_)
         if not version_ or version.parse(app.min_support_version) <= version.parse(version_):
             return app
-        abort(400, message='Your version need to be version <= {}'.format(app.min_support_version))
+        raise NotFoundException(f'Your version need to be version <= {app.min_support_version}')
     except ModuleNotFoundError as e:
-        abort(404, message=str(e))
+        raise NotFoundException(str(e))
 
 
 def get_installed_app_details(dummy_app: InstallableApp):

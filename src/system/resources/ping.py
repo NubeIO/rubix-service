@@ -2,7 +2,7 @@ import time
 from datetime import datetime
 
 from flask import current_app
-from flask_restful import Resource
+from rubix_http.resource import RubixResource
 
 from src import AppSetting
 from src.system.utils.project import get_version
@@ -18,7 +18,7 @@ def get_up_time():
     return time.time() - startTime
 
 
-class Ping(Resource):
+class Ping(RubixResource):
     def get(self):
         up_time = get_up_time()
         up_min = up_time / 60

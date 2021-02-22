@@ -1,10 +1,11 @@
-from flask_restful import Resource, reqparse, abort
+from flask_restful import reqparse
+from rubix_http.resource import RubixResource
 
 from src.system.resources.service.utils import validate_host_restart
 from src.system.utils.shell import execute_command_with_exception
 
 
-class HostReboot(Resource):
+class HostReboot(RubixResource):
     @classmethod
     def post(cls):
         parser = reqparse.RequestParser()
@@ -15,8 +16,5 @@ class HostReboot(Resource):
         args = parser.parse_args()
         action = args['action']
         service = validate_host_restart(action)
-        try:
-            execute_command_with_exception(service)
-            return {}
-        except Exception as e:
-            abort(501, message=str(e))
+        execute_command_with_exception(service)
+        return {}

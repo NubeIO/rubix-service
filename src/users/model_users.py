@@ -4,7 +4,7 @@ from typing import Dict
 
 import jwt
 from flask import current_app, request
-from flask_restful import abort
+from rubix_http.exceptions.exception import NotFoundException, BadDataException
 from werkzeug.security import generate_password_hash
 
 from src.setting import AppSetting
@@ -22,7 +22,7 @@ class UserModel:
     @classmethod
     def update_user(cls, username, password):
         if not re.match("^([A-Za-z0-9_-])+$", username):
-            raise ValueError("username should be alphanumeric and can contain '_', '-'")
+            raise BadDataException("username should be alphanumeric and can contain '_', '-'")
         app_setting = current_app.config[AppSetting.FLASK_KEY]
         hashed_password = generate_password_hash(password, method='sha256')
         default_user = f'{username}:{hashed_password}'
@@ -64,11 +64,8 @@ class UserModel:
         app_setting = current_app.config[AppSetting.FLASK_KEY]
         if request.endpoint != 'users.login' and app_setting.auth:
             if 'Authorization' not in request.headers:
-                abort(401, message='Authorization header is missing')
+                raise NotFoundException('Authorization header is missing')
 
             data = request.headers['Authorization']
             access_token = str.replace(str(data), 'Bearer ', '')
-            try:
-                UserModel.decode_jwt_token(access_token)
-            except Exception as e:
-                abort(401, message=str(e))
+            UserModel.decode_jwt_token(access_token)

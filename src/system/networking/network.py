@@ -1,7 +1,9 @@
 import netifaces
 from flask import current_app
+from rubix_http.exceptions.exception import BadDataException
+from rubix_http.resource import RubixResource
 from werkzeug.local import LocalProxy
-from flask_restful import Resource, reqparse, abort
+from flask_restful import reqparse
 
 from src.system.networking.ip import dhcpcdManager
 from src.system.networking.ping import network_ping_range, port_check_udp, port_check_tcp
@@ -22,35 +24,32 @@ def get_all_interfaces():
     for iface in ifaces:
         if iface not in gateways_dict.keys():
             continue
-        try:
-            addrs = netifaces.ifaddresses(iface).get(netifaces.AF_INET)
-            macs = netifaces.ifaddresses(iface)[netifaces.AF_LINK]
-            addrs = addrs[0]
-            macs = macs[0]
-            address = addrs.get('addr')
-            broadcast = addrs.get('broadcast')
-            netmask = addrs.get('netmask')
-            mac = macs.get('addr')
-            interfaces[iface] = {
-                'interface': iface,
-                'address': address,
-                'broadcast': broadcast,
-                'netmask': netmask,
-                'gateway': ifaces_gateway.get(iface),
-                'mac': mac
-            }
-        except Exception as e:
-            logger.error(str(e))
+        addrs = netifaces.ifaddresses(iface).get(netifaces.AF_INET)
+        macs = netifaces.ifaddresses(iface)[netifaces.AF_LINK]
+        addrs = addrs[0]
+        macs = macs[0]
+        address = addrs.get('addr')
+        broadcast = addrs.get('broadcast')
+        netmask = addrs.get('netmask')
+        mac = macs.get('addr')
+        interfaces[iface] = {
+            'interface': iface,
+            'address': address,
+            'broadcast': broadcast,
+            'netmask': netmask,
+            'gateway': ifaces_gateway.get(iface),
+            'mac': mac
+        }
     return interfaces
 
 
-class NetworkInfo(Resource):
+class NetworkInfo(RubixResource):
     def get(self):
         mem = get_all_interfaces()
         return mem
 
 
-class NetworkSetStaticIP(Resource):
+class NetworkSetStaticIP(RubixResource):
     """
     ip.set_static_info(iface, "192.168.15.7", "192.168.15.1", "8.8.8.8", "255.255.255.0")  # add a static ip
     """
@@ -84,37 +83,31 @@ class NetworkSetStaticIP(Resource):
         args = parser.parse_args()
         interface = args['interface']
         if not is_interface_up(interface):
-            abort(500, message=str("interface is not valid"))
+            raise BadDataException("interface is not valid")
         ip_address = args['ip_address']
         if not is_valid_ip(ip_address):
-            abort(500, message=str("ip address is not valid"))
+            raise BadDataException("ip address is not valid")
         routers = args['routers']
         if not is_valid_ip(routers):
-            abort(500, message=str("routers address is not valid"))
+            raise BadDataException("routers address is not valid")
         if not is_valid_ip(routers):
-            abort(500, message=str("routers address is not valid"))
+            raise BadDataException("routers address is not valid")
         domain_name_server = args['domain_name_server']
         if not is_valid_ip(domain_name_server):
-            abort(500, message=str("domain_name_server address is not valid"))
+            raise BadDataException("domain_name_server address is not valid")
         netmask = args['netmask']
         if not is_valid_ip(netmask):
-            abort(500, message=str("netmask address is not valid"))
+            raise BadDataException("netmask address is not valid")
 
         reset = args['network_reset']
-        try:
-            ip = dhcpcdManager()
-            ip.set_static_info(interface, ip_address, routers, domain_name_server, netmask)
-            if reset:
-                try:
-                    ip.restart_interface(interface)
-                except Exception as e:
-                    abort(501, message=str(e))
-            return True
-        except Exception as e:
-            abort(501, message=str(e))
+        ip = dhcpcdManager()
+        ip.set_static_info(interface, ip_address, routers, domain_name_server, netmask)
+        if reset:
+            ip.restart_interface(interface)
+        return True
 
 
-class NetworkSetDHCP(Resource):
+class NetworkSetDHCP(RubixResource):
     """
     ip.set_static_info('eth0', true)  # add a static ip
     """
@@ -133,21 +126,15 @@ class NetworkSetDHCP(Resource):
         interface = args['interface']
         reset = args['network_reset']
         if not is_interface_up(interface):
-            abort(500, message=str("interface is not valid"))
-        try:
-            ip = dhcpcdManager()
-            ip.remove_static_info(interface)
-            if reset:
-                try:
-                    ip.restart_interface(interface)
-                except Exception as e:
-                    abort(501, message=str(e))
-            return True
-        except Exception as e:
-            abort(501, message=str(e))
+            raise BadDataException("interface is not valid")
+        ip = dhcpcdManager()
+        ip.remove_static_info(interface)
+        if reset:
+            ip.restart_interface(interface)
+        return True
 
 
-class NetworkPingRange(Resource):
+class NetworkPingRange(RubixResource):
     def post(cls):
         parser = reqparse.RequestParser()
         parser.add_argument('address',
@@ -171,13 +158,10 @@ class NetworkPingRange(Resource):
         start = args['start_address']
         finish = args['end_address']
         timeout_seconds = args['timeout_seconds']
-        try:
-            return network_ping_range(address, start, finish, timeout_seconds)
-        except Exception as e:
-            abort(501, message=str(e))
+        return network_ping_range(address, start, finish, timeout_seconds)
 
 
-class NetworkCheckPort(Resource):
+class NetworkCheckPort(RubixResource):
     def post(cls):
         parser = reqparse.RequestParser()
         parser.add_argument('host',
@@ -196,10 +180,7 @@ class NetworkCheckPort(Resource):
         host = args['host']
         port = args['port']
         type_udp = args['type_udp']
-        try:
-            if type_udp:
-                return port_check_udp(host, port)
-            else:
-                return port_check_tcp(host, port)
-        except Exception as e:
-            abort(501, message=str(e))
+        if type_udp:
+            return port_check_udp(host, port)
+        else:
+            return port_check_tcp(host, port)

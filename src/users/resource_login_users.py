@@ -1,10 +1,12 @@
-from flask_restful import Resource, reqparse, abort
+from flask_restful import reqparse
+from rubix_http.exceptions.exception import NotFoundException
+from rubix_http.resource import RubixResource
 from werkzeug.security import check_password_hash
 
 from src.users.model_users import UserModel
 
 
-class UsersLoginResource(Resource):
+class UsersLoginResource(RubixResource):
     @classmethod
     def post(cls):
         parser = reqparse.RequestParser()
@@ -15,4 +17,4 @@ class UsersLoginResource(Resource):
         if user and user['username'] == data['username'] and check_password_hash(user['password'], data['password']):
             return UserModel.encode_jwt_token(user['username'])
         else:
-            abort(404, message='username and password combination is incorrect')
+            raise NotFoundException('username and password combination is incorrect')

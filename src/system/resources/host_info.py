@@ -2,7 +2,7 @@ import os
 import time
 from collections import namedtuple
 from datetime import datetime, timezone
-from flask_restful import Resource
+from rubix_http.resource import RubixResource
 
 from src.system.resources.utils import format_size, convert_bytes
 
@@ -48,17 +48,17 @@ def disk_usage(path):
     return _tuple(free, total, used)
 
 
-class GetSystemTime(Resource):
+class GetSystemTime(RubixResource):
     def get(self):
         return host_time()
 
 
-class GetSystemMem(Resource):
+class GetSystemMem(RubixResource):
     def get(self):
         return get_current_memory_usage()
 
 
-class GetSystemDiscUsage(Resource):
+class GetSystemDiscUsage(RubixResource):
     def get(self):
         path = '/'
         du = disk_usage(path)

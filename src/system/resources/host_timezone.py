@@ -1,5 +1,6 @@
-from flask_restful import Resource, reqparse
-from flask_restful import abort
+from flask_restful import reqparse
+from rubix_http.exceptions.exception import NotFoundException
+from rubix_http.resource import RubixResource
 
 from src.system.utils.shell import execute_command_with_exception
 
@@ -92,10 +93,10 @@ _tz_list = ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", "Africa/Algi
 def validate_host_set_timezone(timezone) -> str:
     if timezone in _tz_list:
         return "sudo timetable set-timezone {}".format(timezone)
-    abort(400, message="incorrect timezone sent try:`{}`".format(timezone))
+    raise NotFoundException(f"incorrect timezone sent try:`{timezone}`")
 
 
-class SetSystemTimeZone(Resource):
+class SetSystemTimeZone(RubixResource):
     @classmethod
     def get(cls):
         return _tz_list
@@ -110,8 +111,5 @@ class SetSystemTimeZone(Resource):
         args = parser.parse_args()
         timezone = args['timezone']
         service = validate_host_set_timezone(timezone)
-        try:
-            execute_command_with_exception(service)
-            return service
-        except Exception as e:
-            abort(501, message=str(e))
+        execute_command_with_exception(service)
+        return service

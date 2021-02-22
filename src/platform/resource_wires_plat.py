@@ -1,12 +1,14 @@
 from datetime import datetime
 
-from flask_restful import Resource, reqparse, marshal_with, abort
+from flask_restful import reqparse, marshal_with
 from registry.registry import RubixRegistry
+from rubix_http.exceptions.exception import NotFoundException
+from rubix_http.resource import RubixResource
 
 from src.platform.schema_wires_plat import wires_plat_all_attributes, wires_plat_all_fields
 
 
-class WiresPlatResource(Resource):
+class WiresPlatResource(RubixResource):
     parser = reqparse.RequestParser()
     for attr in wires_plat_all_attributes:
         parser.add_argument(attr,
@@ -20,7 +22,7 @@ class WiresPlatResource(Resource):
     def get(cls):
         wires_plat: dict = RubixRegistry().read_wires_plat()
         if not wires_plat:
-            abort(404, message='Wires details not found')
+            raise NotFoundException('Wires details not found')
         return wires_plat
 
     @classmethod
@@ -30,15 +32,9 @@ class WiresPlatResource(Resource):
         data['updated_on'] = datetime.utcnow().isoformat()
         if not RubixRegistry().read_wires_plat():
             data['created_on'] = datetime.utcnow().isoformat()
-        try:
-            return RubixRegistry().store_wires_plat(data)
-        except Exception as e:
-            abort(500, message=str(e))
+        return RubixRegistry().store_wires_plat(data)
 
     @classmethod
     def delete(cls):
-        try:
-            RubixRegistry().delete_wires_plat()
-        except Exception as e:
-            abort(500, message=str(e))
+        RubixRegistry().delete_wires_plat()
         return '', 204

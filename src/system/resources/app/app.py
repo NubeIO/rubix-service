@@ -1,5 +1,6 @@
 from flask import current_app
-from flask_restful import Resource, abort, fields, marshal_with, reqparse, inputs
+from flask_restful import fields, marshal_with, reqparse, inputs
+from rubix_http.resource import RubixResource
 from werkzeug.local import LocalProxy
 
 from src import AppSetting
@@ -12,7 +13,7 @@ from src.system.utils.shell import systemctl_installed
 logger = LocalProxy(lambda: current_app.logger)
 
 
-class AppResource(Resource):
+class AppResource(RubixResource):
     fields = {
         'version': fields.String,
         'app_type': fields.String,
@@ -27,16 +28,13 @@ class AppResource(Resource):
     @classmethod
     @marshal_with(fields)
     def get(cls):
-        try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('browser_download_url', type=inputs.boolean, default=False)
-            parser.add_argument('latest_version', type=inputs.boolean, default=False)
-            args = parser.parse_args()
-            browser_download_url = args['browser_download_url']
-            latest_version = args['latest_version']
-            return cls.get_installed_apps_stat(browser_download_url, latest_version)
-        except Exception as e:
-            abort(501, message=str(e))
+        parser = reqparse.RequestParser()
+        parser.add_argument('browser_download_url', type=inputs.boolean, default=False)
+        parser.add_argument('latest_version', type=inputs.boolean, default=False)
+        args = parser.parse_args()
+        browser_download_url = args['browser_download_url']
+        latest_version = args['latest_version']
+        return cls.get_installed_apps_stat(browser_download_url, latest_version)
 
     @classmethod
     def get_installed_apps_stat(cls, browser_download_url, latest_version):
