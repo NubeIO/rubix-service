@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.5.0](https://github.com/NubeIO/rubix-service/tree/v1.5.0) (2021-02-23)
+### Added
+- Add UFW api
+
 ## [v1.4.9](https://github.com/NubeIO/rubix-service/tree/v1.4.8) (2021-02-22)
 ### Added
 - Integrate rubix-registry for wires-plat
