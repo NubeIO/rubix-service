@@ -1,6 +1,6 @@
 import enum
 
-from flask_restful import abort
+from rubix_http.exceptions.exception import NotFoundException
 
 
 class Services(enum.Enum):
@@ -25,19 +25,19 @@ class ServiceAction(enum.Enum):
 def validate_service(service: str) -> bool:
     if service in Services.__members__.keys():
         return True
-    abort(400, message="service {} does not exist in our system".format(service))
+    raise NotFoundException(f'service {service} does not exist in our system')
 
 
 def validate_and_create_action(action) -> str:
     if action.upper() in ServiceAction.__members__.keys():
         return action.lower()
-    abort(400, message='action should be `start | stop | restart | disable | enable`')
+    raise NotFoundException('action should be `start | stop | restart | disable | enable`')
 
 
 def validate_host_restart(action) -> str:
     if action == 'restart':
         return "sudo reboot"
-    abort(400, message="incorrect command to restart host try: `restart` not:`{}`".format(action))
+    raise NotFoundException(f'incorrect command to restart host try: `restart` not:`{action}`')
 
 
 def create_service_cmd(action, service_file_name) -> str:

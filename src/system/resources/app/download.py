@@ -1,10 +1,11 @@
-from flask_restful import Resource, reqparse, abort
+from flask_restful import reqparse
+from rubix_http.resource import RubixResource
 
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.resources.app.utils import get_app_from_service
 
 
-class DownloadResource(Resource):
+class DownloadResource(RubixResource):
 
     @classmethod
     def post(cls):
@@ -15,7 +16,4 @@ class DownloadResource(Resource):
         service = args['service'].upper()
         version = args['version']
         app: InstallableApp = get_app_from_service(service, version)
-        try:
-            return app.download()
-        except Exception as e:
-            abort(501, message=str(e))
+        return app.download()

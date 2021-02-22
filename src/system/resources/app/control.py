@@ -1,4 +1,4 @@
-from flask_restful import abort
+from rubix_http.exceptions.exception import NotFoundException
 
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.resources.service.control import ServiceControl
@@ -12,4 +12,4 @@ class ControlResource(ServiceControl):
             app: InstallableApp = InstallableApp.get_app(service, "")
             return create_service_cmd(action, app.service_file_name)
         except ModuleNotFoundError:
-            abort(400, message="App service {} does not exist in our system".format(service))
+            raise NotFoundException(f'App service {service} does not exist in our system')
