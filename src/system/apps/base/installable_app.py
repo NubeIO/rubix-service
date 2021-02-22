@@ -1,7 +1,9 @@
 import json
 import os
+import shutil
 from abc import abstractmethod, ABC
 from packaging import version as packaging_version
+from datetime import datetime
 
 import requests
 from flask import current_app
@@ -10,7 +12,7 @@ from werkzeug.local import LocalProxy
 from src import AppSetting
 from src.inheritors import inheritors
 from src.model import BaseModel
-from src.system.utils.file import delete_existing_folder, download_unzip_service
+from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist
 from src.system.utils.shell import execute_command
 
 logger = LocalProxy(lambda: current_app.logger)
@@ -143,6 +145,15 @@ class InstallableApp(BaseModel, ABC):
         logger.info('Successfully restarted service.')
         return True
 
+    def backup_data(self):
+        logger.info('Starting data backup...')
+        data_dir = self.get_data_dir()
+        if is_dir_exist(data_dir):
+            shutil.copytree(data_dir, self.get_backup_dir())
+            logger.info('Successfully completed data backup...')
+            return True
+        return False
+
     def get_data_dir(self) -> str:
         setting = current_app.config[AppSetting.FLASK_KEY]
         return os.path.join(setting.global_dir, self.data_dir_name)
@@ -201,6 +212,11 @@ class InstallableApp(BaseModel, ABC):
 
     def get_installed_dir(self):
         return os.path.join(self.get_installation_dir(), self.version)
+
+    def get_backup_dir(self):
+        setting = current_app.config[AppSetting.FLASK_KEY]
+        return os.path.join(setting.backup_dir, self.repo_name,
+                            f'{datetime.now().strftime("%Y%m%d%H%M%S")}_{self.version}')
 
     def set_version(self, _version):
         self.__version = _version

@@ -19,8 +19,10 @@ build/
 dist/
 out/*
 !out/.gitkeep
+backup/
 
 !docker/.env
 
 *.iml
 *.spec
+
