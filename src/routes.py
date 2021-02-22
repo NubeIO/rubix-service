@@ -4,6 +4,7 @@ from flask_restful import Api
 from src.platform.resource_wires_plat import WiresPlatResource
 from src.system.networking.network import NetworkInfo, NetworkSetStaticIP, NetworkSetDHCP, NetworkPingRange, \
     NetworkCheckPort
+from src.system.networking.ufw import UFWRuleList, UFWStatus, UFWEnable
 from src.system.resources.app.app import AppResource
 from src.system.resources.app.control import ControlResource
 from src.system.resources.app.delete_data import DeleteDataResource
@@ -40,7 +41,11 @@ api_system.add_resource(NetworkSetStaticIP, '/networking/static')
 api_system.add_resource(NetworkSetDHCP, '/networking/dhcp')
 api_system.add_resource(NetworkPingRange, '/networking/ping_range')
 api_system.add_resource(NetworkCheckPort, '/networking/check_port')
+api_system.add_resource(UFWRuleList, '/networking/ufw/rules')
+api_system.add_resource(UFWStatus, '/networking/ufw/status')
+api_system.add_resource(UFWEnable, '/networking/ufw/enable')
 api_system.add_resource(HostReboot, '/host/restart')
+
 
 api_service = Api(bp_service)
 api_service.add_resource(ServiceResource, "/")
