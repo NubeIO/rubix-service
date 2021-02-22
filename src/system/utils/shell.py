@@ -4,9 +4,16 @@ import subprocess
 
 
 class States(enum.Enum):
+    """
+    Available unit active states list of systemctl, `systemctl --state=help`.
+    """
     ACTIVE = 'active'
+    RELOADING = 'reloading'
     INACTIVE = 'inactive'
+    FAILED = 'failed'
     ACTIVATING = 'activating'
+    DEACTIVATING = 'deactivating'
+    MAINTENANCE = 'maintenance'
 
 
 def execute_command_with_exception(cmd, cwd=None):
