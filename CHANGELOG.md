@@ -2,6 +2,7 @@
 ## [v1.5.0](https://github.com/NubeIO/rubix-service/tree/v1.5.0) (2021-02-23)
 ### Added
 - Add UFW api
+- Integrate rubix-http for better error response
 
 ## [v1.4.9](https://github.com/NubeIO/rubix-service/tree/v1.4.8) (2021-02-22)
 ### Added
