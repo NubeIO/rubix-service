@@ -1,14 +1,14 @@
+import configparser
 import json
 import os
 import subprocess
-import configparser
+
 from flask_restful import Resource, reqparse, abort
 
 FNULL = open(os.devnull, "w")
 GETENT = "/usr/bin/getent"
 UFW = "/usr/sbin/ufw"
 USER_RULES = "/etc/ufw/user.rules"
-# USER_RULES = "src/system/networking/test.txt"
 UFW_CONF = "/etc/ufw/ufw.conf"
 
 
@@ -67,7 +67,7 @@ def _set_default(obj):
 
 class UFWRuleList(Resource):
     @classmethod
-    def get(self):
+    def get(cls):
         try:
             _ = get_rule_index()
             result = json.dumps(_, default=_set_default)
@@ -78,7 +78,7 @@ class UFWRuleList(Resource):
 
 class UFWStatus(Resource):
     @classmethod
-    def get(self):
+    def get(cls):
         try:
             return ufw_is_enabled()
         except Exception as e:
