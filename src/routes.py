@@ -4,6 +4,7 @@ from flask_restful import Api
 from src.platform.resource_wires_plat import WiresPlatResource
 from src.system.networking.network import NetworkInfo, NetworkSetStaticIP, NetworkSetDHCP, NetworkPingRange, \
     NetworkCheckPort
+from src.system.networking.ufw import UFWRuleList, UFWStatus, UFWEnable
 from src.system.resources.app.app import AppResource
 from src.system.resources.app.control import ControlResource
 from src.system.resources.app.delete_data import DeleteDataResource
@@ -24,6 +25,7 @@ from src.users.resource_login_users import UsersLoginResource
 from src.users.resource_users import UsersResource
 
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')
+bp_networking = Blueprint('networking', __name__, url_prefix='/api/system/networking')
 bp_service = Blueprint('service', __name__, url_prefix='/api/system/service')
 bp_app = Blueprint('app', __name__, url_prefix='/api/app')
 bp_wires = Blueprint('wires', __name__, url_prefix='/api/wires')
@@ -35,12 +37,17 @@ api_system.add_resource(GetSystemTime, '/time')
 api_system.add_resource(SetSystemTimeZone, '/time/timezone')
 api_system.add_resource(GetSystemMem, '/memory')
 api_system.add_resource(GetSystemDiscUsage, '/disc')
-api_system.add_resource(NetworkInfo, '/networking')
-api_system.add_resource(NetworkSetStaticIP, '/networking/static')
-api_system.add_resource(NetworkSetDHCP, '/networking/dhcp')
-api_system.add_resource(NetworkPingRange, '/networking/ping_range')
-api_system.add_resource(NetworkCheckPort, '/networking/check_port')
 api_system.add_resource(HostReboot, '/host/restart')
+
+api_networking = Api(bp_networking)
+api_networking.add_resource(NetworkInfo, '')
+api_networking.add_resource(NetworkSetStaticIP, '/static')
+api_networking.add_resource(NetworkSetDHCP, '/dhcp')
+api_networking.add_resource(NetworkPingRange, '/ping_range')
+api_networking.add_resource(NetworkCheckPort, '/check_port')
+api_networking.add_resource(UFWRuleList, '/ufw/rules')
+api_networking.add_resource(UFWStatus, '/ufw/status')
+api_networking.add_resource(UFWEnable, '/ufw/enable')
 
 api_service = Api(bp_service)
 api_service.add_resource(ServiceResource, "/")
