@@ -21,7 +21,7 @@ logger = LocalProxy(lambda: current_app.logger)
 class InstallableApp(BaseModel, ABC):
 
     def __init__(self, display_name, repo_name, service_file_name, data_dir_name, port, min_support_version,
-                 description='', gateway_access=False, url_prefix='', version=''):
+                 description='', gateway_access=False, url_prefix='', version='', need_wires_plat=True):
 
         self.__display_name = display_name
         self.__repo_name = repo_name
@@ -33,6 +33,7 @@ class InstallableApp(BaseModel, ABC):
         self.__gateway_access = gateway_access
         self.__url_prefix = url_prefix
         self.__version = version
+        self.__need_wires_plat = need_wires_plat
 
     @classmethod
     def get_app(cls, service, version):
@@ -105,6 +106,10 @@ class InstallableApp(BaseModel, ABC):
     @property
     def version(self):
         return self.__version
+
+    @property
+    def need_wires_plat(self):
+        return self.__need_wires_plat
 
     @property
     def is_asset(self):
