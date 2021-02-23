@@ -1,4 +1,5 @@
 from packaging import version
+from registry.registry import RubixRegistry
 from rubix_http.exceptions.exception import NotFoundException
 
 from src.system.apps.base.installable_app import InstallableApp
@@ -26,5 +27,11 @@ def get_installed_app_details(dummy_app: InstallableApp):
             'version': _version.split("/")[-1],
             'service': dummy_app.service(),
         }
-
     return None
+
+
+def check_wires_plat():
+    wires_plat: dict = RubixRegistry().read_wires_plat()
+    if not wires_plat:
+        return False
+    return True

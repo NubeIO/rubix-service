@@ -13,6 +13,7 @@ class RubixPlatBuildApp(FrontendApp):
             port=1414,
             min_support_version='v1.1.6',
             description='Rubix Platform',
+            need_wires_plat=False,
         )
 
     @classmethod

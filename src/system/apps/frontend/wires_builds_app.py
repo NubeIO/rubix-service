@@ -13,6 +13,7 @@ class WiresBuildsApp(FrontendApp):
             port=1313,
             min_support_version='v1.8.7',
             description='Wires for for IoT',
+            need_wires_plat=True,
         )
 
     @classmethod

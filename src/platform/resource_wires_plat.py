@@ -33,8 +33,3 @@ class WiresPlatResource(RubixResource):
         if not RubixRegistry().read_wires_plat():
             data['created_on'] = datetime.utcnow().isoformat()
         return RubixRegistry().store_wires_plat(data)
-
-    @classmethod
-    def delete(cls):
-        RubixRegistry().delete_wires_plat()
-        return '', 204
