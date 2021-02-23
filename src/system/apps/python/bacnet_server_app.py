@@ -13,7 +13,6 @@ class BACnetServerApp(PythonApp):
             description='Flask Application for Nube BACNET SERVER',
             gateway_access=True,
             url_prefix='bacnet',
-            need_wires_plat=True,
         )
 
     @classmethod

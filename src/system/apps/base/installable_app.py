@@ -21,7 +21,7 @@ logger = LocalProxy(lambda: current_app.logger)
 class InstallableApp(BaseModel, ABC):
 
     def __init__(self, display_name, repo_name, service_file_name, data_dir_name, port, min_support_version,
-                 description='', gateway_access=False, url_prefix='', version='', need_wires_plat=False):
+                 description='', gateway_access=False, url_prefix='', version='', need_wires_plat=True):
 
         self.__display_name = display_name
         self.__repo_name = repo_name

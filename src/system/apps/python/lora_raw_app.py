@@ -13,7 +13,6 @@ class LoRaRawApp(PythonApp):
             description='NubeIO LoRa Raw pyserial',
             gateway_access=True,
             url_prefix='lora',
-            need_wires_plat=True,
         )
 
     @classmethod

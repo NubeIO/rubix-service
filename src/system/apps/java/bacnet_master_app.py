@@ -20,7 +20,6 @@ class BACnetMasterApp(JavaApp):
             description='BACnet Master for BACnet discovery',
             gateway_access=True,
             url_prefix='bm',
-            need_wires_plat=True,
         )
 
     @classmethod
