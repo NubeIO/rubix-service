@@ -54,7 +54,7 @@ def get_rule_index() -> list:
     for i in range(len(data)):
         if "tuple" in data[i]:
             rule = data[i][14:].split()
-            rule_list.append({k + 1, rule[2], rule[1], rule[5], rule[0]})
+            rule_list.append({"index": k + 1, "port": rule[2], "action": rule[0]})
             k += 1
             rule_num.append(i)
     return rule_list
@@ -70,8 +70,7 @@ class UFWRuleList(RubixResource):
     @classmethod
     def get(cls):
         _ = get_rule_index()
-        result = json.dumps(_, default=_set_default)
-        return json.loads(result)
+        return _
 
 
 class UFWStatus(RubixResource):
