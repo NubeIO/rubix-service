@@ -1,4 +1,9 @@
 # CHANGELOG
+## [v1.5.1](https://github.com/NubeIO/rubix-service/tree/v1.5.1) (2021-02-26)
+### Added
+- Fix UFW api get rule list
+- If no wires plat user cant install apps
+
 ## [v1.5.0](https://github.com/NubeIO/rubix-service/tree/v1.5.0) (2021-02-23)
 ### Added
 - Add UFW api
