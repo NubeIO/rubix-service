@@ -51,13 +51,14 @@ Usage: run.py [OPTIONS]
 
 Options:
   -p, --port INTEGER              Port  [default: 1616]
+  -g, --global-dir PATH           Global dir
   -d, --data-dir PATH             Application data dir
-  -g, --global-dir PATH           Global data dir
+  -c, --config-dir PATH           Application config dir
   -a, --artifact-dir PATH         Artifact downloaded dir
   --prod                          Production mode
   -s, --setting-file TEXT         Rubix-Service: setting json file
   --workers INTEGER               Gunicorn: The number of worker processes for handling requests.
-  -c, --gunicorn-config TEXT      Gunicorn: config file(gunicorn.conf.py)
+  --gunicorn-config TEXT          Gunicorn: config file(gunicorn.conf.py)
   --log-level [FATAL|ERROR|WARN|INFO|DEBUG]
                                   Logging level
   --device-type [amd64|arm64|armv7]
@@ -208,4 +209,4 @@ curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: applic
 
 ##### Edit config.json
 
-- Copy config details to location: `/data/<data_dir>/config.json` and restart service
+- Copy config details to location: `/data/<config_dir>/config.json` and restart service
