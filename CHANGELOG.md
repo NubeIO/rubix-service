@@ -1,4 +1,9 @@
 # CHANGELOG
+## [v1.5.2](https://github.com/NubeIO/rubix-service/tree/v1.5.2) (2021-02-28)
+### Added
+- Data, Config & Apps directory standardization
+- Fix issue: authorization check & response
+
 ## [v1.5.1](https://github.com/NubeIO/rubix-service/tree/v1.5.1) (2021-02-26)
 ### Added
 - Fix UFW api get rule list

@@ -4,7 +4,8 @@ from typing import Dict
 
 import jwt
 from flask import current_app, request
-from rubix_http.exceptions.exception import NotFoundException, BadDataException
+from flask_restful import abort
+from rubix_http.exceptions.exception import BadDataException
 from werkzeug.security import generate_password_hash
 
 from src.setting import AppSetting
@@ -63,9 +64,13 @@ class UserModel:
     def authorize():
         app_setting = current_app.config[AppSetting.FLASK_KEY]
         if request.endpoint != 'users.login' and app_setting.auth:
-            if 'Authorization' not in request.headers:
-                raise NotFoundException('Authorization header is missing')
+            if request.endpoint != 'users.login' and app_setting.auth:
+                if 'Authorization' not in request.headers:
+                    abort(401, message='Authorization header is missing')
 
-            data = request.headers['Authorization']
-            access_token = str.replace(str(data), 'Bearer ', '')
-            UserModel.decode_jwt_token(access_token)
+                data = request.headers['Authorization']
+                access_token = str.replace(str(data), 'Bearer ', '')
+                try:
+                    UserModel.decode_jwt_token(access_token)
+                except Exception as e:
+                    abort(401, message=str(e))
