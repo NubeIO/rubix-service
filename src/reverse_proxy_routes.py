@@ -1,7 +1,7 @@
 import requests
 from flask import request, Response, Blueprint
+from flask_restful import abort
 from requests.exceptions import ConnectionError
-from rubix_http.exceptions.exception import NotFoundException
 
 from src.inheritors import inheritors
 from src.system.apps.base.installable_app import InstallableApp
@@ -20,7 +20,7 @@ def reverse_proxy_handler(_):
             url_prefixes[dummy_app.url_prefix] = dummy_app
     requested_url_prefix = "{}".format(url_parts[1])
     if requested_url_prefix not in url_prefixes.keys():
-        raise NotFoundException('')
+        abort(404)
     app_to_redirect = url_prefixes[requested_url_prefix]
     del url_parts[0]
     del url_parts[0]
@@ -30,4 +30,4 @@ def reverse_proxy_handler(_):
         response = Response(resp.content, resp.status_code, resp.raw.headers.items())
         return response
     except ConnectionError:
-        raise NotFoundException('')
+        abort(404)
