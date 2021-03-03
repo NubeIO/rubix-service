@@ -1,4 +1,10 @@
 # CHANGELOG
+## [v1.5.3](https://github.com/NubeIO/rubix-service/tree/v1.5.3) (2021-03-04)
+### Added
+- Root directory creation (for backup & app data dir location)
+- Whole installation script change
+- Update minimum supporting version
+
 ## [v1.5.2](https://github.com/NubeIO/rubix-service/tree/v1.5.2) (2021-02-28)
 ### Added
 - Data, Config & Apps directory standardization
