@@ -152,15 +152,14 @@ class InstallableApp(BaseModel, ABC):
 
     def backup_data(self):
         logger.info('Starting data backup...')
-        data_dir = self.get_data_dir()
-        if is_dir_exist(data_dir):
-            shutil.copytree(data_dir, self.get_backup_dir())
+        global_dir = self.get_global_dir()
+        if is_dir_exist(global_dir):
+            shutil.copytree(global_dir, self.get_backup_dir())
             logger.info('Successfully completed data backup...')
             return True
         return False
 
-    # TODO change into global_dir
-    def get_data_dir(self) -> str:
+    def get_global_dir(self) -> str:
         setting = current_app.config[AppSetting.FLASK_KEY]
         return os.path.join(setting.root_dir, self.data_dir_name)
 

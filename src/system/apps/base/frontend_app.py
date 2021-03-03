@@ -24,9 +24,8 @@ class FrontendApp(InstallableApp, ABC):
         return row.get('zipball_url')
 
     def install(self) -> bool:
-        # TODO: remove user and upgrade parameters in future
-        install_cmd: str = "sudo bash script.bash start -service_name={} -u={} -dir={} -data_dir={} -p={}".format(
-            self.service_file_name, 'root', self.get_wd(), self.get_data_dir(), self.port)
+        install_cmd: str = f"sudo bash script.bash install -s={self.service_file_name} -u=root " \
+                           f"--working-dir={self.get_wd()} -g={self.get_global_dir()} -d=data -c=config -p {self.port}"
         return execute_command(install_cmd, self.get_cwd())
 
     def uninstall(self) -> bool:
