@@ -44,7 +44,7 @@ class PythonApp(SystemdApp, ABC):
         lines = []
         with open(resource_path('systemd/nubeio-app-service.service')) as systemd_file:
             wd: str = self.get_wd()
-            data_dir: str = self.get_data_dir()
+            global_dir: str = self.get_global_dir()
             for line in systemd_file.readlines():
                 if '<pre_start_sleep>' in line:
                     line = line.replace('<pre_start_sleep>', str(self.pre_start_sleep))
@@ -52,9 +52,9 @@ class PythonApp(SystemdApp, ABC):
                     line = line.replace('<working_dir>', wd)
                 if '<port>' in line and self.port:
                     line = line.replace('<port>', str(self.port))
-                if '<data_dir>' in line and data_dir:
-                    line = line.replace('<data_dir>', data_dir)
-                if '<identifier>' in line and data_dir:
+                if '<global_dir>' in line and global_dir:
+                    line = line.replace('<global_dir>', global_dir)
+                if '<identifier>' in line and self.url_prefix:
                     line = line.replace('<identifier>', self.url_prefix)
                 if '<name>' in line and self.repo_name:
                     line = line.replace('<name>', self.repo_name)

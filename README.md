@@ -51,10 +51,12 @@ Usage: run.py [OPTIONS]
 
 Options:
   -p, --port INTEGER              Port  [default: 1616]
+  -r, --root-dir PATH             Root dir
   -g, --global-dir PATH           Global dir
   -d, --data-dir PATH             Application data dir
   -c, --config-dir PATH           Application config dir
   -a, --artifact-dir PATH         Artifact downloaded dir
+  -b, --backup-dir PATH           Backup dir
   --prod                          Production mode
   -s, --setting-file TEXT         Rubix-Service: setting json file
   --workers INTEGER               Gunicorn: The number of worker processes for handling requests.
@@ -64,6 +66,7 @@ Options:
   --device-type [amd64|arm64|armv7]
                                   Device type  [default: armv7]
   --auth                          Enable JWT authentication.
+  -l, --logging-conf TEXT         Rubix-Service: logging config file
   -h, --help                      Show this message and exit.
 ```
 

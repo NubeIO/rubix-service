@@ -9,7 +9,7 @@ class RubixPlatBuildApp(FrontendApp):
             display_name='Rubix Plat',
             repo_name='rubix-plat-build',
             service_file_name='nubeio-wires-plat.service',
-            data_dir_name='rubix-plat-build',
+            data_dir_name='rubix-plat',
             port=1414,
             min_support_version='v1.1.6',
             description='Rubix Platform',
