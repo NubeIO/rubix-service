@@ -50,13 +50,13 @@ api_networking.add_resource(UFWStatus, '/ufw/status')
 api_networking.add_resource(UFWEnable, '/ufw/enable')
 
 api_service = Api(bp_service)
-api_service.add_resource(ServiceResource, "/")
+api_service.add_resource(ServiceResource, '')
 api_service.add_resource(ServiceStats, '/stats/<string:service>')
 api_service.add_resource(ServiceControl, "/control")
 
 # 3
 api_app = Api(bp_app)
-api_app.add_resource(AppResource, '/')
+api_app.add_resource(AppResource, '')
 api_app.add_resource(AppStatsResource, '/stats/<string:service>')
 api_app.add_resource(ControlResource, '/control')
 api_app.add_resource(TokenResource, '/token')
