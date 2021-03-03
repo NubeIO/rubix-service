@@ -9,7 +9,7 @@ class PointServerApp(PythonApp):
             service_file_name='nubeio-point-server.service',
             data_dir_name='point-server',
             port=1515,
-            min_support_version='v1.2.0',
+            min_support_version='v1.4.2',
             description='Flask Application for Nube Rest API',
             gateway_access=True,
             url_prefix='ps',

@@ -11,7 +11,7 @@ class RubixPlatBuildApp(FrontendApp):
             service_file_name='nubeio-wires-plat.service',
             data_dir_name='rubix-plat',
             port=1414,
-            min_support_version='v1.1.6',
+            min_support_version='v1.5.0',
             description='Rubix Platform',
             need_wires_plat=False,
         )

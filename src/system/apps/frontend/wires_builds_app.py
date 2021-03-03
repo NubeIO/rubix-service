@@ -11,7 +11,7 @@ class WiresBuildsApp(FrontendApp):
             service_file_name='nubeio-rubix-wires.service',
             data_dir_name='rubix-wires',
             port=1313,
-            min_support_version='v1.8.7',
+            min_support_version='v2.0.4',
             description='Wires for for IoT',
         )
 
