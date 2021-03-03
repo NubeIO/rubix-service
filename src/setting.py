@@ -8,6 +8,7 @@ from src.system.utils.file import write_file, read_file
 
 class AppSetting:
     PORT = 1616
+    ROOT_DIR_ENV = 'ROOT_DIR'
     GLOBAL_DIR_ENV = 'GLOBAL_DIR'
     DATA_DIR_ENV = 'RUBIX_SERVICE_DATA'
     CONFIG_DIR_ENV = 'RUBIX_SERVICE_CONFIG'
@@ -15,7 +16,8 @@ class AppSetting:
     BACKUP_DATA_DIR_ENV = 'BACKUP_DATA'
     FLASK_KEY: str = 'APP_SETTING'
 
-    default_global_dir: str = 'out'
+    default_root_dir: str = 'out'
+    default_global_dir: str = 'out/rubix-service'
     default_data_dir: str = 'data'
     default_config_dir: str = 'config'
     default_artifact_dir: str = 'apps'
@@ -28,14 +30,16 @@ class AppSetting:
     default_users_file = 'users.txt'
 
     def __init__(self, **kwargs):
-        self.__global_dir = self.__compute_dir(kwargs.get('global_dir'), self.default_global_dir, 0o777)
+        self.__root_dir = self.__compute_dir(kwargs.get('root_dir'), self.default_root_dir)
+        self.__global_dir = self.__compute_dir(kwargs.get('global_dir'), self.default_global_dir)
         self.__data_dir = self.__compute_dir(self.__join_global_dir(kwargs.get('data_dir')),
                                              self.__join_global_dir(self.default_data_dir))
         self.__config_dir = self.__compute_dir(self.__join_global_dir(kwargs.get('config_dir')),
                                                self.__join_global_dir(self.default_config_dir))
         self.__artifact_dir = self.__compute_dir(self.__join_global_dir(kwargs.get('artifact_dir')),
                                                  self.__join_global_dir(self.default_artifact_dir))
-        self.__backup_dir = self.__compute_dir(kwargs.get('backup_dir'), self.default_backup_dir, 0o777)
+        self.__backup_dir = self.__compute_dir(self.__join_root_dir(kwargs.get('backup_dir')),
+                                               self.__join_root_dir(self.default_backup_dir))
         self.__download_dir = self.__compute_dir('', os.path.join(self.__artifact_dir, 'download'))
         self.__install_dir = self.__compute_dir('', os.path.join(self.__artifact_dir, 'install'))
         self.__token_file = os.path.join(self.__data_dir, self.default_token_file)
@@ -45,6 +49,10 @@ class AppSetting:
         self.__secret_key_file = os.path.join(self.__config_dir, self.default_secret_key_file)
         self.__users_file = os.path.join(self.__data_dir, self.default_users_file)
         self.__auth = kwargs.get('auth') or False
+
+    @property
+    def root_dir(self):
+        return self.__root_dir
 
     @property
     def global_dir(self):
@@ -105,6 +113,9 @@ class AppSetting:
         self.__secret_key = AppSetting.__handle_secret_key(self.__secret_key_file)
         app.config[AppSetting.FLASK_KEY] = self
         return self
+
+    def __join_root_dir(self, _dir):
+        return _dir if _dir is None or _dir.strip() == '' else os.path.join(self.__root_dir, _dir)
 
     def __join_global_dir(self, _dir):
         return _dir if _dir is None or _dir.strip() == '' else os.path.join(self.__global_dir, _dir)

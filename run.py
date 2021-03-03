@@ -16,6 +16,8 @@ def number_of_workers():
 
 @click.command(context_settings=CLI_CTX_SETTINGS)
 @click.option('-p', '--port', type=int, default=AppSetting.PORT, show_default=True, help='Port')
+@click.option('-r', '--root-dir', type=click.Path(), default=lambda: os.environ.get(AppSetting.ROOT_DIR_ENV),
+              help='Root dir')
 @click.option('-g', '--global-dir', type=click.Path(), default=lambda: os.environ.get(AppSetting.GLOBAL_DIR_ENV),
               help='Global dir')
 @click.option('-d', '--data-dir', type=click.Path(), default=lambda: os.environ.get(AppSetting.DATA_DIR_ENV),
@@ -36,10 +38,11 @@ def number_of_workers():
               help='Device type')
 @click.option('--auth', is_flag=True, help='Enable JWT authentication.')
 @click.option('-l', '--logging-conf', help='Rubix-Service: logging config file')
-def cli(port, global_dir, data_dir, config_dir, artifact_dir, backup_dir, prod, workers, setting_file, gunicorn_config,
-        log_level, device_type, auth, logging_conf):
-    setting = AppSetting(global_dir=global_dir, data_dir=data_dir, config_dir=config_dir, artifact_dir=artifact_dir,
-                         backup_dir=backup_dir, prod=prod, device_type=device_type, auth=auth).reload(setting_file)
+def cli(port, root_dir, global_dir, data_dir, config_dir, artifact_dir, backup_dir, prod, workers, setting_file,
+        gunicorn_config, log_level, device_type, auth, logging_conf):
+    setting = AppSetting(root_dir=root_dir, global_dir=global_dir, data_dir=data_dir, config_dir=config_dir,
+                         artifact_dir=artifact_dir, backup_dir=backup_dir, prod=prod, device_type=device_type,
+                         auth=auth).reload(setting_file)
     options = {
         'bind': '%s:%s' % ('0.0.0.0', port),
         'workers': workers if workers is not None else number_of_workers() if prod else 1,

@@ -2,11 +2,11 @@ import json
 import os
 import shutil
 from abc import abstractmethod, ABC
-from packaging import version as packaging_version
 from datetime import datetime
 
 import requests
 from flask import current_app
+from packaging import version as packaging_version
 from werkzeug.local import LocalProxy
 
 from src import AppSetting
@@ -159,9 +159,10 @@ class InstallableApp(BaseModel, ABC):
             return True
         return False
 
+    # TODO change into global_dir
     def get_data_dir(self) -> str:
         setting = current_app.config[AppSetting.FLASK_KEY]
-        return os.path.join(setting.global_dir, self.data_dir_name)
+        return os.path.join(setting.root_dir, self.data_dir_name)
 
     def get_releases_link(self) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.repo_name)
