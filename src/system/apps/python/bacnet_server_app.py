@@ -9,7 +9,7 @@ class BACnetServerApp(PythonApp):
             service_file_name='nubeio-bacnet-server.service',
             data_dir_name='bacnet-server',
             port=1717,
-            min_support_version='v1.3.0',
+            min_support_version='v1.4.5',
             description='Flask Application for Nube BACNET SERVER',
             gateway_access=True,
             url_prefix='bacnet',
