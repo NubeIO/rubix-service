@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.5.4](https://github.com/NubeIO/rubix-service/tree/v1.5.4) (2021-03-04)
+### Added
+- Make installed app available even installed version not supporting
+
 ## [v1.5.3](https://github.com/NubeIO/rubix-service/tree/v1.5.3) (2021-03-04)
 ### Added
 - Root directory creation (for backup & app data dir location)
