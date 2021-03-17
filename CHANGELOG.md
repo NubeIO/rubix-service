@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.5.5](https://github.com/NubeIO/rubix-service/tree/v1.5.5) (2021-03-17)
+### Added
+- Add is_enabled flag for services
+
 ## [v1.5.4](https://github.com/NubeIO/rubix-service/tree/v1.5.4) (2021-03-04)
 ### Added
 - Make installed app available even installed version not supporting
