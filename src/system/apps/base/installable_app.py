@@ -7,12 +7,13 @@ from datetime import datetime
 import requests
 from flask import current_app
 from packaging import version as packaging_version
+from werkzeug.datastructures import FileStorage
 from werkzeug.local import LocalProxy
 
 from src import AppSetting
 from src.inheritors import inheritors
 from src.model import BaseModel
-from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist
+from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist, upload_unzip_service
 from src.system.utils.shell import execute_command
 
 logger = LocalProxy(lambda: current_app.logger)
@@ -126,13 +127,19 @@ class InstallableApp(BaseModel, ABC):
         download_name = download_unzip_service(self.get_download_link(app_setting.token), self.get_download_dir()
                                                , app_setting.token, self.is_asset)
         existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
-        self.after_download(download_name)
+        self.after_download_upload(download_name)
         return {'service': self.service(), 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
-    def after_download(self, download_name: str):
+    def upload(self, file: FileStorage) -> dict:
+        upload_name = upload_unzip_service(file, self.get_download_dir())
+        existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
+        self.after_download_upload(upload_name)
+        return {'service': self.service(), 'version': self.version, 'existing_app_deletion': existing_app_deletion}
+
+    def after_download_upload(self, name: str):
         # they are already wrapped on folder
         download_dir: str = self.get_download_dir()
-        extracted_dir = os.path.join(download_dir, download_name)
+        extracted_dir = os.path.join(download_dir, name)
         os.rename(extracted_dir, self.get_downloaded_dir())
 
     @abstractmethod

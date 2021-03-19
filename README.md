@@ -146,7 +146,6 @@ http://localhost:1616/api/app/releases/rubix_plat
 {"service": "<service>","version": "<version>"}
 ```
 
-```
 >Examples:
 ```bash
 curl -X POST http://localhost:1616/api/app/download -H "Content-Type: application/json" -d '{"service":"POINT_SERVER","version":"v1.4.2"}'
@@ -154,6 +153,26 @@ curl -X POST http://localhost:1616/api/app/download -H "Content-Type: applicatio
 curl -X POST http://localhost:1616/api/app/download -H "Content-Type: application/json" -d '{"service":"LORA_RAW","version":"v1.3.6"}'
 curl -X POST http://localhost:1616/api/app/download -H "Content-Type: application/json" -d '{"service":"WIRES","version":"v2.0.4"}'
 curl -X POST http://localhost:1616/api/app/download -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT","version":"v1.5.0"}'
+```
+
+##### Upload
+
+> POST: `/api/services/upload`
+
+> Body
+```form-data
+"service=<service>"
+"version=<version>"
+"file=<file>"
+```
+
+>Examples:
+```bash
+curl -X POST http://localhost:1616/api/app/upload -H "Content-Type: multipart/form-data" -F "service=POINT_SERVER" -F "version=v1.4.2" -F "file=@/home/downloads/rubix-point-1.4.2-149e935.armv7.zip"
+curl -X POST http://localhost:1616/api/app/upload -H "Content-Type: multipart/form-data" -F "service=BACNET_SERVER" -F "version=v1.4.5" -F "file=@/home/downloads/rubix-bacnet-1.4.5-974de13.armv7.zip"
+curl -X POST http://localhost:1616/api/app/upload -H "Content-Type: multipart/form-data" -F "service=LORA_RAW" -F "version=v1.3.6" -F "file=@/home/downloads/rubix-lora-1.3.6-cce9562.armv7.zip"
+curl -X POST http://localhost:1616/api/app/upload -H "Content-Type: multipart/form-data" -F "service=WIRES" -F "version=v2.0.4" -F "file=@/home/downloads/wires-builds-2.0.4.zip"
+curl -X POST http://localhost:1616/api/app/upload -H "Content-Type: multipart/form-data" -F 'service=RUBIX_PLAT' -F 'version=v1.5.0' -F 'file=@/home/downloads/rubix-plat-build-1.5.0.zip'
 ```
 
 ##### Install

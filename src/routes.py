@@ -14,6 +14,7 @@ from src.system.resources.app.release import ReleaseResource
 from src.system.resources.app.stats import AppStatsResource
 from src.system.resources.app.token import TokenResource
 from src.system.resources.app.uninstall import UnInstallResource
+from src.system.resources.app.upload import UploadResource
 from src.system.resources.host_info import GetSystemMem, GetSystemTime, GetSystemDiscUsage
 from src.system.resources.host_reboot import HostReboot
 from src.system.resources.host_timezone import SetSystemTimeZone
@@ -62,6 +63,7 @@ api_app.add_resource(ControlResource, '/control')
 api_app.add_resource(TokenResource, '/token')
 api_app.add_resource(ReleaseResource, '/releases/<string:service>')
 api_app.add_resource(DownloadResource, '/download')
+api_app.add_resource(UploadResource, '/upload')
 api_app.add_resource(InstallResource, '/install')
 api_app.add_resource(UnInstallResource, '/uninstall')
 api_app.add_resource(DeleteDataResource, '/delete_data')
