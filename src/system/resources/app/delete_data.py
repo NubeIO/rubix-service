@@ -16,6 +16,7 @@ class DeleteDataResource(RubixResource):
         args = parser.parse_args()
         service: str = args['service'].upper()
         app: InstallableApp = get_app_from_service(service)
+        stop: bool = app.stop()
+        backup_data: bool = app.backup_data()
         deletion: bool = delete_existing_folder(os.path.join(app.get_global_dir(), 'data'))
-        restart: bool = app.restart()
-        return {'service': service, 'deletion': deletion, 'restart': restart}
+        return {'service': service, 'deletion': deletion, 'backup_data': backup_data, 'stop': stop}

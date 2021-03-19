@@ -143,11 +143,11 @@ class InstallableApp(BaseModel, ABC):
     def uninstall(self) -> bool:
         raise NotImplementedError("uninstall needs to be overridden")
 
-    def restart(self) -> bool:
-        logger.info('Restarting Linux Service...')
-        if not execute_command('sudo systemctl restart {}'.format(self.service_file_name)):
+    def stop(self) -> bool:
+        logger.info('Stopping Linux Service...')
+        if not execute_command('sudo systemctl stop {}'.format(self.service_file_name)):
             return False
-        logger.info('Successfully restarted service.')
+        logger.info('Successfully stopped service.')
         return True
 
     def backup_data(self):
@@ -225,5 +225,3 @@ class InstallableApp(BaseModel, ABC):
 
     def set_version(self, _version):
         self.__version = _version
-
-
