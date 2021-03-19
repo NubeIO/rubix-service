@@ -14,7 +14,7 @@ from src.system.utils.file import read_file, write_file
 
 class UserModel:
     @classmethod
-    def create_user(cls, username='admin', password='admin'):
+    def create_user(cls, username='admin', password='N00BWires'):
         app_setting = current_app.config[AppSetting.FLASK_KEY]
         existing_users = read_file(app_setting.users_file).split()
         if not existing_users:
