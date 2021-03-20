@@ -64,3 +64,9 @@ def download_unzip_service(download_link, directory, token, is_asset) -> str:
     with ZipFile(BytesIO(r.content)) as z_file:
         z_file.extractall(directory)
     return z_file.namelist()[0]
+
+
+def upload_unzip_service(file, directory) -> str:
+    with ZipFile(file) as z_file:
+        z_file.extractall(directory)
+    return z_file.namelist()[0]
