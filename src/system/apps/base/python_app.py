@@ -29,10 +29,10 @@ class PythonApp(SystemdApp, ABC):
                     }
                 return asset.get('url')
 
-    def after_download(self, download_name: str):
+    def after_download_upload(self, name: str):
         # enforcing to extract on version directory
         download_dir: str = self.get_download_dir()
-        extracted_dir = os.path.join(download_dir, download_name)
+        extracted_dir = os.path.join(download_dir, name)
         dir_with_version = os.path.join(download_dir, self.version)
         mode = 0o744
         os.makedirs(dir_with_version, mode, True)

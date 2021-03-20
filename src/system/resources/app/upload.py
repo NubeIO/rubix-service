@@ -1,5 +1,6 @@
 from flask_restful import reqparse
-from rubix_http.exceptions.exception import PreConditionException
+from packaging.version import Version
+from rubix_http.exceptions.exception import PreConditionException, BadDataException
 from rubix_http.resource import RubixResource
 from werkzeug.datastructures import FileStorage
 
@@ -21,7 +22,8 @@ class UploadResource(RubixResource):
         file = args['file']
         if file.filename.split('.')[-1] != 'zip':
             raise PreConditionException(f'File must be in zip format')
-        if version[1:] not in file.filename:
-            raise PreConditionException(f'File {file.filename} version mismatch with version {version}')
+        match: bool = Version._regex.search(version)
+        if not match:
+            raise BadDataException(f'Invalid version, version needs to be like v1.0.0, v1.1.0')
         app: InstallableApp = get_app_from_service(service, version)
         return app.upload(file)
