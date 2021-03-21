@@ -1,4 +1,9 @@
 # CHANGELOG
+## [v1.5.6](https://github.com/NubeIO/rubix-service/tree/v1.5.6) (2021-03-21)
+### Added
+- Change default password
+- Add upload artifacts option (an alternative of download apps)
+
 ## [v1.5.5](https://github.com/NubeIO/rubix-service/tree/v1.5.5) (2021-03-17)
 ### Added
 - Add is_enabled flag for services
