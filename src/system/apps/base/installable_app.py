@@ -13,7 +13,9 @@ from werkzeug.local import LocalProxy
 from src import AppSetting
 from src.inheritors import inheritors
 from src.model import BaseModel
-from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist, upload_unzip_service
+from src.system.apps.enums.types import Types
+from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist, upload_unzip_service, \
+    write_file
 from src.system.utils.shell import execute_command
 
 logger = LocalProxy(lambda: current_app.logger)
@@ -135,6 +137,12 @@ class InstallableApp(BaseModel, ABC):
         existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
         self.after_download_upload(upload_name)
         return {'service': self.service(), 'version': self.version, 'existing_app_deletion': existing_app_deletion}
+
+    def update_config_file(self, file: str, data: str) -> bool:
+        update = self.app_type == Types.PYTHON_APP.value
+        if update:
+            write_file(os.path.join(self.get_global_dir(), f'config/{file}'), data)
+        return update
 
     def after_download_upload(self, name: str):
         # they are already wrapped on folder
