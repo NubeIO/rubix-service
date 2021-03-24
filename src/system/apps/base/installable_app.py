@@ -13,7 +13,9 @@ from werkzeug.local import LocalProxy
 from src import AppSetting
 from src.inheritors import inheritors
 from src.model import BaseModel
-from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist, upload_unzip_service
+from src.system.apps.enums.types import Types
+from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist, upload_unzip_service, \
+    write_file
 from src.system.utils.shell import execute_command
 
 logger = LocalProxy(lambda: current_app.logger)
@@ -136,6 +138,24 @@ class InstallableApp(BaseModel, ABC):
         self.after_download_upload(upload_name)
         return {'service': self.service(), 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
+    def update_config_file(self, data: str) -> bool:
+        if self.app_type == Types.PYTHON_APP.value:
+            write_file(os.path.join(self.get_global_dir(), 'config/config.json'), data)
+            return True
+        return False
+
+    def update_logging_file(self, data: str) -> bool:
+        if self.app_type == Types.PYTHON_APP.value:
+            write_file(os.path.join(self.get_global_dir(), 'config/logging.conf'), data)
+            return True
+        return False
+
+    def update_env_file(self, data: str) -> bool:
+        if self.app_type == Types.FRONTEND_APP.value:
+            write_file(os.path.join(self.get_global_dir(), 'config/.env'), data)
+            return True
+        return False
+
     def after_download_upload(self, name: str):
         # they are already wrapped on folder
         download_dir: str = self.get_download_dir()
@@ -155,6 +175,13 @@ class InstallableApp(BaseModel, ABC):
         if not execute_command('sudo systemctl stop {}'.format(self.service_file_name)):
             return False
         logger.info('Successfully stopped service.')
+        return True
+
+    def restart(self) -> bool:
+        logger.info('Restarting Linux Service...')
+        if not execute_command(f'sudo systemctl restart {self.service_file_name}'):
+            return False
+        logger.info('Successfully restarted service.')
         return True
 
     def backup_data(self):

@@ -12,3 +12,9 @@ service_fields = {
     'time_since': fields.String,
     'is_enabled': fields.Boolean(default=False)
 }
+
+config_fields = {
+    'service': fields.String,
+    'update': fields.Boolean,
+    'state': fields.String(default=States.INACTIVE.value)
+}
