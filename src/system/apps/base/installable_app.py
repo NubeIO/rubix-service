@@ -138,11 +138,23 @@ class InstallableApp(BaseModel, ABC):
         self.after_download_upload(upload_name)
         return {'service': self.service(), 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
-    def update_config_file(self, file: str, data: str) -> bool:
-        update = self.app_type == Types.PYTHON_APP.value
-        if update:
-            write_file(os.path.join(self.get_global_dir(), f'config/{file}'), data)
-        return update
+    def update_config_file(self, data: str) -> bool:
+        if self.app_type == Types.PYTHON_APP.value:
+            write_file(os.path.join(self.get_global_dir(), 'config/config.json'), data)
+            return True
+        return False
+
+    def update_logging_file(self, data: str) -> bool:
+        if self.app_type == Types.PYTHON_APP.value:
+            write_file(os.path.join(self.get_global_dir(), 'config/logging.conf'), data)
+            return True
+        return False
+
+    def update_env_file(self, data: str) -> bool:
+        if self.app_type == Types.FRONTEND_APP.value:
+            write_file(os.path.join(self.get_global_dir(), 'config/.env'), data)
+            return True
+        return False
 
     def after_download_upload(self, name: str):
         # they are already wrapped on folder
@@ -163,6 +175,13 @@ class InstallableApp(BaseModel, ABC):
         if not execute_command('sudo systemctl stop {}'.format(self.service_file_name)):
             return False
         logger.info('Successfully stopped service.')
+        return True
+
+    def restart(self) -> bool:
+        logger.info('Restarting Linux Service...')
+        if not execute_command(f'sudo systemctl restart {self.service_file_name}'):
+            return False
+        logger.info('Successfully restarted service.')
         return True
 
     def backup_data(self):

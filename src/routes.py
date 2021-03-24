@@ -6,6 +6,7 @@ from src.system.networking.network import NetworkInfo, NetworkSetStaticIP, Netwo
     NetworkCheckPort
 from src.system.networking.ufw import UFWRuleList, UFWStatus, UFWEnable
 from src.system.resources.app.app import AppResource
+from src.system.resources.app.config import UpdateLoggingResource, UpdateConfigResource, UpdateEnvResource
 from src.system.resources.app.control import ControlResource
 from src.system.resources.app.delete_data import DeleteDataResource
 from src.system.resources.app.download import DownloadResource
@@ -14,8 +15,6 @@ from src.system.resources.app.release import ReleaseResource
 from src.system.resources.app.stats import AppStatsResource
 from src.system.resources.app.token import TokenResource
 from src.system.resources.app.uninstall import UnInstallResource
-from src.system.resources.app.update_config import UpdateConfigResource
-from src.system.resources.app.update_logging import UpdateLoggingResource
 from src.system.resources.app.upload import UploadResource
 from src.system.resources.host_info import GetSystemMem, GetSystemTime, GetSystemDiscUsage
 from src.system.resources.host_reboot import HostReboot
@@ -71,6 +70,7 @@ api_app.add_resource(UnInstallResource, '/uninstall')
 api_app.add_resource(DeleteDataResource, '/delete_data')
 api_app.add_resource(UpdateConfigResource, '/update_config')
 api_app.add_resource(UpdateLoggingResource, '/update_logging')
+api_app.add_resource(UpdateEnvResource, '/update_env')
 
 # 4
 api_wires = Api(bp_wires)
