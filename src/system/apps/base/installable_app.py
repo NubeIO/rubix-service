@@ -15,7 +15,7 @@ from src.inheritors import inheritors
 from src.model import BaseModel
 from src.system.apps.enums.types import Types
 from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist, upload_unzip_service, \
-    write_file
+    write_file, directory_zip_service
 from src.system.utils.shell import execute_command
 
 logger = LocalProxy(lambda: current_app.logger)
@@ -192,6 +192,9 @@ class InstallableApp(BaseModel, ABC):
             logger.info('Successfully completed data backup...')
             return True
         return False
+
+    def download_data(self):
+        return directory_zip_service(os.path.join(self.get_global_dir(), 'data'))
 
     def get_global_dir(self) -> str:
         setting = current_app.config[AppSetting.FLASK_KEY]
