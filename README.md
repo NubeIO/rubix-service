@@ -229,6 +229,24 @@ curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: applic
 curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}'
 ```
 
+##### Download Data
+
+> GET: `/api/services/download_data`
+
+> Body
+```json
+{"service": "<service>"}
+```
+
+> Examples:
+```bash
+curl -X GET http://localhost:1616/api/app/download_data  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"}' -o 'POINT_SERVER_DATA'
+curl -X GET http://localhost:1616/api/app/download_data  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER"}' -o 'BACNET_SERVER_DATA'
+curl -X GET http://localhost:1616/api/app/download_data  -H "Content-Type: application/json" -d '{"service":"LORA_RAW"}' -o 'LORA_RAW_DATA'
+curl -X GET http://localhost:1616/api/app/download_data  -H "Content-Type: application/json" -d '{"service":"WIRES"}' -o 'WIRES_DATA'
+curl -X GET http://localhost:1616/api/app/download_data  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}' -o 'RUBIX_PLAT_DATA'
+```
+
 ##### Edit config.json
 
 - Copy config details to location: `/data/<config_dir>/config.json` and restart service

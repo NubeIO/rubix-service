@@ -3,7 +3,7 @@ import shutil
 from io import BytesIO
 from logging import Logger
 from pathlib import Path
-from zipfile import ZipFile
+from zipfile import ZipFile, ZIP_DEFLATED
 
 from flask import current_app
 from werkzeug.local import LocalProxy
@@ -70,3 +70,14 @@ def upload_unzip_service(file, directory) -> str:
     with ZipFile(file) as z_file:
         z_file.extractall(directory)
     return z_file.namelist()[0]
+
+
+def directory_zip_service(directory) -> BytesIO:
+    zip_file = BytesIO()
+    with ZipFile(zip_file, 'w', ZIP_DEFLATED) as z_file:
+        for root, dirs, files in os.walk(directory):
+            for file in files:
+                file_path = os.path.join(root, file)
+                z_file.write(file_path, os.path.basename(file_path))
+    zip_file.seek(0)
+    return zip_file
