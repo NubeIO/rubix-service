@@ -247,6 +247,46 @@ curl -X GET http://localhost:1616/api/app/download_data  -H "Content-Type: appli
 curl -X GET http://localhost:1616/api/app/download_data  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}' -o 'RUBIX_PLAT_DATA'
 ```
 
+##### Update config files
+
+> PUT: `/api/app/config/config`
+> 
+> PUT: `/api/app/config/logging`
+> 
+> PUT: `/api/app/config/env`
+
+> Body
+```json
+{"service": "<service>", "data": "<data>"}
+```
+
+> Examples:
+```bash
+curl -X DELETE http://localhost:1616/api/app/config/config  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER", "data":{"drivers":{"generic":false},"services":{"mqtt":true}}'
+curl -X DELETE http://localhost:1616/api/app/config/logging  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER", "data":"[loggers]\nroot,werkzeug,gunicorn.error,gunicorn.access"}'
+curl -X DELETE http://localhost:1616/api/app/config/env  -H "Content-Type: application/json" -d '{"service":"WIRES"}, "data":"PORT=1313\nSECRET_KEY=__SECRET_KEY__"'
+```
+
+##### Delete config files
+
+> DELETE: `/api/app/config/config` 
+> 
+> DELETE: `/api/app/config/logging` 
+> 
+> DELETE: `/api/app/config/env` 
+
+> Body
+```json
+{"service": "<service>"}
+```
+
+> Examples:
+```bash
+curl -X DELETE http://localhost:1616/api/app/config/config  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"'
+curl -X DELETE http://localhost:1616/api/app/config/logging  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"'
+curl -X DELETE http://localhost:1616/api/app/config/env  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
+```
+
 ##### Edit config.json
 
 - Copy config details to location: `/data/<config_dir>/config.json` and restart service

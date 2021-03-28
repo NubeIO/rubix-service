@@ -8,7 +8,7 @@ from src.system.resources.app.utils import get_app_from_service, get_installed_a
 from src.system.resources.fields import config_fields
 
 
-class UpdateConfigResource(RubixResource):
+class ConfigResource(RubixResource):
     @classmethod
     @marshal_with(config_fields)
     def put(cls):
@@ -26,8 +26,22 @@ class UpdateConfigResource(RubixResource):
         app_details = get_installed_app_details(app) or {}
         return {'service': service, 'update': update, **app_details}
 
+    @classmethod
+    @marshal_with(config_fields)
+    def delete(cls):
+        parser = reqparse.RequestParser()
+        parser.add_argument('service', type=str, required=True)
+        args = parser.parse_args()
+        service: str = args['service'].upper()
+        app: InstallableApp = get_app_from_service(service)
+        delete = app.delete_config_file()
+        if delete:
+            app.restart()
+        app_details = get_installed_app_details(app) or {}
+        return {'service': service, 'delete': delete, **app_details}
 
-class UpdateLoggingResource(RubixResource):
+
+class LoggingResource(RubixResource):
     @classmethod
     @marshal_with(config_fields)
     def put(cls):
@@ -38,14 +52,28 @@ class UpdateLoggingResource(RubixResource):
         service: str = args['service'].upper()
         data: str = args['data']
         app: InstallableApp = get_app_from_service(service)
-        update = app.update_config_file(data)
+        update = app.update_logging_file(data)
         if update:
             app.restart()
         app_details = get_installed_app_details(app) or {}
         return {'service': service, 'update': update, **app_details}
 
+    @classmethod
+    @marshal_with(config_fields)
+    def delete(cls):
+        parser = reqparse.RequestParser()
+        parser.add_argument('service', type=str, required=True)
+        args = parser.parse_args()
+        service: str = args['service'].upper()
+        app: InstallableApp = get_app_from_service(service)
+        delete = app.delete_logging_file()
+        if delete:
+            app.restart()
+        app_details = get_installed_app_details(app) or {}
+        return {'service': service, 'delete': delete, **app_details}
 
-class UpdateEnvResource(RubixResource):
+
+class EnvResource(RubixResource):
     @classmethod
     @marshal_with(config_fields)
     def put(cls):
@@ -61,3 +89,18 @@ class UpdateEnvResource(RubixResource):
             app.restart()
         app_details = get_installed_app_details(app) or {}
         return {'service': service, 'update': update, **app_details}
+
+    @classmethod
+    @marshal_with(config_fields)
+    def delete(cls):
+        parser = reqparse.RequestParser()
+        parser.add_argument('service', type=str, required=True)
+        args = parser.parse_args()
+        service: str = args['service'].upper()
+        app: InstallableApp = get_app_from_service(service)
+        delete = app.delete_env_file()
+        if delete:
+            app.restart()
+        app_details = get_installed_app_details(app) or {}
+        return {'service': service, 'delete': delete, **app_details}
+
