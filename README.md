@@ -262,9 +262,9 @@ curl -X GET http://localhost:1616/api/app/download_data  -H "Content-Type: appli
 
 > Examples:
 ```bash
-curl -X DELETE http://localhost:1616/api/app/config/config  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER", "data":{"drivers":{"generic":false},"services":{"mqtt":true}}'
-curl -X DELETE http://localhost:1616/api/app/config/logging  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER", "data":"[loggers]\nroot,werkzeug,gunicorn.error,gunicorn.access"}'
-curl -X DELETE http://localhost:1616/api/app/config/env  -H "Content-Type: application/json" -d '{"service":"WIRES"}, "data":"PORT=1313\nSECRET_KEY=__SECRET_KEY__"'
+curl -X PUT http://localhost:1616/api/app/config/config  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER", "data":{"drivers":{"generic":false},"services":{"mqtt":true}}'
+curl -X PUT http://localhost:1616/api/app/config/logging  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER", "data":"[loggers]\nroot,werkzeug,gunicorn.error,gunicorn.access"}'
+curl -X PUT http://localhost:1616/api/app/config/env  -H "Content-Type: application/json" -d '{"service":"WIRES"}, "data":"PORT=1313\nSECRET_KEY=__SECRET_KEY__"'
 ```
 
 ##### Delete config files

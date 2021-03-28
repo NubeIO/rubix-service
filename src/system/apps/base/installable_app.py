@@ -211,6 +211,9 @@ class InstallableApp(BaseModel, ABC):
             return True
         return False
 
+    def download_data(self):
+        return directory_zip_service(os.path.join(self.get_global_dir(), 'data'))
+
     def get_global_dir(self) -> str:
         setting = current_app.config[AppSetting.FLASK_KEY]
         return os.path.join(setting.root_dir, self.data_dir_name)

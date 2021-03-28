@@ -21,8 +21,6 @@ class ConfigResource(RubixResource):
         app: InstallableApp = get_app_from_service(service)
         json_data = json.dumps(data, indent=2)
         update = app.update_config_file(json_data)
-        if update:
-            app.restart()
         app_details = get_installed_app_details(app) or {}
         return {'service': service, 'update': update, **app_details}
 
@@ -35,8 +33,6 @@ class ConfigResource(RubixResource):
         service: str = args['service'].upper()
         app: InstallableApp = get_app_from_service(service)
         delete = app.delete_config_file()
-        if delete:
-            app.restart()
         app_details = get_installed_app_details(app) or {}
         return {'service': service, 'delete': delete, **app_details}
 
@@ -53,8 +49,6 @@ class LoggingResource(RubixResource):
         data: str = args['data']
         app: InstallableApp = get_app_from_service(service)
         update = app.update_logging_file(data)
-        if update:
-            app.restart()
         app_details = get_installed_app_details(app) or {}
         return {'service': service, 'update': update, **app_details}
 
@@ -67,8 +61,6 @@ class LoggingResource(RubixResource):
         service: str = args['service'].upper()
         app: InstallableApp = get_app_from_service(service)
         delete = app.delete_logging_file()
-        if delete:
-            app.restart()
         app_details = get_installed_app_details(app) or {}
         return {'service': service, 'delete': delete, **app_details}
 
@@ -85,8 +77,6 @@ class EnvResource(RubixResource):
         data: str = args['data']
         app: InstallableApp = get_app_from_service(service)
         update = app.update_env_file(data)
-        if update:
-            app.restart()
         app_details = get_installed_app_details(app) or {}
         return {'service': service, 'update': update, **app_details}
 
@@ -99,8 +89,6 @@ class EnvResource(RubixResource):
         service: str = args['service'].upper()
         app: InstallableApp = get_app_from_service(service)
         delete = app.delete_env_file()
-        if delete:
-            app.restart()
         app_details = get_installed_app_details(app) or {}
         return {'service': service, 'delete': delete, **app_details}
 
