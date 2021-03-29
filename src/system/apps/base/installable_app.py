@@ -15,7 +15,7 @@ from src.inheritors import inheritors
 from src.model import BaseModel
 from src.system.apps.enums.types import Types
 from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist, upload_unzip_service, \
-    write_file, directory_zip_service
+    write_file, delete_file, directory_zip_service
 from src.system.utils.shell import execute_command
 
 logger = LocalProxy(lambda: current_app.logger)
@@ -153,6 +153,24 @@ class InstallableApp(BaseModel, ABC):
     def update_env_file(self, data: str) -> bool:
         if self.app_type == Types.FRONTEND_APP.value:
             write_file(os.path.join(self.get_global_dir(), 'config/.env'), data)
+            return True
+        return False
+
+    def delete_config_file(self) -> bool:
+        if self.app_type == Types.PYTHON_APP.value:
+            delete_file(os.path.join(self.get_global_dir(), 'config/config.json'))
+            return True
+        return False
+
+    def delete_logging_file(self) -> bool:
+        if self.app_type == Types.PYTHON_APP.value:
+            delete_file(os.path.join(self.get_global_dir(), 'config/logging.conf'))
+            return True
+        return False
+
+    def delete_env_file(self) -> bool:
+        if self.app_type == Types.FRONTEND_APP.value:
+            delete_file(os.path.join(self.get_global_dir(), 'config/.env'))
             return True
         return False
 
