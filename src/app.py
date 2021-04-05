@@ -1,6 +1,5 @@
 import logging
 import os
-from functools import partial
 
 from flask import Flask
 from flask_cors import CORS
@@ -46,5 +45,5 @@ def create_app(app_setting: AppSetting) -> Flask:
         _app.register_blueprint(bp_users)
         return _app
 
-    app.setup = partial(setup, app)
+    setup(app)
     return register_router(app)
