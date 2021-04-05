@@ -1,7 +1,7 @@
 import logging
 import os
 
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 
 from .setting import AppSetting
@@ -29,8 +29,10 @@ def create_app(app_setting: AppSetting) -> Flask:
 
     @app.before_request
     def before_request_fn():
-        from src.users.model_users import UserModel
-        UserModel.authorize()
+        env: dict = request.environ
+        if not (env.get('REMOTE_ADDR', '') == "127.0.0.1" and "python-requests" in env.get('HTTP_USER_AGENT', '')):
+            from src.users.model_users import UserModel
+            UserModel.authorize()
 
     def register_router(_app: Flask) -> Flask:
         from src.routes import bp_system, bp_networking, bp_service, bp_app, bp_wires, bp_users
