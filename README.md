@@ -231,60 +231,65 @@ curl -X POST http://localhost:1616/api/app/delete_data  -H "Content-Type: applic
 
 ##### Download Data
 
-> GET: `/api/services/download_data`
-
-> Body
-```json
-{"service": "<service>"}
-```
+> GET: `/api/services/download_data/<service>`
 
 > Examples:
 ```bash
-curl -X GET http://localhost:1616/api/app/download_data  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"}' -o 'POINT_SERVER_DATA'
-curl -X GET http://localhost:1616/api/app/download_data  -H "Content-Type: application/json" -d '{"service":"BACNET_SERVER"}' -o 'BACNET_SERVER_DATA'
-curl -X GET http://localhost:1616/api/app/download_data  -H "Content-Type: application/json" -d '{"service":"LORA_RAW"}' -o 'LORA_RAW_DATA'
-curl -X GET http://localhost:1616/api/app/download_data  -H "Content-Type: application/json" -d '{"service":"WIRES"}' -o 'WIRES_DATA'
-curl -X GET http://localhost:1616/api/app/download_data  -H "Content-Type: application/json" -d '{"service":"RUBIX_PLAT"}' -o 'RUBIX_PLAT_DATA'
+curl -X GET http://localhost:1616/api/app/download_data/POINT_SERVER
+curl -X GET http://localhost:1616/api/app/download_data/BACNET_SERVER
+curl -X GET http://localhost:1616/api/app/download_data/LORA_RAW
+curl -X GET http://localhost:1616/api/app/download_data/WIRES
+curl -X GET http://localhost:1616/api/app/download_data/RUBIX_PLAT
 ```
 
 ##### Update config files
 
-> PUT: `/api/app/config/config`
+> PUT: `/api/app/config/config/<service>`
 > 
-> PUT: `/api/app/config/logging`
+> PUT: `/api/app/config/logging/<service>`
 > 
-> PUT: `/api/app/config/env`
+> PUT: `/api/app/config/env/<service>`
 
 > Body
 ```json
-{"service": "<service>", "data": "<data>"}
+{"data": "<data>"}
 ```
 
 > Examples:
 ```bash
-curl -X PUT http://localhost:1616/api/app/config/config  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER", "data":{"drivers":{"generic":false},"services":{"mqtt":true}}'
-curl -X PUT http://localhost:1616/api/app/config/logging  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER", "data":"[loggers]\nroot,werkzeug,gunicorn.error,gunicorn.access"}'
-curl -X PUT http://localhost:1616/api/app/config/env  -H "Content-Type: application/json" -d '{"service":"WIRES"}, "data":"PORT=1313\nSECRET_KEY=__SECRET_KEY__"'
+curl -X PUT http://localhost:1616/api/app/config/config/POINT_SERVER  -H "Content-Type: application/json" -d '{"data":{"drivers":{"generic":false},"services":{"mqtt":true}}'
+curl -X PUT http://localhost:1616/api/app/config/logging/POINT_SERVER  -H "Content-Type: application/json" -d '{"data":"[loggers]\nroot,werkzeug,gunicorn.error,gunicorn.access"}'
+curl -X PUT http://localhost:1616/api/app/config/env/WIRES  -H "Content-Type: application/json" -d '{"data":"PORT=1313\nSECRET_KEY=__SECRET_KEY__"'
 ```
 
 ##### Delete config files
 
-> DELETE: `/api/app/config/config` 
+> DELETE: `/api/app/config/config/<service>` 
 > 
-> DELETE: `/api/app/config/logging` 
+> DELETE: `/api/app/config/logging/<service>` 
 > 
-> DELETE: `/api/app/config/env` 
-
-> Body
-```json
-{"service": "<service>"}
-```
+> DELETE: `/api/app/config/env/<service>`
 
 > Examples:
 ```bash
-curl -X DELETE http://localhost:1616/api/app/config/config  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"'
-curl -X DELETE http://localhost:1616/api/app/config/logging  -H "Content-Type: application/json" -d '{"service":"POINT_SERVER"'
-curl -X DELETE http://localhost:1616/api/app/config/env  -H "Content-Type: application/json" -d '{"service":"WIRES"}'
+curl -X DELETE http://localhost:1616/api/app/config/config/POINT_SERVER
+curl -X DELETE http://localhost:1616/api/app/config/logging/POINT_SERVER
+curl -X DELETE http://localhost:1616/api/app/config/env/WIRES
+```
+
+##### Download config files
+
+> GET: `/api/app/config/config/<service>` 
+> 
+> GET: `/api/app/config/logging/<service>` 
+> 
+> GET: `/api/app/config/env/<service>`
+
+> Examples:
+```bash
+curl -X GET http://localhost:1616/api/app/config/config/POINT_SERVER
+curl -X GET http://localhost:1616/api/app/config/logging/POINT_SERVER
+curl -X GET http://localhost:1616/api/app/config/env/WIRES
 ```
 
 ##### Edit config.json
