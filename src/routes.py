@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api
 
+from src.gw_mqtt.resource_gw_mqtt import GwMqttMasterResource, GwMqttSlaveResource, GwMqttSlavesResource
 from src.platform.resource_wires_plat import WiresPlatResource
 from src.system.networking.network import NetworkInfo, NetworkSetStaticIP, NetworkSetDHCP, NetworkPingRange, \
     NetworkCheckPort
@@ -33,6 +34,7 @@ bp_service = Blueprint('service', __name__, url_prefix='/api/system/service')
 bp_app = Blueprint('app', __name__, url_prefix='/api/app')
 bp_wires = Blueprint('wires', __name__, url_prefix='/api/wires')
 bp_users = Blueprint('users', __name__, url_prefix='/api/users')
+bp_gw_mqtt = Blueprint('gw_mqtt', __name__, url_prefix='/api/gw_mqtt')
 
 api_system = Api(bp_system)
 api_system.add_resource(Ping, '/ping')
@@ -82,3 +84,8 @@ api_wires.add_resource(WiresPlatResource, '/plat')
 api_users = Api(bp_users)
 api_users.add_resource(UsersResource, '')
 api_users.add_resource(UsersLoginResource, '/login', endpoint="login")
+
+api_gw_mqtt = Api(bp_gw_mqtt)
+api_gw_mqtt.add_resource(GwMqttSlaveResource, '/slave')
+api_gw_mqtt.add_resource(GwMqttSlavesResource, '/slaves')
+api_gw_mqtt.add_resource(GwMqttMasterResource, '/master')

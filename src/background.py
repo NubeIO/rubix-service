@@ -29,7 +29,7 @@ class Background:
     def run():
         setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
         if setting.mqtt_rest_bridge_setting.enabled:
-            MqttRestBridge(port=setting.port, identifier=setting.identifier, prod=setting.prod,
+            MqttRestBridge(port=setting.port,
                            mqtt_setting=setting.mqtt_rest_bridge_setting,
                            callback=Background.sync_on_start).start()
 
