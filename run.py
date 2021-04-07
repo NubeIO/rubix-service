@@ -6,6 +6,7 @@ import os
 import click
 
 from src import AppSetting, GunicornFlaskApplication
+from src.platform.resource_wires_plat import WiresPlatResource
 
 CLI_CTX_SETTINGS = dict(help_option_names=["-h", "--help"], max_content_width=120)
 
@@ -43,6 +44,7 @@ def cli(port, root_dir, global_dir, data_dir, config_dir, artifact_dir, backup_d
     setting = AppSetting(port=port, root_dir=root_dir, global_dir=global_dir, data_dir=data_dir, config_dir=config_dir,
                          artifact_dir=artifact_dir, backup_dir=backup_dir, prod=prod, device_type=device_type,
                          auth=auth).reload(setting_file)
+    WiresPlatResource.store_wires_plat_if_does_not_updated()
     options = {
         'bind': '%s:%s' % ('0.0.0.0', setting.port),
         'workers': 1,
