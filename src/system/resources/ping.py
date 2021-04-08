@@ -36,6 +36,7 @@ class Ping(RubixResource):
             'deployment_mode': deployment_mode,
             'mqtt_rest_bridge_listener': {
                 'enabled': setting.mqtt_rest_bridge_setting.enabled,
+                'master': setting.mqtt_rest_bridge_setting.master,
                 'status': MqttRestBridge.status()
             }
         }
