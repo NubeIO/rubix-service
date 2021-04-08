@@ -1,7 +1,12 @@
 # CHANGELOG
+## [v1.5.8](https://github.com/NubeIO/rubix-service/tree/v1.5.8) (2021-04-08)
+### Added
+- API: Download Database
+- Delete/Download API for config, environment & logging file
+
 ## [v1.5.7](https://github.com/NubeIO/rubix-service/tree/v1.5.7) (2021-03-26)
 ### Added
-- fix typo on set tz changed to timedatectl
+- Fix typo on set tz changed to timedatectl
 - Update Config/Logging files of Apps
 
 ## [v1.5.6](https://github.com/NubeIO/rubix-service/tree/v1.5.6) (2021-03-21)
