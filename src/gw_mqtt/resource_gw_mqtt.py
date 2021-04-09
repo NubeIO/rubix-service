@@ -2,7 +2,8 @@ import json
 
 from flask import Response
 from flask_restful import reqparse
-from mrb.mapper import api_to_slave_topic_mapper, api_to_master_topic_mapper, api_to_slaves_topic_mapper
+from mrb.mapper import api_to_slave_topic_mapper, api_to_master_topic_mapper, api_to_slaves_multicast_topic_mapper, \
+    api_to_slaves_broadcast_topic_mapper
 from mrb.message import Response as MessageResponse, HttpMethod
 from rubix_http.resource import RubixResource
 
@@ -23,31 +24,65 @@ class GwMqttSlaveResource(RubixResource):
         parser.add_argument('http_method', type=str, default='GET')
         parser.add_argument('headers', type=dict)
         args = parser.parse_args()
-        response: MessageResponse = api_to_slave_topic_mapper(slave_global_uuid=args['slave_global_uuid'],
-                                                              api=args['api'],
-                                                              body=args['body'],
-                                                              http_method=HttpMethod[args['http_method']],
-                                                              headers=args['headers'])
-        return Response(json.dumps(response.content).encode('utf-8'), response.status_code, response.headers)
+        response: MessageResponse = api_to_slave_topic_mapper(
+            slave_global_uuid=args['slave_global_uuid'],
+            api=args['api'],
+            body=args['body'],
+            http_method=HttpMethod[args['http_method']],
+            headers=args['headers'])
+        if response.error:
+            return Response(json.dumps({'message': response.error_message}), response.status_code, response.headers)
+        else:
+            return Response(json.dumps(response.content).encode('utf-8'), response.status_code, response.headers)
 
 
-class GwMqttSlavesResource(RubixResource):
+class GwMqttSlavesMulticastResource(RubixResource):
+    @classmethod
+    def post(cls):
+        parser = reqparse.RequestParser()
+        parser.add_argument('slaves_global_uuids', type=str, action='append', required=True)
+        parser.add_argument('api', type=str, required=True)
+        parser.add_argument('body', type=dict)
+        parser.add_argument('http_method', type=str, default='GET')
+        parser.add_argument('headers', type=dict)
+        args = parser.parse_args()
+        response: MessageResponse = api_to_slaves_multicast_topic_mapper(
+            slaves_global_uuids=args['slaves_global_uuids'],
+            api=args['api'],
+            body=args['body'],
+            http_method=HttpMethod[args['http_method']],
+            headers=args['headers'])
+        if response.error:
+            return Response(json.dumps({'message': response.error_message}), response.status_code, response.headers)
+        else:
+            return Response(json.dumps(response.content).encode('utf-8'), response.status_code, response.headers)
+
+
+class GwMqttSlavesBroadcastResource(RubixResource):
     @classmethod
     def post(cls):
         args = gw_mqtt_parser.parse_args()
-        response: MessageResponse = api_to_slaves_topic_mapper(api=args['api'],
-                                                               body=args['body'],
-                                                               http_method=HttpMethod[args['http_method']],
-                                                               headers=args['headers'])
-        return Response(json.dumps(response.content).encode('utf-8'), response.status_code, response.headers)
+        response: MessageResponse = api_to_slaves_broadcast_topic_mapper(
+            api=args['api'],
+            body=args['body'],
+            http_method=HttpMethod[args['http_method']],
+            headers=args['headers'])
+        if response.error:
+            return Response(json.dumps({'message': response.error_message}), response.status_code, response.headers)
+        else:
+            return Response(json.dumps(response.content).encode('utf-8'), response.status_code, response.headers)
 
 
 class GwMqttMasterResource(RubixResource):
     @classmethod
     def post(cls):
         args = gw_mqtt_parser.parse_args()
-        response: MessageResponse = api_to_master_topic_mapper(api=args['api'],
-                                                               body=args['body'],
-                                                               http_method=HttpMethod[args['http_method']],
-                                                               headers=args['headers'])
-        return Response(json.dumps(response.content).encode('utf-8'), response.status_code, response.headers)
+        response: MessageResponse = api_to_master_topic_mapper(
+            api=args['api'],
+            body=args['body'],
+            http_method=HttpMethod[args['http_method']],
+            headers=args['headers'])
+        if response.error:
+            return Response(json.dumps({'message': response.error_message}), response.status_code, response.headers)
+        else:
+            return Response(json.dumps(response.content).encode('utf-8'), response.status_code, response.headers)
