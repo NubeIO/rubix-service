@@ -1,6 +1,7 @@
 import logging
 from threading import Thread
 
+import gevent
 from flask import current_app
 from mrb.brige import MqttRestBridge
 
@@ -32,6 +33,9 @@ class Background:
             MqttRestBridge(port=setting.port,
                            mqtt_setting=setting.mqtt_rest_bridge_setting,
                            callback=Background.sync_on_start).start()
+            if setting.mqtt_rest_bridge_setting.master:
+                from src.discover.remote_device_registry import RemoteDeviceRegistry
+                gevent.spawn(RemoteDeviceRegistry().register)
 
     @staticmethod
     def sync_on_start():

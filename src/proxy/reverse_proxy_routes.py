@@ -18,7 +18,7 @@ def reverse_proxy_handler(_):
         dummy_app = installable_app()
         if dummy_app.gateway_access:
             url_prefixes[dummy_app.url_prefix] = dummy_app
-    requested_url_prefix = "{}".format(url_parts[1])
+    requested_url_prefix = url_parts[1] if len(url_parts) > 1 else ''
     if requested_url_prefix not in url_prefixes.keys():
         abort(404)
     app_to_redirect = url_prefixes[requested_url_prefix]
