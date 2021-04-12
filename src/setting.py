@@ -1,7 +1,9 @@
+import json
 import os
 import secrets
 
 from flask import Flask
+from mrb.setting import MqttSetting as MqttRestBridgeSetting
 
 from src.system.utils.file import write_file, read_file
 
@@ -20,16 +22,19 @@ class AppSetting:
     default_global_dir: str = 'out/rubix-service'
     default_data_dir: str = 'data'
     default_config_dir: str = 'config'
+    default_identifier: str = 'rs'
     default_artifact_dir: str = 'apps'
     default_backup_dir: str = 'backup'
     default_secret_key_file = 'secret_key.txt'
     default_token_file = 'token.txt'
+    default_setting_file: str = 'config.json'
     default_logging_conf: str = 'logging.conf'
     fallback_logging_conf: str = 'config/logging.example.conf'
     fallback_prod_logging_conf: str = 'config/logging.prod.example.conf'
     default_users_file = 'users.txt'
 
     def __init__(self, **kwargs):
+        self.__port = kwargs.get('port') or AppSetting.PORT
         self.__root_dir = self.__compute_dir(kwargs.get('root_dir'), self.default_root_dir)
         self.__global_dir = self.__compute_dir(kwargs.get('global_dir'), self.default_global_dir)
         self.__data_dir = self.__compute_dir(self.__join_global_dir(kwargs.get('data_dir')),
@@ -43,12 +48,19 @@ class AppSetting:
         self.__download_dir = self.__compute_dir('', os.path.join(self.__artifact_dir, 'download'))
         self.__install_dir = self.__compute_dir('', os.path.join(self.__artifact_dir, 'install'))
         self.__token_file = os.path.join(self.__data_dir, self.default_token_file)
+        self.__identifier = kwargs.get('identifier') or AppSetting.default_identifier
         self.__prod = kwargs.get('prod') or False
         self.__device_type = kwargs.get('device_type')
         self.__secret_key = ''
         self.__secret_key_file = os.path.join(self.__config_dir, self.default_secret_key_file)
         self.__users_file = os.path.join(self.__data_dir, self.default_users_file)
         self.__auth = kwargs.get('auth') or False
+        self.__mqtt_rest_bridge_setting = MqttRestBridgeSetting()
+        self.__mqtt_rest_bridge_setting.name = 'rs_mqtt_rest_bridge_listener'
+
+    @property
+    def port(self):
+        return self.__port
 
     @property
     def root_dir(self):
@@ -87,6 +99,10 @@ class AppSetting:
         return read_file(os.path.join(self.data_dir, self.default_token_file))
 
     @property
+    def identifier(self):
+        return self.__identifier
+
+    @property
     def prod(self) -> bool:
         return self.__prod
 
@@ -106,7 +122,13 @@ class AppSetting:
     def users_file(self) -> str:
         return self.__users_file
 
-    def reload(self, setting_file: str):
+    @property
+    def mqtt_rest_bridge_setting(self) -> MqttRestBridgeSetting:
+        return self.__mqtt_rest_bridge_setting
+
+    def reload(self, setting_file: str, is_json_str: bool = False):
+        data = self.__read_file(setting_file, self.__config_dir, is_json_str)
+        self.__mqtt_rest_bridge_setting = self.__mqtt_rest_bridge_setting.reload(data.get('mqtt_rest_bridge_listener'))
         return self
 
     def init_app(self, app: Flask):
@@ -142,3 +164,15 @@ class AppSetting:
     @staticmethod
     def __create_secret_key():
         return secrets.token_hex(24)
+
+    @staticmethod
+    def __read_file(setting_file: str, _dir: str, is_json_str=False):
+        if is_json_str:
+            return json.loads(setting_file)
+        if setting_file is None or setting_file.strip() == '':
+            return {}
+        s = setting_file if os.path.isabs(setting_file) else os.path.join(_dir, setting_file)
+        if not os.path.isfile(s) or not os.path.exists(s):
+            return {}
+        with open(s) as json_file:
+            return json.load(json_file)

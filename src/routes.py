@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api
 
+from src.discover.resources.remote_device import RemoteDevice
 from src.platform.resource_wires_plat import WiresPlatResource
 from src.system.networking.network import NetworkInfo, NetworkSetStaticIP, NetworkSetDHCP, NetworkPingRange, \
     NetworkCheckPort
@@ -33,7 +34,9 @@ bp_service = Blueprint('service', __name__, url_prefix='/api/system/service')
 bp_app = Blueprint('app', __name__, url_prefix='/api/app')
 bp_wires = Blueprint('wires', __name__, url_prefix='/api/wires')
 bp_users = Blueprint('users', __name__, url_prefix='/api/users')
+bp_gw_mqtt = Blueprint('gw_mqtt', __name__, url_prefix='/api/gw_mqtt')
 
+# 1
 api_system = Api(bp_system)
 api_system.add_resource(Ping, '/ping')
 api_system.add_resource(GetSystemTime, '/time')
@@ -42,6 +45,7 @@ api_system.add_resource(GetSystemMem, '/memory')
 api_system.add_resource(GetSystemDiscUsage, '/disc')
 api_system.add_resource(HostReboot, '/host/restart')
 
+# 2
 api_networking = Api(bp_networking)
 api_networking.add_resource(NetworkInfo, '')
 api_networking.add_resource(NetworkSetStaticIP, '/static')
@@ -52,12 +56,13 @@ api_networking.add_resource(UFWRuleList, '/ufw/rules')
 api_networking.add_resource(UFWStatus, '/ufw/status')
 api_networking.add_resource(UFWEnable, '/ufw/enable')
 
+# 3
 api_service = Api(bp_service)
 api_service.add_resource(ServiceResource, '')
 api_service.add_resource(ServiceStats, '/stats/<string:service>')
 api_service.add_resource(ServiceControl, "/control")
 
-# 3
+# 4
 api_app = Api(bp_app)
 api_app.add_resource(AppResource, '')
 api_app.add_resource(AppStatsResource, '/stats/<string:service>')
@@ -74,7 +79,7 @@ api_app.add_resource(ConfigResource, '/config/config/<string:service>')
 api_app.add_resource(LoggingResource, '/config/logging/<string:service>')
 api_app.add_resource(EnvResource, '/config/env/<string:service>')
 
-# 4
+# 5
 api_wires = Api(bp_wires)
 api_wires.add_resource(WiresPlatResource, '/plat')
 
@@ -82,3 +87,8 @@ api_wires.add_resource(WiresPlatResource, '/plat')
 api_users = Api(bp_users)
 api_users.add_resource(UsersResource, '')
 api_users.add_resource(UsersLoginResource, '/login', endpoint="login")
+
+# 6
+bp_discover = Blueprint('discover', __name__, url_prefix='/api/discover')
+api_discover = Api(bp_discover)
+api_discover.add_resource(RemoteDevice, '/remote_devices')

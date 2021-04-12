@@ -1,8 +1,7 @@
 import logging
 import os
-from functools import partial
 
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 
 from .setting import AppSetting
@@ -30,12 +29,14 @@ def create_app(app_setting: AppSetting) -> Flask:
 
     @app.before_request
     def before_request_fn():
-        from src.users.model_users import UserModel
-        UserModel.authorize()
+        env: dict = request.environ
+        if not (env.get('REMOTE_ADDR', '') == "127.0.0.1" and "python-requests" in env.get('HTTP_USER_AGENT', '')):
+            from src.users.model_users import UserModel
+            UserModel.authorize()
 
     def register_router(_app: Flask) -> Flask:
-        from src.routes import bp_system, bp_networking, bp_service, bp_app, bp_wires, bp_users
-        from src.reverse_proxy_routes import bp_reverse_proxy
+        from src.routes import bp_system, bp_networking, bp_service, bp_app, bp_wires, bp_users, bp_gw_mqtt, bp_discover
+        from src.proxy.reverse_proxy_routes import bp_reverse_proxy
 
         _app.register_blueprint(bp_system)
         _app.register_blueprint(bp_networking)
@@ -44,7 +45,19 @@ def create_app(app_setting: AppSetting) -> Flask:
         _app.register_blueprint(bp_wires)
         _app.register_blueprint(bp_reverse_proxy)
         _app.register_blueprint(bp_users)
+        _app.register_blueprint(bp_gw_mqtt)
+
+        if app_setting.mqtt_rest_bridge_setting.enabled and app_setting.mqtt_rest_bridge_setting.master:
+            from src.proxy.master_proxy_routes import bp_master_proxy
+            from src.proxy.slave_proxy_routes import bp_slave_proxy
+            from src.proxy.slaves_multicast_proxy_routes import bp_slaves_multicast_proxy
+            from src.proxy.slaves_broadcast_proxy_routes import bp_slaves_broadcast_proxy
+            _app.register_blueprint(bp_discover)
+            _app.register_blueprint(bp_master_proxy)
+            _app.register_blueprint(bp_slave_proxy)
+            _app.register_blueprint(bp_slaves_broadcast_proxy)
+            _app.register_blueprint(bp_slaves_multicast_proxy)
         return _app
 
-    app.setup = partial(setup, app)
+    setup(app)
     return register_router(app)
