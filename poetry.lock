@@ -222,12 +222,13 @@ develop = false
 paho-mqtt = "1.5.1"
 requests = "2.25.1"
 rubix-mqtt = "rev v1.2.0"
+rubix-registry = "rev v1.0.0"
 
 [package.source]
 type = "git"
 url = "https://github.com/NubeIO/mqtt-rest-bridge"
 reference = "v1.2.0"
-resolved_reference = "258ccda18e823e00d3fbbb7f7bb5a4959d90a63b"
+resolved_reference = "8ee34df3c94dd61356c1374c370601a7957f86e2"
 
 [[package]]
 name = "netifaces"
