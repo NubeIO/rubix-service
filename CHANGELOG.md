@@ -1,4 +1,10 @@
 # CHANGELOG
+## [v1.6.0](https://github.com/NubeIO/rubix-service/tree/v1.6.0) (2021-04-12)
+### Added
+- Implementation of master slave architecture
+- Expose Gateway APIs for local apps (without authorization)
+- Add global_uuid on wires-plat
+
 ## [v1.5.8](https://github.com/NubeIO/rubix-service/tree/v1.5.8) (2021-04-08)
 ### Added
 - API: Download Database
