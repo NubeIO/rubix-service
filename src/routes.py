@@ -3,6 +3,8 @@ from flask_restful import Api
 
 from src.discover.resources.remote_device import RemoteDevice
 from src.platform.resource_wires_plat import WiresPlatResource
+from src.slaves.resources.slaves_plural import SlavesPlural
+from src.slaves.resources.slaves_singular import SlavesSingular
 from src.system.networking.network import NetworkInfo, NetworkSetStaticIP, NetworkSetDHCP, NetworkPingRange, \
     NetworkCheckPort
 from src.system.networking.ufw import UFWRuleList, UFWStatus, UFWEnable
@@ -92,3 +94,9 @@ api_users.add_resource(UsersLoginResource, '/login', endpoint="login")
 bp_discover = Blueprint('discover', __name__, url_prefix='/api/discover')
 api_discover = Api(bp_discover)
 api_discover.add_resource(RemoteDevice, '/remote_devices')
+
+# 7
+bp_slaves = Blueprint('slaves', __name__, url_prefix='/api/slaves')
+api_slaves = Api(bp_slaves)
+api_slaves.add_resource(SlavesPlural, '')
+api_slaves.add_resource(SlavesSingular, '/<string:global_uuid>')
