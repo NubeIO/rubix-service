@@ -1,4 +1,10 @@
 # CHANGELOG
+## [v1.6.1](https://github.com/NubeIO/rubix-service/tree/v1.6.1) (2021-04-18)
+### Added
+- Add slaves APIs for listing
+- Query only listed & available slaves on multicast
+- Add `is_online` flag on slaves get API
+
 ## [v1.6.0](https://github.com/NubeIO/rubix-service/tree/v1.6.0) (2021-04-12)
 ### Added
 - Implementation of master slave architecture
