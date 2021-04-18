@@ -13,7 +13,14 @@ class SlavesPlural(SlavesBase):
 
     @classmethod
     def get(cls):
-        return cls.get_slaves()[0]
+        devices: Dict[str, Dict] = RemoteDeviceRegistry().devices
+        slaves: Dict[str, Dict] = cls.get_slaves()[0]
+        for slave in slaves:
+            if slave in devices:
+                slaves[slave]['is_online'] = True
+            else:
+                slaves[slave]['is_online'] = False
+        return slaves
 
     @classmethod
     def post(cls):
