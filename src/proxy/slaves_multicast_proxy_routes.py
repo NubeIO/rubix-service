@@ -18,11 +18,11 @@ def slaves_proxy_handler(_):
     del url_parts[0]
     del url_parts[0]
     url = "/".join(url_parts)
-    available_devices_global_uuids: List[
-        str] = RemoteDeviceRegistry().available_devices_global_uuids
-    if available_devices_global_uuids:
+    available_inserted_devices_global_uuids: List[
+        str] = RemoteDeviceRegistry().available_inserted_devices_global_uuids
+    if available_inserted_devices_global_uuids:
         response: MessageResponse = api_to_slaves_multicast_topic_mapper(
-            slaves_global_uuids=available_devices_global_uuids,
+            slaves_global_uuids=available_inserted_devices_global_uuids,
             api=url,
             body=request.get_json(),
             http_method=HttpMethod[request.method.upper()])

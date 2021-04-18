@@ -13,6 +13,6 @@ class SlavesSingular(SlavesBase):
         slaves, slaves_file = cls.get_slaves()
         if global_uuid not in slaves:
             raise NotFoundException(f"global_uuid = {global_uuid} does not exist")
-        slaves.remove(global_uuid)
+        del slaves[global_uuid]
         write_file(slaves_file, json.dumps(slaves))
         return slaves
