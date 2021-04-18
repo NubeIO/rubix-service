@@ -35,7 +35,7 @@ class Background:
                            callback=Background.sync_on_start).start()
             if setting.mqtt_rest_bridge_setting.master:
                 from src.discover.remote_device_registry import RemoteDeviceRegistry
-                gevent.spawn(RemoteDeviceRegistry().register)
+                gevent.spawn(RemoteDeviceRegistry().register, setting)
 
     @staticmethod
     def sync_on_start():

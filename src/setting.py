@@ -32,6 +32,7 @@ class AppSetting:
     fallback_logging_conf: str = 'config/logging.example.conf'
     fallback_prod_logging_conf: str = 'config/logging.prod.example.conf'
     default_users_file = 'users.txt'
+    default_slaves_file = 'slaves.json'
 
     def __init__(self, **kwargs):
         self.__port = kwargs.get('port') or AppSetting.PORT
