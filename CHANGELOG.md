@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.6.2](https://github.com/NubeIO/rubix-service/tree/v1.6.2) (2021-04-20)
+### Added
+- Create mrb_listener APIs
+
 ## [v1.6.1](https://github.com/NubeIO/rubix-service/tree/v1.6.1) (2021-04-18)
 ### Added
 - Add slaves APIs for listing
