@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask_restful import Api
 
 from src.discover.resources.remote_device import RemoteDevice
+from src.mrb_listener.resource_mrb_listener import MRBListenerResource
 from src.platform.resource_wires_plat import WiresPlatResource
 from src.slaves.resources.slaves_plural import SlavesPlural
 from src.slaves.resources.slaves_singular import SlavesSingular
@@ -36,7 +37,7 @@ bp_service = Blueprint('service', __name__, url_prefix='/api/system/service')
 bp_app = Blueprint('app', __name__, url_prefix='/api/app')
 bp_wires = Blueprint('wires', __name__, url_prefix='/api/wires')
 bp_users = Blueprint('users', __name__, url_prefix='/api/users')
-bp_gw_mqtt = Blueprint('gw_mqtt', __name__, url_prefix='/api/gw_mqtt')
+bp_mrb_listener = Blueprint('mrb_listener', __name__, url_prefix='/api/mrb_listener')
 
 # 1
 api_system = Api(bp_system)
@@ -91,11 +92,15 @@ api_users.add_resource(UsersResource, '')
 api_users.add_resource(UsersLoginResource, '/login', endpoint="login")
 
 # 6
+api_mrb_listener = Api(bp_mrb_listener)
+api_mrb_listener.add_resource(MRBListenerResource, '')
+
+# 7
 bp_discover = Blueprint('discover', __name__, url_prefix='/api/discover')
 api_discover = Api(bp_discover)
 api_discover.add_resource(RemoteDevice, '/remote_devices')
 
-# 7
+# 8
 bp_slaves = Blueprint('slaves', __name__, url_prefix='/api/slaves')
 api_slaves = Api(bp_slaves)
 api_slaves.add_resource(SlavesPlural, '')

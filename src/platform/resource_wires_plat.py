@@ -29,7 +29,7 @@ class WiresPlatResource(RubixResource):
     @classmethod
     @marshal_with(wires_plat_all_fields)
     def put(cls):
-        data: dict = WiresPlatResource.parser.parse_args()
+        data: dict = cls.parser.parse_args()
         wires_plat: dict = RubixRegistry().read_wires_plat()
         return cls.store_wires_plat(wires_plat, data)
 
