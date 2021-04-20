@@ -56,8 +56,7 @@ class AppSetting:
         self.__secret_key_file = os.path.join(self.__config_dir, self.default_secret_key_file)
         self.__users_file = os.path.join(self.__data_dir, self.default_users_file)
         self.__auth = kwargs.get('auth') or False
-        self.__mqtt_rest_bridge_setting = MqttRestBridgeSetting()
-        self.__mqtt_rest_bridge_setting.name = 'rs_mqtt_rest_bridge_listener'
+        self.__mqtt_rest_bridge_setting: MqttRestBridgeSetting = MqttRestBridgeSetting()
 
     @property
     def port(self):
@@ -127,10 +126,17 @@ class AppSetting:
     def mqtt_rest_bridge_setting(self) -> MqttRestBridgeSetting:
         return self.__mqtt_rest_bridge_setting
 
-    def reload(self, setting_file: str, is_json_str: bool = False):
-        data = self.__read_file(setting_file, self.__config_dir, is_json_str)
+    def reload(self, is_json_str: bool = False):
+        data = self.__read_file(self.default_setting_file, self.__config_dir, is_json_str)
         self.__mqtt_rest_bridge_setting = self.__mqtt_rest_bridge_setting.reload(data.get('mqtt_rest_bridge_listener'))
         return self
+
+    def reload_mrb_listener(self, mqtt_rest_bridge_listener):
+        data = self.__read_file(self.default_setting_file, self.__config_dir, False)
+        self.__mqtt_rest_bridge_setting = self.__mqtt_rest_bridge_setting.reload(mqtt_rest_bridge_listener)
+        data = {**data, 'mqtt_rest_bridge_listener': mqtt_rest_bridge_listener}
+        write_file(os.path.join(self.__config_dir, self.default_setting_file), json.dumps(data, indent=2))
+        return mqtt_rest_bridge_listener
 
     def init_app(self, app: Flask):
         self.__secret_key = AppSetting.__handle_secret_key(self.__secret_key_file)
