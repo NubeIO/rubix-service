@@ -53,6 +53,10 @@ wires_plat_all_attributes = {
         'type': str,
         'required': True,
     },
+    'time_zone': {
+        'type': str,
+        'required': True,
+    },
 }
 
 wires_plat_return_attributes = {
