@@ -49,7 +49,7 @@ class WiresPlatResource(RubixResource):
             "site_country": "-",
             "site_lat": "-",
             "site_lon": "-",
-            "time_zone": "-"
+            "time_zone": "Australia/Sydney"
         }
         wires_plat: dict = RubixRegistry().read_wires_plat()
         cls.store_wires_plat(wires_plat, {**data, **wires_plat})
