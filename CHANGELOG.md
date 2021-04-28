@@ -1,5 +1,9 @@
 # CHANGELOG
-## [v1.6.3](https://github.com/NubeIO/rubix-service/tree/v1.6.3) (2021-04-28)
+## [v1.6.4](https://github.com/NubeIO/rubix-service/tree/v1.6.4) (2021-04-28)
+### Added
+- let user see if iface is dhcp or staic (fix bug changed for ipv6 to ipv4)
+
+## [v1.6.3](https://github.com/NubeIO/rubix-service/tree/v1.6.3) (2021-04-28) (deleted)
 ### Added
 - let user see if iface is dhcp or staic 
 
