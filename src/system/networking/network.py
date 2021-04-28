@@ -1,46 +1,14 @@
-import netifaces
 from flask import current_app
 from rubix_http.exceptions.exception import BadDataException
 from rubix_http.resource import RubixResource
 from werkzeug.local import LocalProxy
 from flask_restful import reqparse
-
+from src.system.networking.functions import get_all_interfaces
 from src.system.networking.ip import dhcpcdManager
 from src.system.networking.ping import network_ping_range, port_check_udp, port_check_tcp
 from src.system.networking.utils import is_valid_ip, is_interface_up
 
 logger = LocalProxy(lambda: current_app.logger)
-
-
-def get_all_interfaces():
-    ifaces = netifaces.interfaces()
-    ifaces_gateway = {}
-    gateways = netifaces.gateways()
-    interfaces = {}
-    gateways = gateways.get(netifaces.AF_INET, [])
-    for gateway in gateways:
-        ifaces_gateway[gateway[1]] = gateway[0]
-    gateways_dict = dict(map(lambda gw: (gw[1], gw[0]), gateways))
-    for iface in ifaces:
-        if iface not in gateways_dict.keys():
-            continue
-        addrs = netifaces.ifaddresses(iface).get(netifaces.AF_INET)
-        macs = netifaces.ifaddresses(iface)[netifaces.AF_LINK]
-        addrs = addrs[0]
-        macs = macs[0]
-        address = addrs.get('addr')
-        broadcast = addrs.get('broadcast')
-        netmask = addrs.get('netmask')
-        mac = macs.get('addr')
-        interfaces[iface] = {
-            'interface': iface,
-            'address': address,
-            'broadcast': broadcast,
-            'netmask': netmask,
-            'gateway': ifaces_gateway.get(iface),
-            'mac': mac
-        }
-    return interfaces
 
 
 class NetworkInfo(RubixResource):

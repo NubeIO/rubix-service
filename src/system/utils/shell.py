@@ -16,6 +16,15 @@ class States(enum.Enum):
     MAINTENANCE = 'maintenance'
 
 
+def command(cmd, _input=""):
+    rst = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, input=_input.encode("utf-8"))
+    assert rst.returncode == 0, rst.stderr.decode("utf-8")
+    try:
+        return rst.stdout.decode("utf-8")
+    except ValueError:
+        return "Error"
+
+
 def execute_command_with_exception(cmd, cwd=None):
     subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, cwd=cwd)
 
@@ -80,3 +89,4 @@ def systemctl_installed(service) -> bool:
         if 'TRUE' in line:
             return True
     return False
+
