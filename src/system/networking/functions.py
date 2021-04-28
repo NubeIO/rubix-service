@@ -22,7 +22,7 @@ def get_all_interfaces():
         broadcast = addrs.get('broadcast')
         netmask = addrs.get('netmask')
         mac = macs.get('addr')
-        cmd = f"if ip -6 addr show {iface}  | grep -q dynamic; then echo 'dhcp'; else echo 'static'; fi"
+        cmd = f"if ip -4 addr show {iface}  | grep -q dynamic; then echo 'dhcp'; else echo 'static'; fi"
         interface_usage = command(cmd).strip('\n')
         interfaces[iface] = {
             'interface': iface,
