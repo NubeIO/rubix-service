@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.6.3](https://github.com/NubeIO/rubix-service/tree/v1.6.3) (2021-04-28)
+### Added
+- let user see if iface is dhcp or staic 
+
 ## [v1.6.2](https://github.com/NubeIO/rubix-service/tree/v1.6.2) (2021-04-20)
 ### Added
 - Create mrb_listener APIs
