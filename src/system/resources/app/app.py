@@ -71,7 +71,7 @@ class AppResource(RubixResource):
                 }
         return {
             **app.to_property_dict(),
-            'service': app.service(),
+            'service': app.service,
             'is_installed': False,
             'latest_version': _latest_version
         }

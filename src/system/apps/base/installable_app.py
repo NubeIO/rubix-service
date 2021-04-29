@@ -13,6 +13,7 @@ from werkzeug.local import LocalProxy
 from src import AppSetting
 from src.inheritors import inheritors
 from src.model import BaseModel
+from src.setting import InstallableAppSetting
 from src.system.apps.enums.types import Types
 from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist, upload_unzip_service, \
     write_file, delete_file, directory_zip_service
@@ -23,74 +24,67 @@ logger = LocalProxy(lambda: current_app.logger)
 
 class InstallableApp(BaseModel, ABC):
 
-    def __init__(self, display_name, repo_name, service_file_name, data_dir_name, port, min_support_version,
-                 description='', gateway_access=False, url_prefix='', version='', need_wires_plat=True):
-
-        self.__display_name = display_name
-        self.__repo_name = repo_name
-        self.__service_file_name = service_file_name
-        self.__data_dir_name = data_dir_name
-        self.__port = port
-        self.__min_support_version = min_support_version
-        self.__description = description
-        self.__gateway_access = gateway_access
-        self.__url_prefix = url_prefix
-        self.__version = version
-        self.__need_wires_plat = need_wires_plat
+    def __init__(self):
+        self.__version = ''
+        self.__app_setting: InstallableAppSetting = InstallableAppSetting()
 
     @classmethod
     def get_app(cls, service, version):
+        _app_settings = current_app.config[AppSetting.FLASK_KEY].installable_app_settings
+        setting = next((item for item in _app_settings if item.service == service), None)
+        if setting is None:
+            raise ModuleNotFoundError(f"service {service} does not exist in our system")
         for subclass in inheritors(InstallableApp):
-            if subclass.service() == service:
-                instance = subclass()
+            instance = subclass()
+            if instance.app_type == setting.app_type:
                 instance.__version = version
+                instance.__app_setting = setting
                 return instance
-        raise ModuleNotFoundError("service {} does not exist in our system".format(service))
+        raise ModuleNotFoundError(f"app_type {setting.app_type} does not exist in our system")
 
-    @classmethod
-    @abstractmethod
-    def service(cls) -> str:
+    @property
+    def service(self) -> str:
         """service for mapping frontend request with the App"""
-        raise NotImplementedError("service needs to be overridden")
+        return self.__app_setting.service
 
     @property
     def display_name(self):
         """display_name for frontend side"""
-        return self.__display_name
+        return self.__app_setting.display_name
 
     @property
     def repo_name(self):
         """name for installation folder creation and github repo name validation"""
-        return self.__repo_name
+        return self.__app_setting.repo_name
 
     @property
     def service_file_name(self):
         """service_file_name for systemd name"""
-        return self.__service_file_name
+        return self.__app_setting.service_file_name
 
     @property
     def pre_start_sleep(self):
         """pre_start_sleep for pausing process"""
-        return 0
+        return self.__app_setting.pre_start_sleep
 
     @property
     def data_dir_name(self):
         """data_dir_name for making/denoting a valid data dir"""
-        return self.__data_dir_name
+        return self.__app_setting.data_dir_name
 
     @property
     def port(self):
         """port for running app"""
-        return self.__port
+        return self.__app_setting.port
 
     @property
     def min_support_version(self):
-        return self.__min_support_version
+        return self.__app_setting.min_support_version
 
     @property
     def description(self):
         """description for systemd"""
-        return self.__description
+        return self.__app_setting.description
 
     @property
     def app_type(self):
@@ -99,12 +93,12 @@ class InstallableApp(BaseModel, ABC):
 
     @property
     def gateway_access(self):
-        return self.__gateway_access
+        return self.__app_setting.gateway_access
 
     @property
     def url_prefix(self):
         """url_prefix for running app"""
-        return self.__url_prefix
+        return self.__app_setting.url_prefix
 
     @property
     def version(self):
@@ -112,12 +106,16 @@ class InstallableApp(BaseModel, ABC):
 
     @property
     def need_wires_plat(self):
-        return self.__need_wires_plat
+        return self.__app_setting.need_wires_plat
 
     @property
     def is_asset(self):
         """Accept: "application/octet-stream" needs to be added on headers if it is downloading from assets list"""
         return True
+
+    @property
+    def app_setting(self):
+        return self.__app_setting
 
     @abstractmethod
     def select_link(self, row: any, is_browser_downloadable: bool):
@@ -130,13 +128,13 @@ class InstallableApp(BaseModel, ABC):
                                                , app_setting.token, self.is_asset)
         existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
         self.after_download_upload(download_name)
-        return {'service': self.service(), 'version': self.version, 'existing_app_deletion': existing_app_deletion}
+        return {'service': self.service, 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
     def upload(self, file: FileStorage) -> dict:
         upload_name = upload_unzip_service(file, self.get_download_dir())
         existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
         self.after_download_upload(upload_name)
-        return {'service': self.service(), 'version': self.version, 'existing_app_deletion': existing_app_deletion}
+        return {'service': self.service, 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
     def update_config_file(self, data: str) -> bool:
         if self.app_type == Types.PYTHON_APP.value:

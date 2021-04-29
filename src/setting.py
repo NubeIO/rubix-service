@@ -1,11 +1,37 @@
 import json
 import os
 import secrets
+from typing import List
 
 from flask import Flask
 from mrb.setting import MqttSetting as MqttRestBridgeSetting
+from rubix_mqtt.setting import BaseSetting
 
 from src.system.utils.file import write_file, read_file
+
+
+class InstallableAppSetting(BaseSetting):
+    KEY = 'installable-apps'
+
+    def __init__(self):
+        self.app_type = ''
+        self.service = ''
+        self.display_name = ''
+        self.repo_name = ''
+        self.service_file_name = ''
+        self.data_dir_name = ''
+        self.port = 0000
+        self.min_support_version = ''
+        self.description = "",
+        self.gateway_access = False
+        self.url_prefix = ''
+        self.need_wires_plat = True
+        self.pre_start_sleep = 0
+        self.working_dir_name = ''
+        self.current_working_dir_name = ''
+        self.name_contains = ''
+        self.systemd_file_line = '',
+        self.systemd_file_dir = ''
 
 
 class AppSetting:
@@ -57,6 +83,7 @@ class AppSetting:
         self.__users_file = os.path.join(self.__data_dir, self.default_users_file)
         self.__auth = kwargs.get('auth') or False
         self.__mqtt_rest_bridge_setting: MqttRestBridgeSetting = MqttRestBridgeSetting()
+        self.__installable_app_settings: List[InstallableAppSetting] = [InstallableAppSetting()]
 
     @property
     def port(self):
@@ -126,9 +153,17 @@ class AppSetting:
     def mqtt_rest_bridge_setting(self) -> MqttRestBridgeSetting:
         return self.__mqtt_rest_bridge_setting
 
+    @property
+    def installable_app_settings(self) -> List[InstallableAppSetting]:
+        return self.__installable_app_settings
+
     def reload(self, is_json_str: bool = False):
         data = self.__read_file(self.default_setting_file, self.__config_dir, is_json_str)
         self.__mqtt_rest_bridge_setting = self.__mqtt_rest_bridge_setting.reload(data.get('mqtt_rest_bridge_listener'))
+
+        installable_app_settings = data.get(InstallableAppSetting.KEY, [])
+        if len(installable_app_settings) > 0:
+            self.__installable_app_settings = [InstallableAppSetting().reload(s) for s in installable_app_settings]
         return self
 
     def reload_mrb_listener(self, mqtt_rest_bridge_listener):

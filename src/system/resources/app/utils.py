@@ -26,7 +26,7 @@ def get_installed_app_details(dummy_app: InstallableApp) -> Union[dict, None]:
             **dummy_app.to_property_dict(),
             **status,
             'version': _version.split("/")[-1],
-            'service': dummy_app.service(),
+            'service': dummy_app.service,
         }
 
     return None

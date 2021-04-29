@@ -14,5 +14,89 @@
     "attempt_reconnect_on_unavailable": true,
     "attempt_reconnect_secs": 5,
     "timeout": 10
-  }
+  },
+  "installable-apps": [
+    {
+      "app_type": "FrontendApp",
+      "service": "WIRES",
+      "display_name": "Rubix Wires",
+      "repo_name": "wires-builds",
+      "service_file_name": "nubeio-rubix-wires.service",
+      "data_dir_name": "rubix-wires",
+      "port": 1313,
+      "min_support_version": "v2.0.4",
+      "description": "Wires for for IoT",
+      "working_dir_name": "rubix-wires",
+      "current_working_dir_name": "rubix-wires/systemd"
+    },
+    {
+      "app_type": "FrontendApp",
+      "service": "RUBIX_PLAT",
+      "display_name": "Rubix Plat",
+      "repo_name": "rubix-plat-build",
+      "service_file_name": "nubeio-wires-plat.service",
+      "data_dir_name": "rubix-plat",
+      "port": 1414,
+      "min_support_version": "v1.5.0",
+      "description": "Rubix Platform",
+      "need_wires_plat": false,
+      "current_working_dir_name": "rubix-plat"
+    },
+    {
+      "app_type": "PythonApp",
+      "service": "POINT_SERVER",
+      "display_name": "Rubix Point Server",
+      "repo_name": "rubix-point-server",
+      "service_file_name": "nubeio-point-server.service",
+      "data_dir_name": "point-server",
+      "port": 1515,
+      "min_support_version": "v1.4.2",
+      "description": "Flask Application for Nube Rest API",
+      "gateway_access": true,
+      "url_prefix": "ps"
+    },
+    {
+      "app_type": "PythonApp",
+      "service": "BACNET_SERVER",
+      "display_name": "Rubix BACnet Server",
+      "repo_name": "rubix-bacnet-server",
+      "service_file_name": "nubeio-bacnet-server.service",
+      "data_dir_name": "bacnet-server",
+      "port": 1717,
+      "min_support_version": "v1.4.5",
+      "description": "Flask Application for Nube BACNET SERVER",
+      "gateway_access": true,
+      "url_prefix": "bacnet",
+      "pre_start_sleep": 60
+    },
+    {
+      "app_type": "PythonApp",
+      "service": "LORA_RAW",
+      "display_name": "LoRa Raw",
+      "repo_name": "lora-raw",
+      "service_file_name": "nubeio-lora-raw.service",
+      "data_dir_name": "lora-raw",
+      "port": 1919,
+      "min_support_version": "v1.3.6",
+      "description": "NubeIO LoRa Raw pyserial",
+      "gateway_access": true,
+      "url_prefix": "lora"
+    },
+    {
+      "app_type": "JavaApp",
+      "service": "BACNET_MASTER",
+      "display_name":"BACnet Master",
+      "repo_name":"iot-engine",
+      "service_file_name":"nubeio-bacnet-master.service",
+      "data_dir_name":"bacnet-master",
+      "port":8888,
+      "min_support_version":"v0.2.0",
+      "description":"BACnet Master for BACnet discovery",
+      "gateway_access":true,
+      "url_prefix":"bm",
+      "name_contains": "bacnet",
+      "systemd_file_line": "/app/bacnet",
+      "systemd_file_dir": "conf/nubeio-bacnet.service"
+    }
+  ]
 }

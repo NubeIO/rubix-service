@@ -1,3 +1,4 @@
+import os
 from abc import ABC
 
 from src.system.apps.base.installable_app import InstallableApp
@@ -13,6 +14,16 @@ class FrontendApp(InstallableApp, ABC):
     @property
     def is_asset(self):
         return False
+
+    def get_cwd(self) -> str:
+        if self.app_setting.current_working_dir_name:
+            return os.path.join(super().get_cwd(), self.app_setting.current_working_dir_name)
+        return super().get_cwd()
+
+    def get_wd(self) -> str:
+        if self.app_setting.working_dir_name:
+            return os.path.join(super().get_cwd(), self.app_setting.working_dir_name)
+        self.get_cwd()
 
     def select_link(self, row: any, is_browser_downloadable: bool):
         if is_browser_downloadable:
