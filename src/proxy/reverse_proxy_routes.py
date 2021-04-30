@@ -1,9 +1,10 @@
 import requests
-from flask import request, Response, Blueprint
+from flask import request, Response, Blueprint, current_app
 from flask_restful import abort
 from requests.exceptions import ConnectionError
 
-from src.inheritors import inheritors
+from src import AppSetting
+from src.inheritors import get_instance
 from src.system.apps.base.installable_app import InstallableApp
 
 bp_reverse_proxy = Blueprint("reverse_proxy", __name__, url_prefix='/')
@@ -14,10 +15,13 @@ methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE']
 def reverse_proxy_handler(_):
     url_parts = request.full_path.split("/")
     url_prefixes = {}
-    for installable_app in inheritors(InstallableApp):
-        dummy_app = installable_app()
-        if dummy_app.gateway_access:
-            url_prefixes[dummy_app.url_prefix] = dummy_app
+    app_settings = current_app.config[AppSetting.FLASK_KEY].installable_app_settings
+    for app_setting in app_settings:
+        dummy_app = get_instance(InstallableApp, app_setting.app_type)
+        if dummy_app is not None:
+            dummy_app.set_app_settings(app_setting)
+            if dummy_app.gateway_access:
+                url_prefixes[dummy_app.url_prefix] = dummy_app
     requested_url_prefix = url_parts[1] if len(url_parts) > 1 else ''
     if requested_url_prefix not in url_prefixes.keys():
         abort(404)

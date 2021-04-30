@@ -11,7 +11,7 @@ from werkzeug.datastructures import FileStorage
 from werkzeug.local import LocalProxy
 
 from src import AppSetting
-from src.inheritors import inheritors
+from src.inheritors import get_instance
 from src.model import BaseModel
 from src.setting import InstallableAppSetting
 from src.system.apps.enums.types import Types
@@ -30,16 +30,15 @@ class InstallableApp(BaseModel, ABC):
 
     @classmethod
     def get_app(cls, service, version):
-        _app_settings = current_app.config[AppSetting.FLASK_KEY].installable_app_settings
-        setting = next((item for item in _app_settings if item.service == service), None)
+        app_settings = current_app.config[AppSetting.FLASK_KEY].installable_app_settings
+        setting = next((item for item in app_settings if item.service == service), None)
         if setting is None:
             raise ModuleNotFoundError(f"service {service} does not exist in our system")
-        for subclass in inheritors(InstallableApp):
-            instance = subclass()
-            if instance.app_type == setting.app_type:
-                instance.__version = version
-                instance.__app_setting = setting
-                return instance
+        instance = get_instance(InstallableApp, setting.app_type)
+        if instance is not None:
+            instance.__version = version
+            instance.__app_setting = setting
+            return instance
         raise ModuleNotFoundError(f"app_type {setting.app_type} does not exist in our system")
 
     @property
@@ -278,3 +277,6 @@ class InstallableApp(BaseModel, ABC):
 
     def set_version(self, _version):
         self.__version = _version
+
+    def set_app_settings(self, _app_Settings):
+        self.__app_setting = _app_Settings
