@@ -7,7 +7,6 @@ from datetime import datetime
 import requests
 from flask import current_app
 from packaging import version as packaging_version
-from rubix_http.exceptions.exception import NotFoundException, PreConditionException
 from werkzeug.datastructures import FileStorage
 from werkzeug.local import LocalProxy
 
@@ -130,6 +129,14 @@ class InstallableApp(BaseModel, ABC):
         self.after_download_upload(download_name)
         return {'service': self.service, 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
+    def download_async(self, app_context):
+        if app_context:
+            with app_context():
+                try:
+                    return self.download()
+                except Exception as e:
+                    return {'service': self.service(), 'version': self.version, 'error': str(e)}
+
     def upload(self, file: FileStorage) -> dict:
         upload_name = upload_unzip_service(file, self.get_download_dir())
         existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
@@ -211,43 +218,6 @@ class InstallableApp(BaseModel, ABC):
 
     def download_data(self):
         return directory_zip_service(os.path.join(self.get_global_dir(), 'data'))
-
-    def install_app(self):
-        from registry.registry import RubixRegistry
-        if self.need_wires_plat and not RubixRegistry().read_wires_plat():
-            raise PreConditionException('Please add wires-plat details at first')
-        if not is_dir_exist(self.get_downloaded_dir()):
-            raise NotFoundException(f'Please download service {self.service()} with version {self.version} at first')
-        backup_data: bool = self.backup_data()
-        delete_existing_folder(self.get_installation_dir())
-        shutil.copytree(self.get_downloaded_dir(), self.get_installed_dir())
-        installation: bool = self.install()
-        delete_existing_folder(self.get_download_dir())
-        return {'service': self.service(), 'version': self.version, 'installation': installation,
-                'backup_data': backup_data}
-
-    def update_app_async(self, delete_db, delete_config, app_context):
-        if app_context:
-            with app_context():
-                return self.update_app(delete_db, delete_config)
-
-    def update_app(self, delete_db, delete_config):
-        error = ''
-        installation = False
-        backup_data = False
-        install_res = {}
-        try:
-            self.download()
-            if delete_db:
-                delete_db: bool = delete_existing_folder(os.path.join(self.get_global_dir(), 'data'))
-            if delete_config:
-                delete_config: bool = self.delete_config_file()
-            install_res = self.install_app()
-        except Exception as e:
-            error = str(e)
-        return {'service': self.service(), 'version': self.version, 'installation': installation,
-                'backup_data': backup_data, 'delete_db': delete_db, 'delete_config': delete_config,
-                'error': error, **install_res}
 
     def get_global_dir(self) -> str:
         setting = current_app.config[AppSetting.FLASK_KEY]
