@@ -4,7 +4,7 @@ from rubix_http.resource import RubixResource
 from werkzeug.local import LocalProxy
 
 from src import AppSetting
-from src.inheritors import inheritors
+from src.inheritors import get_instance
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.resources.app.utils import get_installed_app_details, get_app_from_service
 from src.system.resources.fields import service_fields
@@ -39,8 +39,12 @@ class AppResource(RubixResource):
     @classmethod
     def get_installed_apps_stat(cls, browser_download_url: bool, latest_version: bool):
         installed_apps = []
-        for installable_app in inheritors(InstallableApp):
-            installed_apps.append(cls.get_installed_app_stat(installable_app(), browser_download_url, latest_version))
+        app_settings = current_app.config[AppSetting.FLASK_KEY].installable_app_settings
+        for app_setting in app_settings:
+            instance = get_instance(InstallableApp, app_setting.app_type)
+            if instance is not None:
+                instance.set_app_settings(app_setting)
+                installed_apps.append(cls.get_installed_app_stat(instance, browser_download_url, latest_version))
         return installed_apps
 
     @classmethod
@@ -71,7 +75,7 @@ class AppResource(RubixResource):
                 }
         return {
             **app.to_property_dict(),
-            'service': app.service(),
+            'service': app.service,
             'is_installed': False,
             'latest_version': _latest_version
         }

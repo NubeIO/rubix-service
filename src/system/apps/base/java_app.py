@@ -1,4 +1,5 @@
-from abc import ABC, abstractmethod
+import os
+from abc import ABC
 
 from src.system.apps.base.systemd_app import SystemdApp
 from src.system.apps.enums.types import Types
@@ -21,6 +22,15 @@ class JavaApp(SystemdApp, ABC):
                 return asset.get('url')
 
     @property
-    @abstractmethod
     def name_contains(self) -> str:
-        raise NotImplementedError("name_contains needs to be overridden")
+        return self.app_setting.name_contains
+
+    def create_service(self):
+        lines = []
+        with open(os.path.join(self.get_wd(), self.app_setting.systemd_file_dir)) as systemd_file:
+            wd: str = self.get_wd()
+            for line in systemd_file.readlines():
+                if self.app_setting.systemd_static_wd_value in line:
+                    line = line.replace(self.app_setting.systemd_static_wd_value, wd)
+                lines.append(line)
+        return lines

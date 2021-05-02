@@ -1,11 +1,38 @@
 import json
 import os
 import secrets
+from typing import List
 
 from flask import Flask
 from mrb.setting import MqttSetting as MqttRestBridgeSetting
+from rubix_mqtt.setting import BaseSetting
 
+from src.pyinstaller import resource_path
 from src.system.utils.file import write_file, read_file
+
+
+class InstallableAppSetting(BaseSetting):
+    KEY = 'installable_apps'
+
+    def __init__(self):
+        self.app_type = ''
+        self.service = ''
+        self.display_name = ''
+        self.repo_name = ''
+        self.service_file_name = ''
+        self.data_dir_name = ''
+        self.port = 8080
+        self.min_support_version = ''
+        self.description = "",
+        self.gateway_access = False
+        self.url_prefix = ''
+        self.need_wires_plat = True
+        self.pre_start_sleep = 0
+        self.working_dir_name = ''
+        self.current_working_dir_name = ''
+        self.name_contains = ''
+        self.systemd_static_wd_value = ''
+        self.systemd_file_dir = ''
 
 
 class AppSetting:
@@ -29,8 +56,10 @@ class AppSetting:
     default_token_file = 'token.txt'
     default_setting_file: str = 'config.json'
     default_logging_conf: str = 'logging.conf'
+    default_app_settings_file: str = 'app.json'
     fallback_logging_conf: str = 'config/logging.example.conf'
     fallback_prod_logging_conf: str = 'config/logging.prod.example.conf'
+    fallback_app_settings_file = 'config/app.example.json'
     default_users_file = 'users.txt'
     default_slaves_file = 'slaves.json'
 
@@ -57,6 +86,7 @@ class AppSetting:
         self.__users_file = os.path.join(self.__data_dir, self.default_users_file)
         self.__auth = kwargs.get('auth') or False
         self.__mqtt_rest_bridge_setting: MqttRestBridgeSetting = MqttRestBridgeSetting()
+        self.__installable_app_settings: List[InstallableAppSetting] = [InstallableAppSetting()]
 
     @property
     def port(self):
@@ -126,9 +156,14 @@ class AppSetting:
     def mqtt_rest_bridge_setting(self) -> MqttRestBridgeSetting:
         return self.__mqtt_rest_bridge_setting
 
+    @property
+    def installable_app_settings(self) -> List[InstallableAppSetting]:
+        return self.__installable_app_settings
+
     def reload(self, is_json_str: bool = False):
         data = self.__read_file(self.default_setting_file, self.__config_dir, is_json_str)
         self.__mqtt_rest_bridge_setting = self.__mqtt_rest_bridge_setting.reload(data.get('mqtt_rest_bridge_listener'))
+        self.__reload_app_settings()
         return self
 
     def reload_mrb_listener(self, mqtt_rest_bridge_listener):
@@ -148,6 +183,15 @@ class AppSetting:
 
     def __join_global_dir(self, _dir):
         return _dir if _dir is None or _dir.strip() == '' else os.path.join(self.__global_dir, _dir)
+
+    def __reload_app_settings(self):
+        app_setting = os.path.join(self.__config_dir, self.default_app_settings_file)
+        if not os.path.isfile(app_setting):
+            app_setting = resource_path(self.fallback_app_settings_file)
+        data = self.__read_file(app_setting, "", False)
+        installable_app_settings = data.get(InstallableAppSetting.KEY, [])
+        if len(installable_app_settings) > 0:
+            self.__installable_app_settings = [InstallableAppSetting().reload(s) for s in installable_app_settings]
 
     @staticmethod
     def __compute_dir(_dir: str, _def: str, mode=0o744) -> str:
