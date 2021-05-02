@@ -20,7 +20,6 @@ from src.system.resources.app.release import ReleaseResource
 from src.system.resources.app.stats import AppStatsResource
 from src.system.resources.app.token import TokenResource
 from src.system.resources.app.uninstall import UnInstallResource
-from src.system.resources.app.update_apps import UpdateAppsResource
 from src.system.resources.app.upload import UploadResource
 from src.system.resources.host_info import GetSystemMem, GetSystemTime, GetSystemDiscUsage
 from src.system.resources.host_reboot import HostReboot
@@ -78,11 +77,10 @@ api_app.add_resource(UploadResource, '/upload')
 api_app.add_resource(InstallResource, '/install')
 api_app.add_resource(UnInstallResource, '/uninstall')
 api_app.add_resource(DeleteDataResource, '/delete_data')
-api_app.add_resource(UpdateAppsResource, '/update_apps')
-api_app.add_resource(DownloadDataResource, '/download_data/<string:service>')
-api_app.add_resource(ConfigResource, '/config/config/<string:service>')
-api_app.add_resource(LoggingResource, '/config/logging/<string:service>')
-api_app.add_resource(EnvResource, '/config/env/<string:service>')
+api_app.add_resource(DownloadDataResource, '/download_data')
+api_app.add_resource(ConfigResource, '/config/config')
+api_app.add_resource(LoggingResource, '/config/logging')
+api_app.add_resource(EnvResource, '/config/env')
 
 # 5
 api_wires = Api(bp_wires)
