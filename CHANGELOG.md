@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.6.7](https://github.com/NubeIO/rubix-service/tree/v1.6.7) (2021-05-03)
+### Added
+- Make rubix-apps installed by a json file
+
 ## [v1.6.6](https://github.com/NubeIO/rubix-service/tree/v1.6.6) (2021-04-30)
 ### Added
 - Added time zone to wires-plat
