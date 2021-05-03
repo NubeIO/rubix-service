@@ -23,7 +23,7 @@ class FrontendApp(InstallableApp, ABC):
     def get_wd(self) -> str:
         if self.app_setting.working_dir_name:
             return os.path.join(super().get_cwd(), self.app_setting.working_dir_name)
-        self.get_cwd()
+        return self.get_cwd()
 
     def select_link(self, row: any, is_browser_downloadable: bool):
         if is_browser_downloadable:
