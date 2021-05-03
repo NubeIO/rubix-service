@@ -2,6 +2,7 @@ import json
 
 from flask import request, Blueprint, Response
 from flask_restful import abort
+from mrb.brige import MqttRestBridge
 from mrb.mapper import api_to_slave_topic_mapper
 from mrb.message import Response as MessageResponse, HttpMethod
 
@@ -28,10 +29,15 @@ def slave_proxy_handler(_):
     if slave_global_uuid not in SlavesBase.get_slaves()[0]:
         return {"message": f"Slave with global_uuid {slave_global_uuid} is not listed!"}, 404
 
-    response: MessageResponse = api_to_slave_topic_mapper(slave_global_uuid=slave_global_uuid,
-                                                          api=url,
-                                                          body=request.get_json(),
-                                                          http_method=HttpMethod[request.method.upper()])
+    timeout: str = request.args.get('timeout')
+    numeric_timeout: int = int(timeout) if timeout and timeout.isnumeric() else MqttRestBridge().mqtt_setting.timeout
+    response: MessageResponse = api_to_slave_topic_mapper(
+        slave_global_uuid=slave_global_uuid,
+        api=url,
+        body=request.get_json(),
+        http_method=HttpMethod[request.method.upper()],
+        timeout=numeric_timeout
+    )
     if response.error:
         return Response(json.dumps({'message': response.error_message}), response.status_code, response.headers)
     else:
