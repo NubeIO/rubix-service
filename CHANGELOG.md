@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.6.8](https://github.com/NubeIO/rubix-service/tree/v1.6.8) (2021-05-03)
+### Added
+- Rubix Plat installation issue fix
+
 ## [v1.6.7](https://github.com/NubeIO/rubix-service/tree/v1.6.7) (2021-05-03)
 ### Added
 - Make rubix-apps installed by a json file
