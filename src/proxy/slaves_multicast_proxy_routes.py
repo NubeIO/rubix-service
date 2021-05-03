@@ -2,6 +2,7 @@ import json
 from typing import List
 
 from flask import request, Blueprint, Response
+from mrb.brige import MqttRestBridge
 from mrb.mapper import api_to_slaves_multicast_topic_mapper
 from mrb.message import Response as MessageResponse, HttpMethod
 
@@ -20,12 +21,16 @@ def slaves_proxy_handler(_):
     url = "/".join(url_parts)
     available_inserted_devices_global_uuids: List[
         str] = RemoteDeviceRegistry().available_inserted_devices_global_uuids
+    timeout: str = request.args.get('timeout')
+    numeric_timeout: int = int(timeout) if timeout and timeout.isnumeric() else MqttRestBridge().mqtt_setting.timeout
     if available_inserted_devices_global_uuids:
         response: MessageResponse = api_to_slaves_multicast_topic_mapper(
             slaves_global_uuids=available_inserted_devices_global_uuids,
             api=url,
             body=request.get_json(),
-            http_method=HttpMethod[request.method.upper()])
+            http_method=HttpMethod[request.method.upper()],
+            timeout=numeric_timeout
+        )
         if response.error:
             return Response(json.dumps({'message': response.error_message}), response.status_code, response.headers)
         else:
