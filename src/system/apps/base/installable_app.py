@@ -129,14 +129,6 @@ class InstallableApp(BaseModel, ABC):
         self.after_download_upload(download_name)
         return {'service': self.service, 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
-    def download_async(self, app_context):
-        if app_context:
-            with app_context():
-                try:
-                    return self.download()
-                except Exception as e:
-                    return {'service': self.service(), 'version': self.version, 'error': str(e)}
-
     def upload(self, file: FileStorage) -> dict:
         upload_name = upload_unzip_service(file, self.get_download_dir())
         existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())

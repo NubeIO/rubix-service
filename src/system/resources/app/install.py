@@ -6,7 +6,7 @@ from rubix_http.exceptions.exception import PreConditionException
 from rubix_http.resource import RubixResource
 
 from src.system.apps.base.installable_app import InstallableApp
-from src.system.resources.app.utils import get_app_from_service
+from src.system.resources.app.utils import get_app_from_service, get_download_state
 from src.system.resources.rest_schema.schema_install import install_attributes
 from src.system.utils.data_validation import validate_args
 from src.system.utils.file import is_dir_exist, delete_existing_folder
@@ -18,6 +18,8 @@ class InstallResource(RubixResource):
         args = request.get_json()
         if not validate_args(args, install_attributes):
             raise PreConditionException('Invalid request.')
+        if get_download_state().get('downloading', False):
+            raise PreConditionException('Download is in progress')
         install_res = []
         args.append(args.pop(next((i for i, item in enumerate(args) if item["service"].upper() == "RUBIX_PLAT"), -1)))
         for arg in args:
@@ -30,7 +32,7 @@ class InstallResource(RubixResource):
                     res = {**res, 'error': 'Please add wires-plat details at first'}
                 if not is_dir_exist(app.get_downloaded_dir()):
                     res = {**res,
-                           'error': f'Please download service {app.service()} with version {app.version} at first'}
+                           'error': f'Please download service {app.service} with version {app.version} at first'}
                 if not res.get('error'):
                     backup_data: bool = app.backup_data()
                     delete_existing_folder(app.get_installation_dir())
