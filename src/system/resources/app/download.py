@@ -1,9 +1,9 @@
 import gevent
 from flask import request, current_app
-from rubix_http.exceptions.exception import PreConditionException
+from rubix_http.exceptions.exception import PreConditionException, NotFoundException
 from rubix_http.resource import RubixResource
 
-from src.system.resources.app.utils import download_async, get_download_state
+from src.system.resources.app.utils import download_async, get_download_state, update_download_state
 from src.system.resources.rest_schema.schema_download import download_attributes
 from src.system.utils.data_validation import validate_args
 
@@ -27,5 +27,14 @@ class DownloadStateResource(RubixResource):
     def get(cls):
         download_stat = get_download_state()
         if download_stat.get('downloading', False):
-            raise PreConditionException('Download is in progress')
-        return download_stat.get('services', [])
+            return {'message': 'Download is in progress'}
+        services = download_stat.get('services')
+        if not services:
+            raise NotFoundException('Download state not found')
+        return services
+
+    @classmethod
+    def delete(cls):
+        update_download_state({})
+        return {'message': 'Download state cleared'}
+
