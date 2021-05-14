@@ -6,7 +6,7 @@ from gunicorn.arbiter import Arbiter
 from gunicorn.glogging import Logger
 from gunicorn.workers.ggevent import GeventWorker
 
-from .app import create_app
+from .app import create_app, db
 from .pyinstaller import resource_path
 from .setting import AppSetting
 
@@ -63,6 +63,7 @@ class GunicornFlaskApplication(BaseApplication, ABC):
     def wsgi(self):
         output = super(GunicornFlaskApplication, self).wsgi()
         with self.application.app_context():
+            db.create_all()
             from src.background import Background
             Background.run()
         return output

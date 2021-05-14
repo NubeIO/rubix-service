@@ -4,6 +4,9 @@ from flask_restful import Api
 from src.discover.resources.remote_device import RemoteDevice
 from src.mrb_listener.resource_mrb_listener import MRBListenerResource
 from src.platform.resource_wires_plat import WiresPlatResource
+from src.resources.resource_device import DeviceResourceList, DeviceResourceByUUID
+from src.resources.resource_user import UserResourceByUUID, UserChangePasswordResource, UserLoginResource, \
+    UserResourceByUsername, UserResourceList
 from src.slaves.resources.slaves_plural import SlavesPlural
 from src.slaves.resources.slaves_singular import SlavesSingular
 from src.system.networking.network import NetworkInfo, NetworkSetStaticIP, NetworkSetDHCP, NetworkPingRange, \
@@ -28,8 +31,6 @@ from src.system.resources.ping import Ping
 from src.system.resources.service.control import ServiceControl
 from src.system.resources.service.service import ServiceResource
 from src.system.resources.service.stats import ServiceStats
-from src.users.resource_login_users import UsersLoginResource
-from src.users.resource_users import UsersResource
 
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')
 bp_networking = Blueprint('networking', __name__, url_prefix='/api/system/networking')
@@ -37,6 +38,7 @@ bp_service = Blueprint('service', __name__, url_prefix='/api/system/service')
 bp_app = Blueprint('app', __name__, url_prefix='/api/app')
 bp_wires = Blueprint('wires', __name__, url_prefix='/api/wires')
 bp_users = Blueprint('users', __name__, url_prefix='/api/users')
+bp_devices = Blueprint('devices', __name__, url_prefix='/api/devices')
 bp_mrb_listener = Blueprint('mrb_listener', __name__, url_prefix='/api/mrb_listener')
 
 # 1
@@ -89,19 +91,27 @@ api_wires.add_resource(WiresPlatResource, '/plat')
 
 # 5
 api_users = Api(bp_users)
-api_users.add_resource(UsersResource, '')
-api_users.add_resource(UsersLoginResource, '/login', endpoint="login")
+api_users.add_resource(UserResourceList, '')
+api_users.add_resource(UserResourceByUUID, '/uuid/<string:uuid>')
+api_users.add_resource(UserResourceByUsername, '/username/<string:username>')
+api_users.add_resource(UserLoginResource, '/login', endpoint="login")
+api_users.add_resource(UserChangePasswordResource, '/change_password')
 
 # 6
+api_devices = Api(bp_devices)
+api_devices.add_resource(DeviceResourceList, '')
+api_devices.add_resource(DeviceResourceByUUID, '/uuid/<string:uuid>')
+
+# 7
 api_mrb_listener = Api(bp_mrb_listener)
 api_mrb_listener.add_resource(MRBListenerResource, '')
 
-# 7
+# 8
 bp_discover = Blueprint('discover', __name__, url_prefix='/api/discover')
 api_discover = Api(bp_discover)
 api_discover.add_resource(RemoteDevice, '/remote_devices')
 
-# 8
+# 9
 bp_slaves = Blueprint('slaves', __name__, url_prefix='/api/slaves')
 api_slaves = Api(bp_slaves)
 api_slaves.add_resource(SlavesPlural, '')
