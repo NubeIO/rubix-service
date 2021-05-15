@@ -12,12 +12,8 @@ from .setting import AppSetting
 db = SQLAlchemy()
 
 
-def __db_setup(_app, _app_setting, db_pg: bool = False):
-    if db_pg:
-        _app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/bac_rest"
-        _app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 10, 'max_overflow': 20}
-    else:
-        _app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}/data.db?timeout=60'.format(_app_setting.data_dir)
+def __db_setup(_app, _app_setting):
+    _app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}/data.db?timeout=60'.format(_app_setting.data_dir)
     _app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     _app.config['SQLALCHEMY_ECHO'] = False
     return _app
@@ -48,13 +44,14 @@ def create_app(app_setting: AppSetting) -> Flask:
     @app.before_first_request
     def create_default_user():
         import uuid as uuid_
-        from src.models.user.model_user import UserModel, RoleType
+        from src.models.user.model_user import UserModel
+        from src.models.enum import RoleType, StateType
         from src.resources.utils import encrypt_password
         user = UserModel.find_by_username('admin')
         if not user:
             uuid = str(uuid_.uuid4())
             user = UserModel(uuid=uuid, username="admin", password="N00BWires", email="admin@nubeio.com",
-                             role=RoleType.ADMIN)
+                             role=RoleType.ADMIN, state=StateType.VERIFIED)
             user.password = encrypt_password(user.password)
             user.save_to_db()
 

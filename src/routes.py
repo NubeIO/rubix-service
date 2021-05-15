@@ -6,7 +6,7 @@ from src.mrb_listener.resource_mrb_listener import MRBListenerResource
 from src.platform.resource_wires_plat import WiresPlatResource
 from src.resources.resource_device import DeviceResourceList, DeviceResourceByUUID
 from src.resources.resource_user import UserResourceByUUID, UserChangePasswordResource, UserLoginResource, \
-    UserResourceByUsername, UserResourceList
+    UserResourceByUsername, UserResourceList, UserVerifyResource
 from src.slaves.resources.slaves_plural import SlavesPlural
 from src.slaves.resources.slaves_singular import SlavesSingular
 from src.system.networking.network import NetworkInfo, NetworkSetStaticIP, NetworkSetDHCP, NetworkPingRange, \
@@ -96,6 +96,7 @@ api_users.add_resource(UserResourceByUUID, '/uuid/<string:uuid>')
 api_users.add_resource(UserResourceByUsername, '/username/<string:username>')
 api_users.add_resource(UserLoginResource, '/login', endpoint="login")
 api_users.add_resource(UserChangePasswordResource, '/change_password')
+api_users.add_resource(UserVerifyResource, '/verify')
 
 # 6
 api_devices = Api(bp_devices)

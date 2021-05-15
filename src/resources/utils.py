@@ -1,29 +1,12 @@
 import datetime
 import re
-from distutils.util import strtobool
 
 import jwt
 from flask import current_app, request
 from flask_restful import fields, abort
-from flask_restful import marshal
-from rubix_http.exceptions.exception import BadDataException, NotFoundException
 from werkzeug.security import generate_password_hash
 
 from src import AppSetting
-
-
-def model_marshaller_with_children(data: any, args: dict, base_fields: dict, children_fields: dict):
-    with_children = False
-    if 'with_children' in args:
-        try:
-            with_children = bool(strtobool(args['with_children']))
-        except Exception:
-            raise BadDataException('Invalid query string')
-
-    if with_children:
-        return marshal(data, children_fields)
-    else:
-        return marshal(data, base_fields)
 
 
 def get_field_type(attr_type):
@@ -51,12 +34,14 @@ def map_rest_schema(schema, resource_fields):
             resource_fields[attr].__init__(attribute=schema[attr]['dict'])
 
 
-def encode_jwt_token(username):
+def encode_jwt_token(uuid: str, username: str, admin: bool = False):
     app_setting = current_app.config[AppSetting.FLASK_KEY]
     payload = {
         'exp': datetime.datetime.utcnow() + datetime.timedelta(days=30, hours=0, seconds=0),
         'iat': datetime.datetime.utcnow(),
-        'sub': username
+        'sub': uuid,
+        'username': username,
+        'admin': admin
     }
     encoded = jwt.encode(payload, app_setting.secret_key, algorithm='HS256')
 
@@ -64,6 +49,12 @@ def encode_jwt_token(username):
         'access_token': encoded,
         'token_type': 'JWT'
     }
+
+
+def get_access_token():
+    if 'Authorization' not in request.headers:
+        abort(401, message='Authorization header is missing')
+    return str.replace(str(request.headers['Authorization']), 'Bearer ', '')
 
 
 def decode_jwt_token(token):
@@ -75,11 +66,7 @@ def authorize():
     app_setting = current_app.config[AppSetting.FLASK_KEY]
     if request.endpoint != 'users.login' and app_setting.auth:
         if request.endpoint != 'users.login' and app_setting.auth:
-            if 'Authorization' not in request.headers:
-                abort(401, message='Authorization header is missing')
-
-            data = request.headers['Authorization']
-            access_token = str.replace(str(data), 'Bearer ', '')
+            access_token = get_access_token()
             try:
                 decode_jwt_token(access_token)
             except Exception as e:

@@ -6,6 +6,7 @@ from rubix_http.resource import RubixResource
 
 from src.models.device.model_device import DeviceModel
 from src.resources.rest_schema.schema_device import device_all_attributes, device_return_fields
+from src.resources.utils import get_access_token, decode_jwt_token
 
 
 class DeviceResourceList(RubixResource):
@@ -25,9 +26,11 @@ class DeviceResourceList(RubixResource):
     @classmethod
     @marshal_with(device_return_fields)
     def post(cls):
+        access_token = get_access_token()
         args = cls.parser.parse_args()
         uuid = str(uuid_.uuid4())
-        device = DeviceModel(uuid=uuid, **args)
+        user_uuid = decode_jwt_token(access_token).get('sub', '')
+        device = DeviceModel(uuid=uuid, user_uuid=user_uuid, **args)
         device.save_to_db()
         return device
 

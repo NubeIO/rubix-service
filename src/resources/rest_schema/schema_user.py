@@ -48,6 +48,11 @@ user_return_attributes = {
         'type': str,
         'nested': True,
         'dict': 'role.value'
+    },
+    'state': {
+        'type': str,
+        'nested': True,
+        'dict': 'state.value'
     }
 }
 

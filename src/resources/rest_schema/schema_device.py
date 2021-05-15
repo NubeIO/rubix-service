@@ -1,10 +1,6 @@
 from src.resources.utils import map_rest_schema
 
 device_all_attributes = {
-    'user_uuid': {
-        'type': str,
-        'required': True,
-    },
     'device_id': {
         'type': str,
         'required': True,

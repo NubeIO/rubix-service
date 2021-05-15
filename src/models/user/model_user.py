@@ -1,16 +1,11 @@
-import enum
 import re
 
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import validates
 
 from src import db
+from src.models.enum import RoleType, StateType
 from src.models.model_base import ModelBase
-
-
-class RoleType(enum.Enum):
-    ADMIN = 'Admin'
-    THIRD_PARTY = 'ThirdParty'
 
 
 class UserModel(ModelBase):
@@ -22,6 +17,7 @@ class UserModel(ModelBase):
     password = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), nullable=False)
     role = db.Column(db.Enum(RoleType), nullable=False, default=RoleType.THIRD_PARTY)
+    state = db.Column(db.Enum(StateType), nullable=False, default=StateType.UNVERIFIED)
     devices = db.relationship('DeviceModel', cascade="all,delete", backref='user', lazy=True)
 
     __table_args__ = (
