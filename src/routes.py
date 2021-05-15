@@ -13,7 +13,7 @@ from src.system.resources.app.app import AppResource
 from src.system.resources.app.config import ConfigResource, LoggingResource, EnvResource
 from src.system.resources.app.control import ControlResource
 from src.system.resources.app.delete_data import DeleteDataResource
-from src.system.resources.app.download import DownloadResource
+from src.system.resources.app.download import DownloadResource, DownloadStateResource
 from src.system.resources.app.download_data import DownloadDataResource
 from src.system.resources.app.install import InstallResource
 from src.system.resources.app.release import ReleaseResource
@@ -73,14 +73,15 @@ api_app.add_resource(ControlResource, '/control')
 api_app.add_resource(TokenResource, '/token')
 api_app.add_resource(ReleaseResource, '/releases/<string:service>')
 api_app.add_resource(DownloadResource, '/download')
+api_app.add_resource(DownloadStateResource, '/download_state')
 api_app.add_resource(UploadResource, '/upload')
 api_app.add_resource(InstallResource, '/install')
 api_app.add_resource(UnInstallResource, '/uninstall')
 api_app.add_resource(DeleteDataResource, '/delete_data')
-api_app.add_resource(DownloadDataResource, '/download_data/<string:service>')
-api_app.add_resource(ConfigResource, '/config/config/<string:service>')
-api_app.add_resource(LoggingResource, '/config/logging/<string:service>')
-api_app.add_resource(EnvResource, '/config/env/<string:service>')
+api_app.add_resource(DownloadDataResource, '/download_data')
+api_app.add_resource(ConfigResource, '/config/config')
+api_app.add_resource(LoggingResource, '/config/logging')
+api_app.add_resource(EnvResource, '/config/env')
 
 # 5
 api_wires = Api(bp_wires)

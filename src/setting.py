@@ -62,6 +62,7 @@ class AppSetting:
     fallback_app_settings_file = 'config/app.example.json'
     default_users_file = 'users.txt'
     default_slaves_file = 'slaves.json'
+    default_download_state_file = 'download_stat.json'
 
     def __init__(self, **kwargs):
         self.__port = kwargs.get('port') or AppSetting.PORT
@@ -87,6 +88,7 @@ class AppSetting:
         self.__auth = kwargs.get('auth') or False
         self.__mqtt_rest_bridge_setting: MqttRestBridgeSetting = MqttRestBridgeSetting()
         self.__installable_app_settings: List[InstallableAppSetting] = [InstallableAppSetting()]
+        self.__download_state_file = os.path.join(self.__data_dir, self.default_download_state_file)
 
     @property
     def port(self):
@@ -159,6 +161,10 @@ class AppSetting:
     @property
     def installable_app_settings(self) -> List[InstallableAppSetting]:
         return self.__installable_app_settings
+
+    @property
+    def download_status_file(self) -> str:
+        return self.__download_state_file
 
     def reload(self, is_json_str: bool = False):
         data = self.__read_file(self.default_setting_file, self.__config_dir, is_json_str)

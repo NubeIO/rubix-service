@@ -18,3 +18,8 @@ config_fields = {
     'update': fields.Boolean,
     'state': fields.String(default=States.INACTIVE.value)
 }
+
+config_delete_fields = {
+    **config_fields,
+    'error': fields.String
+}

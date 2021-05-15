@@ -1,19 +1,40 @@
-from flask_restful import reqparse
+import gevent
+from flask import request, current_app
+from rubix_http.exceptions.exception import PreConditionException, NotFoundException
 from rubix_http.resource import RubixResource
 
-from src.system.apps.base.installable_app import InstallableApp
-from src.system.resources.app.utils import get_app_from_service
+from src.system.resources.app.utils import download_async, get_download_state, update_download_state
+from src.system.resources.rest_schema.schema_download import download_attributes
+from src.system.utils.data_validation import validate_args
 
 
 class DownloadResource(RubixResource):
 
     @classmethod
     def post(cls):
-        parser = reqparse.RequestParser()
-        parser.add_argument('service', type=str, required=True)
-        parser.add_argument('version', type=str, required=True)
-        args = parser.parse_args()
-        service = args['service'].upper()
-        version = args['version']
-        app: InstallableApp = get_app_from_service(service, version)
-        return app.download()
+        args = request.get_json()
+        if not validate_args(args, download_attributes):
+            raise PreConditionException('Invalid request.')
+        if get_download_state().get('downloading', False):
+            raise PreConditionException('Download is in progress')
+        gevent.spawn(download_async, current_app._get_current_object().app_context, args)
+        return {"message": "Download started"}
+
+
+class DownloadStateResource(RubixResource):
+
+    @classmethod
+    def get(cls):
+        download_stat = get_download_state()
+        if download_stat.get('downloading', False):
+            return {'message': 'Download is in progress'}
+        services = download_stat.get('services')
+        if not services:
+            raise NotFoundException('Download state not found')
+        return services
+
+    @classmethod
+    def delete(cls):
+        update_download_state({})
+        return {'message': 'Download state cleared'}
+
