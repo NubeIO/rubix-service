@@ -2,7 +2,7 @@ import shutil
 
 from flask import request
 from registry.registry import RubixRegistry
-from rubix_http.exceptions.exception import PreConditionException
+from rubix_http.exceptions.exception import PreConditionException, BadDataException
 from rubix_http.resource import RubixResource
 
 from src.system.apps.base.installable_app import InstallableApp
@@ -17,7 +17,7 @@ class InstallResource(RubixResource):
     def post(cls):
         args = request.get_json()
         if not validate_args(args, install_attributes):
-            raise PreConditionException('Invalid request.')
+            raise BadDataException('Invalid request')
         if get_download_state().get('downloading', False):
             raise PreConditionException('Download is in progress')
         install_res = []

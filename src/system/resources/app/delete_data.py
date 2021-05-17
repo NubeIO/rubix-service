@@ -1,7 +1,7 @@
 import os
 
 from flask import request
-from rubix_http.exceptions.exception import PreConditionException
+from rubix_http.exceptions.exception import BadDataException
 from rubix_http.resource import RubixResource
 
 from src.system.apps.base.installable_app import InstallableApp
@@ -16,7 +16,7 @@ class DeleteDataResource(RubixResource):
     def post(cls):
         args = request.get_json()
         if not validate_args(args, delete_data_attributes):
-            raise PreConditionException('Invalid request.')
+            raise BadDataException('Invalid request')
         delete_data_res = []
         for arg in args:
             service: str = arg['service'].upper()
@@ -28,6 +28,6 @@ class DeleteDataResource(RubixResource):
                 deletion: bool = delete_existing_folder(os.path.join(app.get_global_dir(), 'data'))
                 res = {**res, 'deletion': deletion, 'backup_data': backup_data, 'stop': stop}
             except Exception as e:
-                res = {**res, 'error': str(e)}
+                res = {'error': str(e)}
             delete_data_res.append(res)
         return delete_data_res
