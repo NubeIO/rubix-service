@@ -1,13 +1,15 @@
 import json
+import shutil
 from typing import Union
 
 from flask import current_app
 from packaging import version
+from registry.registry import RubixRegistry
 from rubix_http.exceptions.exception import NotFoundException
 
 from src import AppSetting
 from src.system.apps.base.installable_app import InstallableApp
-from src.system.utils.file import get_extracted_dir, write_file, read_file
+from src.system.utils.file import get_extracted_dir, write_file, read_file, is_dir_exist, delete_existing_folder
 from src.system.utils.shell import systemctl_status
 
 
@@ -53,6 +55,37 @@ def download_async(app_context, args):
                     services.append({**service, 'download': False, 'error': str(e)})
             stat.update({"downloading": False, "services": services})
             update_download_state(stat)
+
+
+def install_app_async(app_context, arg):
+    if app_context:
+        with app_context():
+            return install_app(arg)
+
+
+def install_app(arg):
+    _service = arg['service'].upper()
+    _version = arg['version']
+    res = {'service': _service, 'version': _version, 'installation': False, 'backup_data': False, 'error': ''}
+    try:
+        app: InstallableApp = get_app_from_service(_service, _version)
+        if app.need_wires_plat and not RubixRegistry().read_wires_plat():
+            res = {**res, 'error': 'Please add wires-plat details at first'}
+        if not is_dir_exist(app.get_downloaded_dir()):
+            res = {
+                **res,
+                'error': f'Please download service {app.service} with version {app.version} at first'
+            }
+        if not res.get('error'):
+            backup_data: bool = app.backup_data()
+            delete_existing_folder(app.get_installation_dir())
+            shutil.copytree(app.get_downloaded_dir(), app.get_installed_dir())
+            installation: bool = app.install()
+            delete_existing_folder(app.get_download_dir())
+            res = {**res, 'installation': installation, 'backup_data': backup_data}
+    except (Exception, NotFoundException) as e:
+        res = {**res, 'error': str(e)}
+    return res
 
 
 def update_download_state(stat: dict):

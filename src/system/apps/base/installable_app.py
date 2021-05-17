@@ -16,7 +16,7 @@ from src.model import BaseModel
 from src.setting import InstallableAppSetting
 from src.system.apps.enums.types import Types
 from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist, upload_unzip_service, \
-    write_file, delete_file, directory_zip_service
+    write_file, delete_file, directory_zip_service, get_extracted_dir
 from src.system.utils.shell import execute_command
 
 logger = LocalProxy(lambda: current_app.logger)
@@ -78,6 +78,12 @@ class InstallableApp(BaseModel, ABC):
 
     @property
     def min_support_version(self):
+        _version: str = get_extracted_dir(self.get_installation_dir())
+        if _version:
+            installed_version = _version.split("/")[-1]
+            if packaging_version.parse(installed_version) > \
+                    packaging_version.parse(self.__app_setting.min_support_version):
+                return installed_version
         return self.__app_setting.min_support_version
 
     @property
