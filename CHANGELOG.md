@@ -1,4 +1,9 @@
 # CHANGELOG
+## [v1.6.9](https://github.com/NubeIO/rubix-service/tree/v1.6.9) (2021-05-17)
+### Added
+- Timeout arg support for master > slave proxy requests
+- Mass update of Apps
+
 ## [v1.6.8](https://github.com/NubeIO/rubix-service/tree/v1.6.8) (2021-05-03)
 ### Added
 - Rubix Plat installation issue fix
