@@ -1,5 +1,5 @@
 from flask import request
-from rubix_http.exceptions.exception import NotFoundException, PreConditionException
+from rubix_http.exceptions.exception import NotFoundException, BadDataException
 from rubix_http.resource import RubixResource
 
 from src.system.resources.rest_schema.schema_control import control_attributes
@@ -13,7 +13,7 @@ class ServiceControl(RubixResource):
     def post(cls):
         args = request.get_json()
         if not validate_args(args, control_attributes):
-            raise PreConditionException('Invalid request.')
+            raise BadDataException('Invalid request')
         control_res = []
         for arg in args:
             service: str = arg['service']

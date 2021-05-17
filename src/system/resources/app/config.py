@@ -3,7 +3,7 @@ import os
 
 from flask import send_from_directory, request
 from flask_restful import reqparse, marshal_with
-from rubix_http.exceptions.exception import NotFoundException, PreConditionException
+from rubix_http.exceptions.exception import NotFoundException, BadDataException
 from rubix_http.resource import RubixResource
 
 from src.system.apps.base.installable_app import InstallableApp
@@ -16,10 +16,9 @@ from src.system.utils.data_validation import validate_args
 class ConfigResource(RubixResource):
     @classmethod
     def get(cls):
-        parser = reqparse.RequestParser()
-        parser.add_argument('service', type=str, required=True)
-        args = parser.parse_args()
-        service = args['service'].upper()
+        service: str = request.args.get('service')
+        if not service:
+            raise BadDataException("Include ?service as an argument")
         app: InstallableApp = get_app_from_service(service)
         filename = 'config.json'
         directory = os.path.join(app.get_global_dir(), 'config')
@@ -49,7 +48,7 @@ class ConfigResource(RubixResource):
     def delete(cls):
         args = request.get_json()
         if not validate_args(args, config_attributes):
-            raise PreConditionException('Invalid request.')
+            raise BadDataException('Invalid request')
         config_res = []
         for arg in args:
             service = arg['service'].upper()
@@ -68,10 +67,9 @@ class ConfigResource(RubixResource):
 class LoggingResource(RubixResource):
     @classmethod
     def get(cls):
-        parser = reqparse.RequestParser()
-        parser.add_argument('service', type=str, required=True)
-        args = parser.parse_args()
-        service = args['service'].upper()
+        service: str = request.args.get('service')
+        if not service:
+            raise BadDataException("Include ?service as an argument")
         app: InstallableApp = get_app_from_service(service)
         filename = 'logging.conf'
         directory = os.path.join(app.get_global_dir(), 'config')
@@ -111,10 +109,9 @@ class LoggingResource(RubixResource):
 class EnvResource(RubixResource):
     @classmethod
     def get(cls):
-        parser = reqparse.RequestParser()
-        parser.add_argument('service', type=str, required=True)
-        args = parser.parse_args()
-        service = args['service'].upper()
+        service: str = request.args.get('service')
+        if not service:
+            raise BadDataException("Include ?service as an argument")
         app: InstallableApp = get_app_from_service(service.upper())
         filename = '.env'
         directory = os.path.join(app.get_global_dir(), 'config')
