@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.7.0](https://github.com/NubeIO/rubix-service/tree/v1.7.0) (2021-05-18)
+### Added
+- Improvements on installation and min_support_version
+
 ## [v1.6.9](https://github.com/NubeIO/rubix-service/tree/v1.6.9) (2021-05-17)
 ### Added
 - Timeout arg support for master > slave proxy requests
