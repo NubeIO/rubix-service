@@ -1,15 +1,11 @@
-import shutil
-
-from flask import request
-from registry.registry import RubixRegistry
+import gevent
+from flask import request, current_app
 from rubix_http.exceptions.exception import PreConditionException, BadDataException
 from rubix_http.resource import RubixResource
 
-from src.system.apps.base.installable_app import InstallableApp
-from src.system.resources.app.utils import get_app_from_service, get_download_state
+from src.system.resources.app.utils import get_download_state, install_app, install_app_async
 from src.system.resources.rest_schema.schema_install import install_attributes
 from src.system.utils.data_validation import validate_args
-from src.system.utils.file import is_dir_exist, delete_existing_folder
 
 
 class InstallResource(RubixResource):
@@ -21,26 +17,13 @@ class InstallResource(RubixResource):
         if get_download_state().get('downloading', False):
             raise PreConditionException('Download is in progress')
         install_res = []
-        args.append(args.pop(next((i for i, item in enumerate(args) if item["service"].upper() == "RUBIX_PLAT"), -1)))
+        rubix_plat = args.pop(next((i for i, item in enumerate(args) if item["service"].upper() == "RUBIX_PLAT"), -1))
+        processes = []
         for arg in args:
-            service = arg['service'].upper()
-            version = arg['version']
-            res = {'service': service, 'version': version, 'installation': False, 'backup_data': False, 'error': ''}
-            try:
-                app: InstallableApp = get_app_from_service(service, version)
-                if app.need_wires_plat and not RubixRegistry().read_wires_plat():
-                    res = {**res, 'error': 'Please add wires-plat details at first'}
-                if not is_dir_exist(app.get_downloaded_dir()):
-                    res = {**res,
-                           'error': f'Please download service {app.service} with version {app.version} at first'}
-                if not res.get('error'):
-                    backup_data: bool = app.backup_data()
-                    delete_existing_folder(app.get_installation_dir())
-                    shutil.copytree(app.get_downloaded_dir(), app.get_installed_dir())
-                    installation: bool = app.install()
-                    delete_existing_folder(app.get_download_dir())
-                    res = {**res, 'installation': installation, 'backup_data': backup_data}
-            except Exception as e:
-                res = {**res, 'error': str(e)}
-            install_res.append(res)
+            processes.append(gevent.spawn(install_app_async, current_app._get_current_object().app_context, arg))
+        gevent.joinall(processes)
+        for process in processes:
+            install_res.append(process.value)
+        if rubix_plat:
+            install_res.append(install_app(rubix_plat))
         return install_res
