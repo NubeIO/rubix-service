@@ -1,6 +1,7 @@
 import os
 from abc import ABC
 
+import gevent
 from flask import current_app
 from werkzeug.local import LocalProxy
 
@@ -49,9 +50,12 @@ class SystemdApp(InstallableApp, ABC):
         if not execute_command('sudo systemctl enable {}'.format(self.service_file_name)):
             return False
 
+        """
+        Some of the services takes time, coz we have sleep at starting
+        So leave it on background
+        """
         logger.info('Starting Linux Service...')
-        if not execute_command('sudo systemctl restart {}'.format(self.service_file_name)):
-            return False
+        gevent.spawn(execute_command, 'sudo systemctl restart {}'.format(self.service_file_name))
 
         logger.info('Successfully started service')
         return True
