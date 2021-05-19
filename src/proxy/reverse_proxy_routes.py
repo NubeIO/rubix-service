@@ -30,7 +30,7 @@ def reverse_proxy_handler(_):
     del url_parts[0]
     actual_url = 'http://0.0.0.0:{}/{}'.format(app_to_redirect.port, "/".join(url_parts))
     try:
-        resp = requests.request(request.method, actual_url, json=request.get_json())
+        resp = requests.request(request.method, actual_url, json=request.get_json(), headers=request.headers)
         response = Response(resp.content, resp.status_code, resp.raw.headers.items())
         return response
     except ConnectionError:
