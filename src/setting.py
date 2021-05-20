@@ -56,10 +56,11 @@ class AppSetting:
     default_token_file = 'token.txt'
     default_setting_file: str = 'config.json'
     default_logging_conf: str = 'logging.conf'
-    default_app_settings_file: str = 'app.json'
-    fallback_logging_conf: str = 'config/logging.example.conf'
-    fallback_prod_logging_conf: str = 'config/logging.prod.example.conf'
-    fallback_app_settings_file = 'config/app.example.json'
+    default_app_settings_file: str = 'apps.json'
+    fallback_logging_conf: str = 'config/logging.conf'
+    fallback_logging_prod_conf: str = 'config/logging.prod.conf'
+    fallback_app_settings_file = 'config/apps.json'
+    fallback_app_master_settings_file = 'config/apps.master.json'
     default_users_file = 'users.txt'
     default_slaves_file = 'slaves.json'
     default_download_state_file = 'download_stat.json'
@@ -193,7 +194,11 @@ class AppSetting:
     def __reload_app_settings(self):
         app_setting = os.path.join(self.__config_dir, self.default_app_settings_file)
         if not os.path.isfile(app_setting):
-            app_setting = resource_path(self.fallback_app_settings_file)
+            if self.mqtt_rest_bridge_setting.master:
+                path: str = self.fallback_app_master_settings_file
+            else:
+                path: str = self.fallback_app_settings_file
+            app_setting = resource_path(path)
         data = self.__read_file(app_setting, "", False)
         installable_app_settings = data.get(InstallableAppSetting.KEY, [])
         if len(installable_app_settings) > 0:

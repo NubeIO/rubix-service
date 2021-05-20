@@ -14,7 +14,7 @@ from src import AppSetting
 from src.inheritors import get_instance
 from src.model import BaseModel
 from src.setting import InstallableAppSetting
-from src.system.apps.enums.types import Types
+from src.system.apps.enums.enums import Types
 from src.system.utils.file import delete_existing_folder, download_unzip_service, is_dir_exist, upload_unzip_service, \
     write_file, delete_file, directory_zip_service, get_extracted_dir
 from src.system.utils.shell import execute_command

@@ -3,6 +3,7 @@ from flask import request, current_app
 from rubix_http.exceptions.exception import PreConditionException, BadDataException
 from rubix_http.resource import RubixResource
 
+from src.system.apps.enums.enums import DownloadState
 from src.system.resources.app.utils import get_download_state, install_app, install_app_async
 from src.system.resources.rest_schema.schema_install import install_attributes
 from src.system.utils.data_validation import validate_args
@@ -14,7 +15,7 @@ class InstallResource(RubixResource):
         args = request.get_json()
         if not validate_args(args, install_attributes):
             raise BadDataException('Invalid request')
-        if get_download_state().get('downloading', False):
+        if get_download_state().get('state') == DownloadState.DOWNLOADING.name:
             raise PreConditionException('Download is in progress')
         install_res = []
         rubix_plat = args.pop(next((i for i, item in enumerate(args) if item["service"].upper() == "RUBIX_PLAT"), -1))

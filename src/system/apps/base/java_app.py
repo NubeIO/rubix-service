@@ -2,7 +2,7 @@ import os
 from abc import ABC
 
 from src.system.apps.base.systemd_app import SystemdApp
-from src.system.apps.enums.types import Types
+from src.system.apps.enums.enums import Types
 
 
 class JavaApp(SystemdApp, ABC):

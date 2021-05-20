@@ -5,7 +5,7 @@ from typing import Dict
 import jwt
 from flask import current_app, request
 from flask_restful import abort
-from rubix_http.exceptions.exception import BadDataException
+from rubix_http.exceptions.exception import BadDataException, UnauthorizedException
 from werkzeug.security import generate_password_hash
 
 from src.setting import AppSetting
@@ -58,7 +58,10 @@ class UserModel:
     @staticmethod
     def decode_jwt_token(token):
         app_setting = current_app.config[AppSetting.FLASK_KEY]
-        return jwt.decode(token, app_setting.secret_key, algorithms="HS256")
+        try:
+            return jwt.decode(token, app_setting.secret_key, algorithms="HS256")
+        except Exception as e:
+            raise UnauthorizedException(str(e))
 
     @staticmethod
     def authorize():
