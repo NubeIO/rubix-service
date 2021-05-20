@@ -2,7 +2,7 @@ import os
 from abc import ABC
 
 from src.system.apps.base.installable_app import InstallableApp
-from src.system.apps.enums.types import Types
+from src.system.apps.enums.enums import Types
 from src.system.utils.shell import execute_command
 
 

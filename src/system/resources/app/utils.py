@@ -1,6 +1,6 @@
 import json
 import shutil
-from typing import Union
+from typing import Union, List, Dict
 
 from flask import current_app
 from packaging import version
@@ -9,6 +9,7 @@ from rubix_http.exceptions.exception import NotFoundException
 
 from src import AppSetting
 from src.system.apps.base.installable_app import InstallableApp
+from src.system.apps.enums.enums import DownloadState
 from src.system.utils.file import get_extracted_dir, write_file, read_file, is_dir_exist, delete_existing_folder
 from src.system.utils.shell import systemctl_status
 
@@ -51,7 +52,7 @@ def download_async(app_context, args):
                     services.append({**service, 'download': True})
                 except (Exception, NotFoundException) as e:
                     services.append({**service, 'download': False, 'error': str(e)})
-            update_download_state({"downloading": False, "services": services})
+            update_download_state(DownloadState.DOWNLOADED, services)
 
 
 def install_app_async(app_context, arg):
@@ -85,11 +86,13 @@ def install_app(arg):
     return res
 
 
-def update_download_state(stat: dict):
+def update_download_state(state: DownloadState, services: List[Dict] = None):
     app_setting = current_app.config[AppSetting.FLASK_KEY]
-    write_file(app_setting.download_status_file, json.dumps(stat))
+    write_file(app_setting.download_status_file,
+               json.dumps({"state": state.name, "services": services if services else []}))
 
 
 def get_download_state():
     app_setting = current_app.config[AppSetting.FLASK_KEY]
-    return json.loads(read_file(app_setting.download_status_file) or "{}")
+    return json.loads(read_file(app_setting.download_status_file) or "{}") \
+           or {"state": DownloadState.CLEARED.name, "services": []}

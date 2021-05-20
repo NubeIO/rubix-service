@@ -7,7 +7,7 @@ from werkzeug.local import LocalProxy
 from src import AppSetting
 from src.pyinstaller import resource_path
 from src.system.apps.base.systemd_app import SystemdApp
-from src.system.apps.enums.types import Types
+from src.system.apps.enums.enums import Types
 
 logger = LocalProxy(lambda: current_app.logger)
 
