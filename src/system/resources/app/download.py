@@ -17,6 +17,7 @@ class DownloadResource(RubixResource):
             raise BadDataException('Invalid request')
         if get_download_state().get('downloading', False):
             raise PreConditionException('Download is in progress')
+        update_download_state({"downloading": True, "services": []})
         gevent.spawn(download_async, current_app._get_current_object().app_context, args)
         return {"message": "Download started"}
 
