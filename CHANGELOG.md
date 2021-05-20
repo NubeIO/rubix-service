@@ -1,4 +1,11 @@
 # CHANGELOG
+## [v1.7.1](https://github.com/NubeIO/rubix-service/tree/v1.7.1) (2021-05-20)
+### Added
+- Send header on reverse proxy
+- Make two different regular & master apps settings
+- Download issue fix (After download start it was throwing 404)
+- Download state improvement
+
 ## [v1.7.0](https://github.com/NubeIO/rubix-service/tree/v1.7.0) (2021-05-18)
 ### Added
 - Improvements on installation and min_support_version
