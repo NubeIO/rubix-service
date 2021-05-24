@@ -15,8 +15,11 @@ class InstallResource(RubixResource):
         args = request.get_json()
         if not validate_args(args, install_attributes):
             raise BadDataException('Invalid request')
-        if get_download_state().get('state') == DownloadState.DOWNLOADING.name:
+        download_state: str = get_download_state().get('state')
+        if download_state == DownloadState.DOWNLOADING.name:
             raise PreConditionException('Download is in progress')
+        elif download_state == DownloadState.DOWNLOADED.name:
+            raise PreConditionException('Download state is not cleared')
         install_res = []
         rubix_plat = args.pop(next((i for i, item in enumerate(args) if item["service"].upper() == "RUBIX_PLAT"), -1))
         processes = []
