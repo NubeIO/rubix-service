@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.7.2](https://github.com/NubeIO/rubix-service/tree/v1.7.2) (2021-05-24)
+### Added
+- Restrict download, install on DOWNLOADED state
+
 ## [v1.7.1](https://github.com/NubeIO/rubix-service/tree/v1.7.1) (2021-05-20)
 ### Added
 - Send header on reverse proxy
