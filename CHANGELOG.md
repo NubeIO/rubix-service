@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.7.3](https://github.com/NubeIO/rubix-service/tree/v1.7.3) (2021-05-24)
+### Added
+- Don't restrict install when it's DOWNLOADED
+
 ## [v1.7.2](https://github.com/NubeIO/rubix-service/tree/v1.7.2) (2021-05-24)
 ### Added
 - Restrict download, install on DOWNLOADED state
