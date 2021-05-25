@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.7.4](https://github.com/NubeIO/rubix-service/tree/v1.7.4) (2021-05-25)
+### Added
+- Accept version latest on downloading & installing
+
 ## [v1.7.3](https://github.com/NubeIO/rubix-service/tree/v1.7.3) (2021-05-24)
 ### Added
 - Don't restrict install when it's DOWNLOADED
