@@ -3,7 +3,7 @@ import json
 import requests
 from flask import current_app
 from packaging import version
-from rubix_http.exceptions.exception import NotFoundException
+from rubix_http.exceptions.exception import NotFoundException, PreConditionException
 from rubix_http.resource import RubixResource
 
 from src import AppSetting
@@ -23,9 +23,10 @@ class ReleaseResource(RubixResource):
         data = json.loads(resp.content)
         releases = []
         for row in data:
+            if isinstance(row, str):
+                raise PreConditionException('Please insert GitHub valid token!')
             if version.parse(app.min_support_version) <= version.parse(row.get('tag_name')):
                 releases.append(row.get('tag_name'))
         if not releases:
-            raise NotFoundException(
-                f'No version found, check your token & repo with version >= {app.min_support_version}')
+            raise NotFoundException(f'No version found, check your repo with version >= {app.min_support_version}')
         return releases
