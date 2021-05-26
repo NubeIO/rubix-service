@@ -1,3 +1,7 @@
+import enum
+from typing import List, Dict
+
+import gevent
 from flask import current_app
 from flask_restful import fields, marshal_with, reqparse, inputs
 from rubix_http.resource import RubixResource
@@ -11,6 +15,11 @@ from src.system.resources.fields import service_fields
 from src.system.utils.shell import systemctl_installed
 
 logger = LocalProxy(lambda: current_app.logger)
+
+
+class BackgroundProcessType(enum.Enum):
+    APP_STAT = 'AppStat'
+    LATEST_VERSION = 'LatestVersion'
 
 
 class AppResource(RubixResource):
@@ -32,50 +41,83 @@ class AppResource(RubixResource):
         parser.add_argument('browser_download_url', type=inputs.boolean, default=False)
         parser.add_argument('latest_version', type=inputs.boolean, default=False)
         args = parser.parse_args()
-        browser_download_url: bool = args['browser_download_url']
-        latest_version: bool = args['latest_version']
-        return cls.get_installed_apps_stat(browser_download_url, latest_version)
+        get_browser_download_url: bool = args['browser_download_url']
+        get_latest_version: bool = args['latest_version']
+        app_settings = current_app.config[AppSetting.FLASK_KEY].installable_app_settings
+        return cls.get_installed_apps(app_settings, get_browser_download_url, get_latest_version)
 
     @classmethod
-    def get_installed_apps_stat(cls, browser_download_url: bool, latest_version: bool):
+    def get_installed_apps(cls, app_settings, get_browser_download_url: bool, get_latest_version: bool) -> List[Dict]:
         installed_apps = []
-        app_settings = current_app.config[AppSetting.FLASK_KEY].installable_app_settings
+        processes = []
         for app_setting in app_settings:
             instance = get_instance(InstallableApp, app_setting.app_type)
             if instance is not None:
                 instance.set_app_settings(app_setting)
-                installed_apps.append(cls.get_installed_app_stat(instance, browser_download_url, latest_version))
+                processes.append(
+                    gevent.spawn(cls.get_installed_app_stat_async, current_app._get_current_object().app_context,
+                                 instance, get_browser_download_url))
+                if get_latest_version:
+                    processes.append(
+                        gevent.spawn(cls.get_latest_app_async, current_app._get_current_object().app_context, instance))
+        gevent.joinall(processes)
+        latest_versions: dict = {}
+        for process in processes:
+            output: dict = process.value
+            if output.get('type') == BackgroundProcessType.APP_STAT.name:
+                installed_apps.append(process.value)
+            else:
+                latest_versions[output.get('service')] = output.get('latest_version')
+        for installed_app in installed_apps:
+            installed_app['latest_version'] = latest_versions.get(installed_app.get('service'))
         return installed_apps
 
     @classmethod
-    def get_installed_app_stat(cls, app: InstallableApp, browser_download_url: bool, latest_version: bool) -> dict:
+    def get_latest_app_async(cls, app_context, app: InstallableApp) -> dict:
+        with app_context():
+            return {
+                'latest_version': cls.get_latest_app(app),
+                'type': BackgroundProcessType.LATEST_VERSION.name,
+                'service': app.service
+            }
+
+    @classmethod
+    def get_latest_app(cls, app: InstallableApp) -> dict:
         app_setting = current_app.config[AppSetting.FLASK_KEY]
-        _latest_version = None
-        if latest_version:
-            try:
-                _latest_version = app.get_latest_release(app_setting.token)
-            except Exception as e:
-                logger.error(str(e))
+        latest_version = None
+        try:
+            latest_version = app.get_latest_release(app_setting.token)
+        except Exception as e:
+            logger.error(str(e))
+        return latest_version
+
+    @classmethod
+    def get_installed_app_stat_async(cls, app_context, app: InstallableApp, get_browser_download_url: bool) -> dict:
+        with app_context():
+            return {
+                **cls.get_installed_app_stat(app, get_browser_download_url),
+                'type': BackgroundProcessType.APP_STAT.name
+            }
+
+    @classmethod
+    def get_installed_app_stat(cls, app: InstallableApp, get_browser_download_url: bool) -> dict:
+        app_setting = current_app.config[AppSetting.FLASK_KEY]
+        details: dict = {}
+        is_installed: bool = False
         if systemctl_installed(app.service_file_name):
-            details: dict = get_installed_app_details(app)
+            details = get_installed_app_details(app)
             if details:
+                is_installed = True
                 app: InstallableApp = get_app_from_service(details['service'])
                 app.set_version(details['version'])
                 _browser_download_url = {}
-                if browser_download_url:
+                if get_browser_download_url:
                     try:
                         _browser_download_url = app.get_download_link(app_setting.token, True)
                     except Exception as e:
                         logger.error(str(e))
-                return {
-                    **details,
-                    'is_installed': True,
-                    **_browser_download_url,
-                    'latest_version': _latest_version
-                }
         return {
-            **app.to_property_dict(),
+            **(details if details else app.to_property_dict()),
             'service': app.service,
-            'is_installed': False,
-            'latest_version': _latest_version
+            'is_installed': is_installed,
         }
