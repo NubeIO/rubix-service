@@ -364,7 +364,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 
 [[package]]
 name = "rubix-http"
-version = "1.2.1"
+version = "1.3.0"
 description = "Rubix HTTP for standardizing Flask HTTP base"
 category = "main"
 optional = false
@@ -382,8 +382,8 @@ SQLAlchemy = ">=1.3.23"
 [package.source]
 type = "git"
 url = "https://github.com/NubeIO/rubix-http"
-reference = "v1.2.0"
-resolved_reference = "c41c34fc51a53aaf03e5741d82de77c2ad86d8a4"
+reference = "v1.3.0"
+resolved_reference = "cc374f52a1e27baf8102720c9c44e3ff5ee0a285"
 
 [[package]]
 name = "rubix-mqtt"
@@ -499,7 +499,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "819976b1f06535769087ec3c5f258b209e34b4f673873a6358aa6a8102079dcb"
+content-hash = "d1f0ec40fe8bc42ad1ecb057dae84032f4d9da03beba4f31c106fe7e0e719993"
 
 [metadata.files]
 altgraph = [

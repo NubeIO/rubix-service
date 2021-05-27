@@ -7,6 +7,7 @@ from datetime import datetime
 import requests
 from flask import current_app
 from packaging import version as packaging_version
+from rubix_http.exceptions.exception import PreConditionException, NotFoundException
 from werkzeug.datastructures import FileStorage
 from werkzeug.local import LocalProxy
 
@@ -247,11 +248,13 @@ class InstallableApp(BaseModel, ABC):
         data = json.loads(resp.content)
         latest_release = ''
         for row in data:
-            release = row.get('tag_name', '') if type(row) is dict else ''
+            if isinstance(row, str):
+                raise PreConditionException('Please insert GitHub valid token!')
+            release = row.get('tag_name')
             if not latest_release or packaging_version.parse(latest_release) <= packaging_version.parse(release):
                 latest_release = release
         if not latest_release:
-            raise ModuleNotFoundError('No version found, check your token & repo')
+            raise NotFoundException('Latest release not found!')
         return latest_release
 
     def get_cwd(self) -> str:
