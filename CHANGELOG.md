@@ -1,4 +1,9 @@
 # CHANGELOG
+## [v1.7.5](https://github.com/NubeIO/rubix-service/tree/v1.7.5) (2021-05-27)
+### Added
+- Reduce fetch app time (parallel query)
+- Issue fix: str' object has no attribute 'get' (now we give readable message to the user)
+
 ## [v1.7.4](https://github.com/NubeIO/rubix-service/tree/v1.7.4) (2021-05-25)
 ### Added
 - Accept version latest on downloading & installing
