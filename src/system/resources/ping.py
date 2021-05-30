@@ -16,12 +16,13 @@ up_time_date = str(datetime.now())
 def _get_public_ip():
     cmd = "curl https://checkip.amazonaws.com"
     try:
-        return command(cmd)
+        # Command output example: "27.34.20.252\n"
+        return command(cmd).strip('\n')
     except:
-        return "issue getting public ip"
+        return None
 
 
-def get_up_time():
+def _get_up_time():
     """
     Returns the number of seconds since the program started.
     """
@@ -30,7 +31,7 @@ def get_up_time():
 
 class Ping(RubixResource):
     def get(self):
-        up_time = get_up_time()
+        up_time = _get_up_time()
         up_min = up_time / 60
         up_min = "{:.2f}".format(up_min)
         up_hour = up_time / 3600
