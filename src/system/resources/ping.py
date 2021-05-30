@@ -7,9 +7,18 @@ from rubix_http.resource import RubixResource
 
 from src import AppSetting
 from src.system.utils.project import get_version
+from src.system.utils.shell import command
 
 startTime = time.time()
 up_time_date = str(datetime.now())
+
+
+def _get_public_ip():
+    cmd = "curl https://checkip.amazonaws.com"
+    try:
+        return command(cmd)
+    except:
+        return "issue getting public ip"
 
 
 def get_up_time():
@@ -28,12 +37,14 @@ class Ping(RubixResource):
         up_hour = "{:.2f}".format(up_hour)
         setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
         deployment_mode = 'production' if setting.prod else 'development'
+
         return {
             'version': get_version(),
             'up_time_date': up_time_date,
             'up_min': up_min,
             'up_hour': up_hour,
             'deployment_mode': deployment_mode,
+            'public_ip': _get_public_ip(),
             'mqtt_rest_bridge_listener': {
                 'enabled': setting.mqtt_rest_bridge_setting.enabled,
                 'master': setting.mqtt_rest_bridge_setting.master,
