@@ -7,7 +7,6 @@ from mrb.mapper import api_to_slave_topic_mapper
 from mrb.message import Response as MessageResponse, HttpMethod
 
 from src.discover.remote_device_registry import RemoteDeviceRegistry
-from src.slaves.resources.slaves_base import SlavesBase
 
 bp_slave_proxy = Blueprint("slave_proxy", __name__, url_prefix='/slave')
 methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE']
@@ -25,9 +24,6 @@ def slave_proxy_handler(_):
     url: str = "/".join(url_parts)
     if slave_global_uuid not in RemoteDeviceRegistry().devices:
         return {"message": f"Slave with global_uuid {slave_global_uuid} is not active!"}, 404
-
-    if slave_global_uuid not in SlavesBase.get_slaves()[0]:
-        return {"message": f"Slave with global_uuid {slave_global_uuid} is not listed!"}, 404
 
     timeout: str = request.args.get('timeout')
     numeric_timeout: int = int(timeout) if timeout and timeout.isnumeric() else MqttRestBridge().mqtt_setting.timeout

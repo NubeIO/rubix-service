@@ -2,6 +2,7 @@ import logging
 from typing import List, Dict, Union
 
 from mrb.mapper import api_to_slaves_broadcast_topic_mapper
+from registry.registry import RubixRegistry
 
 from src import AppSetting
 from src.slaves.resources.slaves_base import SlavesBase
@@ -35,11 +36,17 @@ class RemoteDeviceRegistry(metaclass=Singleton):
         We don't need to sleep the response itself has sleep of bridge timeout seconds
         """
         devices: Dict[str, Dict] = api_to_slaves_broadcast_topic_mapper('/api/wires/plat').content
+        for global_uuid in devices:
+            device = devices[global_uuid]
+            devices[global_uuid] = {
+                **device,
+                'is_master': global_uuid == RubixRegistry().read_wires_plat().get('global_uuid')
+            }
         available_inserted_devices_global_uuids: List[str] = []
         slaves: Dict[str, Dict] = SlavesBase.get_slaves_by_app_setting(self.__app_setting)[0]
-        for device in devices:
-            if device in slaves:
-                available_inserted_devices_global_uuids.append(device)
+        for global_uuid in devices:
+            if global_uuid in slaves:
+                available_inserted_devices_global_uuids.append(global_uuid)
 
         self.__devices = devices
         self.__available_inserted_devices_global_uuids = available_inserted_devices_global_uuids
