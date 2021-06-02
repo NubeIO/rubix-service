@@ -122,3 +122,21 @@ class AppResource(RubixResource):
             'service': app.service,
             'is_installed': is_installed,
         }
+
+
+class AppLatestResource(RubixResource):
+    @classmethod
+    def get(cls):
+        app_settings = current_app.config[AppSetting.FLASK_KEY].installable_app_settings
+        processes = []
+        for app_setting in app_settings:
+            app: InstallableApp = get_instance(InstallableApp, app_setting.app_type)
+            if app:
+                app.set_app_settings(app_setting)
+                processes.append(
+                    gevent.spawn(AppResource.get_latest_app_async, current_app._get_current_object().app_context, app))
+        latest_versions: dict = {}
+        gevent.joinall(processes)
+        for process in processes:
+            latest_versions[process.value.get('service')] = process.value.get('latest_version')
+        return latest_versions
