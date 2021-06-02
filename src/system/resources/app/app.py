@@ -104,13 +104,13 @@ class AppResource(RubixResource):
         app_setting = current_app.config[AppSetting.FLASK_KEY]
         details: dict = {}
         is_installed: bool = False
+        _browser_download_url = {}
         if systemctl_installed(app.service_file_name):
             details = get_installed_app_details(app)
             if details:
                 is_installed = True
                 app: InstallableApp = get_app_from_service(details['service'])
                 app.set_version(details['version'])
-                _browser_download_url = {}
                 if get_browser_download_url:
                     try:
                         _browser_download_url = app.get_download_link(app_setting.token, True)
@@ -118,6 +118,7 @@ class AppResource(RubixResource):
                         logger.error(str(e))
         return {
             **(details if details else app.to_property_dict()),
+            **_browser_download_url,
             'service': app.service,
             'is_installed': is_installed,
         }
