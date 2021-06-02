@@ -25,8 +25,6 @@ class ServiceControl(RubixResource):
                 execute_command_with_exception(service_cmd)
             except Exception as e:
                 res = {**res, 'error': str(e)}
-            except NotFoundException as e:
-                res = {**res, 'error': str(e)}
             control_res.append(res)
         return control_res
 

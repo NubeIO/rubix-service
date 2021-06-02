@@ -22,5 +22,6 @@ class DownloadDataResource(RubixResource):
             raise NotFoundException(f'Service {service} does not have any data to download')
         file = app.download_data()
         return send_file(file,
-                         attachment_filename=f'{service}_DATA_{datetime.now().strftime("%Y%m%d%H%M%S")}',
+                         mimetype='application/zip',
+                         attachment_filename=f'{service}_DATA_{datetime.now().strftime("%Y%m%d%H%M%S")}.zip',
                          as_attachment=True)

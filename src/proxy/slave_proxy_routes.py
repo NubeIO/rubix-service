@@ -40,5 +40,7 @@ def slave_proxy_handler(_):
     )
     if response.error:
         return Response(json.dumps({'message': response.error_message}), response.status_code, response.headers)
+    elif 'application/zip' in response.content_type:
+        return Response(str.encode(response.content), response.status_code, response.headers)
     else:
         return Response(json.dumps(response.content).encode('utf-8'), response.status_code, response.headers)

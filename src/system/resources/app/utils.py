@@ -16,7 +16,7 @@ from src.system.utils.shell import systemctl_status
 
 def get_app_from_service(service, version_='') -> InstallableApp:
     try:
-        if version_ == 'latest':
+        if version_.upper() == 'LATEST':
             app: InstallableApp = InstallableApp.get_app(service, '')
             app_setting = current_app.config[AppSetting.FLASK_KEY]
             app.set_version(app.get_latest_release(app_setting.token))
