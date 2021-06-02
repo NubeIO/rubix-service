@@ -36,7 +36,8 @@ def slave_proxy_handler(_):
         api=url,
         body=request.get_json(),
         http_method=HttpMethod[request.method.upper()],
-        timeout=numeric_timeout
+        timeout=numeric_timeout,
+        headers={k: v for k, v in request.headers.items()},
     )
     if response.error:
         return Response(json.dumps({'message': response.error_message}), response.status_code, response.headers)
