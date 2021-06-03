@@ -228,7 +228,7 @@ rubix-registry = "rev v1.0.0"
 type = "git"
 url = "https://github.com/NubeIO/mqtt-rest-bridge"
 reference = "v1.4.0"
-resolved_reference = "4760dee9ca2e993694b2eb76ecd33cbacc4eed74"
+resolved_reference = "eaee103f64a015f76b2f687832ca55e4deb99abf"
 
 [[package]]
 name = "netifaces"
