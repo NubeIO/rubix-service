@@ -1,4 +1,14 @@
 # CHANGELOG
+## [v1.7.6](https://github.com/NubeIO/rubix-service/tree/v1.7.6) (2021-06-04)
+### Added
+- Improvement on GET config, env, logging
+- Improvements on existing code, error responses
+- Appropriate message for download/upload errors
+- Fix: browser_download_url issue
+- Add latest_version API
+- Flag is_master is added on discover remote devices
+- Unauthorized issue fix for internal re-route
+
 ## [v1.7.5](https://github.com/NubeIO/rubix-service/tree/v1.7.5) (2021-05-27)
 ### Added
 - Reduce fetch app time (parallel query)
