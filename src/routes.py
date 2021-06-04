@@ -9,7 +9,7 @@ from src.slaves.resources.slaves_singular import SlavesSingular
 from src.system.networking.network import NetworkInfo, NetworkSetStaticIP, NetworkSetDHCP, NetworkPingRange, \
     NetworkCheckPort
 from src.system.networking.ufw import UFWRuleList, UFWStatus, UFWEnable
-from src.system.resources.app.app import AppResource
+from src.system.resources.app.app import AppResource, AppLatestResource
 from src.system.resources.app.config import ConfigResource, LoggingResource, EnvResource
 from src.system.resources.app.control import ControlResource
 from src.system.resources.app.delete_data import DeleteDataResource
@@ -68,6 +68,7 @@ api_service.add_resource(ServiceControl, "/control")
 # 4
 api_app = Api(bp_app)
 api_app.add_resource(AppResource, '')
+api_app.add_resource(AppLatestResource, '/latest_versions')
 api_app.add_resource(AppStatsResource, '/stats/<string:service>')
 api_app.add_resource(ControlResource, '/control')
 api_app.add_resource(TokenResource, '/token')

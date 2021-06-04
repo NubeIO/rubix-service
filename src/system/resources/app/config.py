@@ -1,7 +1,7 @@
 import json
 import os
 
-from flask import send_from_directory, request
+from flask import request
 from flask_restful import reqparse, marshal_with
 from rubix_http.exceptions.exception import NotFoundException, BadDataException
 from rubix_http.resource import RubixResource
@@ -11,6 +11,7 @@ from src.system.resources.app.utils import get_app_from_service, get_installed_a
 from src.system.resources.fields import config_fields, config_delete_fields
 from src.system.resources.rest_schema.schema_config import config_attributes
 from src.system.utils.data_validation import validate_args
+from src.system.utils.file import read_file
 
 
 class ConfigResource(RubixResource):
@@ -22,11 +23,10 @@ class ConfigResource(RubixResource):
         app: InstallableApp = get_app_from_service(service)
         filename = 'config.json'
         directory = os.path.join(app.get_global_dir(), 'config')
-        if not os.path.exists(f'{directory}/{filename}'):
+        file = os.path.join(directory, filename)
+        if not os.path.exists(file):
             raise NotFoundException(f'Service {service} does not have {filename}')
-        return send_from_directory(directory=directory,
-                                   filename=filename,
-                                   as_attachment=True)
+        return {"data": json.loads(read_file(file))}
 
     @classmethod
     @marshal_with(config_fields)
@@ -73,11 +73,10 @@ class LoggingResource(RubixResource):
         app: InstallableApp = get_app_from_service(service)
         filename = 'logging.conf'
         directory = os.path.join(app.get_global_dir(), 'config')
-        if not os.path.exists(f'{directory}/{filename}'):
+        file = os.path.join(directory, filename)
+        if not os.path.exists(file):
             raise NotFoundException(f'Service {service} does not have {filename}')
-        return send_from_directory(directory=directory,
-                                   filename=filename,
-                                   as_attachment=True)
+        return {"data": read_file(file)}
 
     @classmethod
     @marshal_with(config_fields)
@@ -115,11 +114,10 @@ class EnvResource(RubixResource):
         app: InstallableApp = get_app_from_service(service.upper())
         filename = '.env'
         directory = os.path.join(app.get_global_dir(), 'config')
-        if not os.path.exists(f'{directory}/{filename}'):
+        file = os.path.join(directory, filename)
+        if not os.path.exists(file):
             raise NotFoundException(f'Service {service.upper()} does not have {filename}')
-        return send_from_directory(directory=directory,
-                                   filename=filename,
-                                   as_attachment=True)
+        return {"data": read_file(file)}
 
     @classmethod
     @marshal_with(config_fields)

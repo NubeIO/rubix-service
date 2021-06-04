@@ -236,7 +236,8 @@ class InstallableApp(BaseModel, ABC):
         download_link = self.select_link(row, is_browser_downloadable)
         if not download_link:
             raise ModuleNotFoundError(
-                f'No app for type {setting.device_type} & version {self.version}, check your token & repo')
+                f'No app {self.service} for type {setting.device_type} & version {self.version}, '
+                f'check your token & repo')
         return download_link
 
     def get_latest_release(self, token: str):
