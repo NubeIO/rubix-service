@@ -39,7 +39,7 @@ def create_app(app_setting: AppSetting) -> Flask:
             UserModel.authorize()
 
     def register_router(_app: Flask) -> Flask:
-        from src.routes import bp_system, bp_networking, bp_service, bp_app, bp_wires, bp_users, bp_mrb_listener, \
+        from src.routes import bp_system, bp_networking, bp_service, bp_app, bp_device_info, bp_users, bp_mrb_listener, \
             bp_discover, bp_slaves
         from src.proxy.reverse_proxy_routes import bp_reverse_proxy
 
@@ -47,7 +47,7 @@ def create_app(app_setting: AppSetting) -> Flask:
         _app.register_blueprint(bp_networking)
         _app.register_blueprint(bp_service)
         _app.register_blueprint(bp_app)
-        _app.register_blueprint(bp_wires)
+        _app.register_blueprint(bp_device_info)
         _app.register_blueprint(bp_reverse_proxy)
         _app.register_blueprint(bp_users)
         _app.register_blueprint(bp_mrb_listener)

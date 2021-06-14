@@ -3,7 +3,7 @@ from flask_restful import Api
 
 from src.discover.resources.remote_device import RemoteDevice
 from src.mrb_listener.resource_mrb_listener import MRBListenerResource
-from src.platform.resource_wires_plat import WiresPlatResource
+from src.platform.resource_device_info import DeviceInfoResource
 from src.slaves.resources.slaves_plural import SlavesPlural
 from src.slaves.resources.slaves_singular import SlavesSingular
 from src.system.networking.network import NetworkInfo, NetworkSetStaticIP, NetworkSetDHCP, NetworkPingRange, \
@@ -35,7 +35,7 @@ bp_system = Blueprint('system', __name__, url_prefix='/api/system')
 bp_networking = Blueprint('networking', __name__, url_prefix='/api/system/networking')
 bp_service = Blueprint('service', __name__, url_prefix='/api/system/service')
 bp_app = Blueprint('app', __name__, url_prefix='/api/app')
-bp_wires = Blueprint('wires', __name__, url_prefix='/api/wires')
+bp_device_info = Blueprint('device_info', __name__, url_prefix='/api/wires')
 bp_users = Blueprint('users', __name__, url_prefix='/api/users')
 bp_mrb_listener = Blueprint('mrb_listener', __name__, url_prefix='/api/mrb_listener')
 
@@ -85,8 +85,8 @@ api_app.add_resource(LoggingResource, '/config/logging')
 api_app.add_resource(EnvResource, '/config/env')
 
 # 5
-api_wires = Api(bp_wires)
-api_wires.add_resource(WiresPlatResource, '/plat')
+api_device_info = Api(bp_device_info)
+api_device_info.add_resource(DeviceInfoResource, '/plat')
 
 # 5
 api_users = Api(bp_users)

@@ -2,7 +2,8 @@ import logging
 from typing import List, Dict, Union
 
 from mrb.mapper import api_to_slaves_broadcast_topic_mapper
-from registry.registry import RubixRegistry
+from registry.models.model_device_info import DeviceInfoModel
+from registry.resources.resource_device_info import get_device_info
 
 from src import AppSetting
 from src.slaves.resources.slaves_base import SlavesBase
@@ -38,9 +39,10 @@ class RemoteDeviceRegistry(metaclass=Singleton):
         devices: Dict[str, Dict] = api_to_slaves_broadcast_topic_mapper('/api/wires/plat').content
         for global_uuid in devices:
             device = devices[global_uuid]
+            device_info_model: DeviceInfoModel = get_device_info()
             devices[global_uuid] = {
                 **device,
-                'is_master': global_uuid == RubixRegistry().read_wires_plat().get('global_uuid')
+                'is_master': global_uuid == device_info_model.global_uuid
             }
         available_inserted_devices_global_uuids: List[str] = []
         slaves: Dict[str, Dict] = SlavesBase.get_slaves_by_app_setting(self.__app_setting)[0]

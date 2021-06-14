@@ -26,7 +26,6 @@ class InstallableAppSetting(BaseSetting):
         self.description = "",
         self.gateway_access = False
         self.url_prefix = ''
-        self.need_wires_plat = True
         self.pre_start_sleep = 0
         self.working_dir_name = ''
         self.current_working_dir_name = ''

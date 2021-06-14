@@ -4,7 +4,6 @@ from typing import Union, List, Dict
 
 from flask import current_app
 from packaging import version
-from registry.registry import RubixRegistry
 from rubix_http.exceptions.exception import NotFoundException
 
 from src import AppSetting
@@ -72,8 +71,6 @@ def install_app(arg):
     res = {'service': _service, 'version': _version, 'installation': False, 'backup_data': False, 'error': ''}
     try:
         app: InstallableApp = get_app_from_service(_service, _version)
-        if app.need_wires_plat and not RubixRegistry().read_wires_plat():
-            res = {**res, 'version': app.version, 'error': 'Please add wires-plat details at first'}
         if not is_dir_exist(app.get_downloaded_dir()):
             res = {
                 **res, 'version': app.version,

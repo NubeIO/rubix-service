@@ -111,10 +111,6 @@ class InstallableApp(BaseModel, ABC):
         return self.__version
 
     @property
-    def need_wires_plat(self):
-        return self.__app_setting.need_wires_plat
-
-    @property
     def is_asset(self):
         """Accept: "application/octet-stream" needs to be added on headers if it is downloading from assets list"""
         return True
