@@ -5,6 +5,7 @@ import os
 
 import click
 
+from migrations.migration import migrate
 from src import AppSetting, GunicornFlaskApplication
 from src.platform.resource_device_info import DeviceInfoResource
 
@@ -40,6 +41,7 @@ def number_of_workers():
 @click.option('-l', '--logging-conf', help='Rubix-Service: logging config file')
 def cli(port, root_dir, global_dir, data_dir, config_dir, artifact_dir, backup_dir, prod, workers, gunicorn_config,
         log_level, device_type, auth, logging_conf):
+    migrate()
     setting = AppSetting(port=port, root_dir=root_dir, global_dir=global_dir, data_dir=data_dir, config_dir=config_dir,
                          artifact_dir=artifact_dir, backup_dir=backup_dir, prod=prod, device_type=device_type,
                          auth=auth).reload()
