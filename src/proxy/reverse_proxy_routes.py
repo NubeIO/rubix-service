@@ -1,6 +1,7 @@
 import requests
 from flask import request, Response, Blueprint, current_app
 from flask_restful import abort
+from registry.resources.resource_bios_info import get_bios_info
 from requests.exceptions import ConnectionError
 
 from src import AppSetting
@@ -23,12 +24,16 @@ def reverse_proxy_handler(_):
             if dummy_app.gateway_access:
                 url_prefixes[dummy_app.url_prefix] = dummy_app
     requested_url_prefix = url_parts[1] if len(url_parts) > 1 else ''
-    if requested_url_prefix not in url_prefixes.keys():
+    port: int = get_bios_info().port
+    if requested_url_prefix in url_prefixes.keys():
+        app_to_redirect = url_prefixes[requested_url_prefix]
+        port: int = app_to_redirect.port
+    elif not requested_url_prefix == 'bios':
         abort(404)
-    app_to_redirect = url_prefixes[requested_url_prefix]
     del url_parts[0]
     del url_parts[0]
-    actual_url = 'http://0.0.0.0:{}/{}'.format(app_to_redirect.port, "/".join(url_parts))
+    path: str = "/".join(url_parts)
+    actual_url = f'http://0.0.0.0:{port}/{path}'
     try:
         resp = requests.request(request.method, actual_url, json=request.get_json(), headers=request.headers)
         response = Response(resp.content, resp.status_code, resp.raw.headers.items())
