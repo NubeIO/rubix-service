@@ -125,9 +125,10 @@ class InstallableApp(BaseModel, ABC):
         raise NotImplementedError("select_link needs to be overridden")
 
     def download(self) -> dict:
-        app_setting = current_app.config[AppSetting.FLASK_KEY]
-        download_name = download_unzip_service(self.get_download_link(app_setting.token), self.get_download_dir()
-                                               , app_setting.token, self.is_asset)
+        from src.system.resources.app.utils import get_github_token
+        token: str = get_github_token()
+        download_name = download_unzip_service(self.get_download_link(token), self.get_download_dir(), token,
+                                               self.is_asset)
         existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
         self.after_download_upload(download_name)
         return {'service': self.service, 'version': self.version, 'existing_app_deletion': existing_app_deletion}
