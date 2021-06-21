@@ -211,7 +211,7 @@ python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
 
 [[package]]
 name = "mqtt-rest-bridge"
-version = "1.5.0"
+version = "1.5.1"
 description = "MQTT-REST-Bridge"
 category = "main"
 optional = false
@@ -222,13 +222,13 @@ develop = false
 paho-mqtt = "1.5.1"
 requests = "2.25.1"
 rubix-mqtt = "rev v1.2.0"
-rubix-registry = "rev v1.1.0"
+rubix-registry = "rev v1.1.1"
 
 [package.source]
 type = "git"
 url = "https://github.com/NubeIO/mqtt-rest-bridge"
-reference = "v1.5.0"
-resolved_reference = "1dab5e72586b10730a4cd4982454714be4b69f99"
+reference = "v1.5.1"
+resolved_reference = "40eda03d0ca38d746610fd7e837c33c936a94607"
 
 [[package]]
 name = "netifaces"
@@ -405,7 +405,7 @@ resolved_reference = "cd9070a4c4b6c352826b1a3dff1d1bc016285125"
 
 [[package]]
 name = "rubix-registry"
-version = "1.1.0"
+version = "1.1.1"
 description = "Rubix Registry"
 category = "main"
 optional = false
@@ -419,8 +419,8 @@ tinydb = "4.4.0"
 [package.source]
 type = "git"
 url = "https://github.com/NubeIO/rubix-registry"
-reference = "v1.1.0"
-resolved_reference = "d6a6c11c1025b3471648002c3f1ace322c82945e"
+reference = "v1.1.1"
+resolved_reference = "6f2d9ccca328ed6b202b17e0316b7dcfc25b6b7f"
 
 [[package]]
 name = "shortuuid"
@@ -519,7 +519,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "2bb754548af1a2b83438691fe10e4d858b3f1582e7331ebc28295a12d0a1f4d7"
+content-hash = "5e9f628d68ffb8499c92caeaeb4291003d667afd4674b320faafbe82cca2103b"
 
 [metadata.files]
 altgraph = [
