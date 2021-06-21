@@ -4,7 +4,8 @@ from typing import Union, List, Dict
 
 from flask import current_app
 from packaging import version
-from registry.registry import RubixRegistry
+from registry.models.model_github_info import GitHubInfoModel
+from registry.resources.resource_github_info import get_github_info
 from rubix_http.exceptions.exception import NotFoundException
 
 from src import AppSetting
@@ -18,8 +19,7 @@ def get_app_from_service(service, version_='') -> InstallableApp:
     try:
         if version_.upper() == 'LATEST':
             app: InstallableApp = InstallableApp.get_app(service, '')
-            app_setting = current_app.config[AppSetting.FLASK_KEY]
-            app.set_version(app.get_latest_release(app_setting.token))
+            app.set_version(app.get_latest_release(get_github_token()))
         else:
             app: InstallableApp = InstallableApp.get_app(service, version_)
         if not version_ or version.parse(app.min_support_version) <= version.parse(app.version):
@@ -72,8 +72,6 @@ def install_app(arg):
     res = {'service': _service, 'version': _version, 'installation': False, 'backup_data': False, 'error': ''}
     try:
         app: InstallableApp = get_app_from_service(_service, _version)
-        if app.need_wires_plat and not RubixRegistry().read_wires_plat():
-            res = {**res, 'version': app.version, 'error': 'Please add wires-plat details at first'}
         if not is_dir_exist(app.get_downloaded_dir()):
             res = {
                 **res, 'version': app.version,
@@ -99,5 +97,10 @@ def update_download_state(state: DownloadState, services: List[Dict] = None):
 
 def get_download_state():
     app_setting = current_app.config[AppSetting.FLASK_KEY]
-    return json.loads(read_file(app_setting.download_status_file) or "{}") \
-        or {"state": DownloadState.CLEARED.name, "services": []}
+    return json.loads(read_file(app_setting.download_status_file) or "{}") or {
+        "state": DownloadState.CLEARED.name, "services": []}
+
+
+def get_github_token() -> str:
+    github_info: Union[GitHubInfoModel, None] = get_github_info()
+    return github_info.token if github_info else ""

@@ -10,7 +10,7 @@ from werkzeug.local import LocalProxy
 from src import AppSetting
 from src.inheritors import get_instance
 from src.system.apps.base.installable_app import InstallableApp
-from src.system.resources.app.utils import get_installed_app_details, get_app_from_service
+from src.system.resources.app.utils import get_installed_app_details, get_app_from_service, get_github_token
 from src.system.resources.fields import service_fields
 from src.system.utils.shell import systemctl_installed
 
@@ -83,10 +83,9 @@ class AppResource(RubixResource):
 
     @classmethod
     def get_latest_app(cls, app: InstallableApp) -> dict:
-        app_setting = current_app.config[AppSetting.FLASK_KEY]
         latest_version = None
         try:
-            latest_version = app.get_latest_release(app_setting.token)
+            latest_version = app.get_latest_release(get_github_token())
         except Exception as e:
             logger.error(str(e))
         return latest_version
@@ -113,7 +112,7 @@ class AppResource(RubixResource):
                 app.set_version(details['version'])
                 if get_browser_download_url:
                     try:
-                        _browser_download_url = app.get_download_link(app_setting.token, True)
+                        _browser_download_url = app.get_download_link(get_github_token(), True)
                     except Exception as e:
                         logger.error(str(e))
         return {

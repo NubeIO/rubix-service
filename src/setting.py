@@ -26,7 +26,6 @@ class InstallableAppSetting(BaseSetting):
         self.description = "",
         self.gateway_access = False
         self.url_prefix = ''
-        self.need_wires_plat = True
         self.pre_start_sleep = 0
         self.working_dir_name = ''
         self.current_working_dir_name = ''
@@ -53,7 +52,6 @@ class AppSetting:
     default_artifact_dir: str = 'apps'
     default_backup_dir: str = 'backup'
     default_secret_key_file = 'secret_key.txt'
-    default_token_file = 'token.txt'
     default_setting_file: str = 'config.json'
     default_logging_conf: str = 'logging.conf'
     default_app_settings_file: str = 'apps.json'
@@ -79,7 +77,6 @@ class AppSetting:
                                                self.__join_root_dir(self.default_backup_dir))
         self.__download_dir = self.__compute_dir('', os.path.join(self.__artifact_dir, 'download'))
         self.__install_dir = self.__compute_dir('', os.path.join(self.__artifact_dir, 'install'))
-        self.__token_file = os.path.join(self.__data_dir, self.default_token_file)
         self.__identifier = kwargs.get('identifier') or AppSetting.default_identifier
         self.__prod = kwargs.get('prod') or False
         self.__device_type = kwargs.get('device_type')
@@ -126,10 +123,6 @@ class AppSetting:
     @property
     def install_dir(self) -> str:
         return self.__install_dir
-
-    @property
-    def token(self) -> str:
-        return read_file(os.path.join(self.data_dir, self.default_token_file))
 
     @property
     def identifier(self):

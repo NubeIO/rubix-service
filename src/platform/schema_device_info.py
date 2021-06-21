@@ -1,6 +1,6 @@
 from src.platform.utils import map_rest_schema
 
-wires_plat_all_attributes = {
+device_info_all_attributes = {
     'client_id': {
         'type': str,
         'required': True,
@@ -59,7 +59,7 @@ wires_plat_all_attributes = {
     },
 }
 
-wires_plat_return_attributes = {
+device_info_return_attributes = {
     'global_uuid': {
         'type': str,
     },
@@ -71,6 +71,6 @@ wires_plat_return_attributes = {
     }
 }
 
-wires_plat_all_fields = {}
-map_rest_schema(wires_plat_return_attributes, wires_plat_all_fields)
-map_rest_schema(wires_plat_all_attributes, wires_plat_all_fields)
+device_info_all_fields = {}
+map_rest_schema(device_info_return_attributes, device_info_all_fields)
+map_rest_schema(device_info_all_attributes, device_info_all_fields)

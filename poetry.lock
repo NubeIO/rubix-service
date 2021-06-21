@@ -211,7 +211,7 @@ python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
 
 [[package]]
 name = "mqtt-rest-bridge"
-version = "1.4.0"
+version = "1.5.1"
 description = "MQTT-REST-Bridge"
 category = "main"
 optional = false
@@ -222,13 +222,13 @@ develop = false
 paho-mqtt = "1.5.1"
 requests = "2.25.1"
 rubix-mqtt = "rev v1.2.0"
-rubix-registry = "rev v1.0.0"
+rubix-registry = "rev v1.1.1"
 
 [package.source]
 type = "git"
 url = "https://github.com/NubeIO/mqtt-rest-bridge"
-reference = "v1.4.0"
-resolved_reference = "eaee103f64a015f76b2f687832ca55e4deb99abf"
+reference = "v1.5.1"
+resolved_reference = "40eda03d0ca38d746610fd7e837c33c936a94607"
 
 [[package]]
 name = "netifaces"
@@ -405,18 +405,30 @@ resolved_reference = "cd9070a4c4b6c352826b1a3dff1d1bc016285125"
 
 [[package]]
 name = "rubix-registry"
-version = "1.0.0"
+version = "1.1.1"
 description = "Rubix Registry"
 category = "main"
 optional = false
 python-versions = ">=3.6"
 develop = false
 
+[package.dependencies]
+shortuuid = "1.0.1"
+tinydb = "4.4.0"
+
 [package.source]
 type = "git"
 url = "https://github.com/NubeIO/rubix-registry"
-reference = "v1.0.0"
-resolved_reference = "cbd039aac2eafc3bdeb10aead8a3180f86335a1b"
+reference = "v1.1.1"
+resolved_reference = "6f2d9ccca328ed6b202b17e0316b7dcfc25b6b7f"
+
+[[package]]
+name = "shortuuid"
+version = "1.0.1"
+description = "A generator library for concise, unambiguous and URL-safe UUIDs."
+category = "main"
+optional = false
+python-versions = ">=3.5"
 
 [[package]]
 name = "six"
@@ -445,6 +457,14 @@ postgresql_pg8000 = ["pg8000 (<1.16.6)"]
 postgresql_psycopg2binary = ["psycopg2-binary"]
 postgresql_psycopg2cffi = ["psycopg2cffi"]
 pymysql = ["pymysql (<1)", "pymysql"]
+
+[[package]]
+name = "tinydb"
+version = "4.4.0"
+description = "TinyDB is a tiny, document oriented database optimized for your happiness :)"
+category = "main"
+optional = false
+python-versions = ">=3.5,<4.0"
 
 [[package]]
 name = "urllib3"
@@ -499,7 +519,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "72c67fe23174a70d9287ee06095d1267d4a4c269eceb0333578641505d71f26c"
+content-hash = "5e9f628d68ffb8499c92caeaeb4291003d667afd4674b320faafbe82cca2103b"
 
 [metadata.files]
 altgraph = [
@@ -769,6 +789,10 @@ requests = [
 rubix-http = []
 rubix-mqtt = []
 rubix-registry = []
+shortuuid = [
+    {file = "shortuuid-1.0.1-py3-none-any.whl", hash = "sha256:492c7402ff91beb1342a5898bd61ea953985bf24a41cd9f247409aa2e03c8f77"},
+    {file = "shortuuid-1.0.1.tar.gz", hash = "sha256:3c11d2007b915c43bee3e10625f068d8a349e04f0d81f08f5fa08507427ebf1f"},
+]
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
     {file = "six-1.15.0.tar.gz", hash = "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"},
@@ -812,6 +836,10 @@ sqlalchemy = [
     {file = "SQLAlchemy-1.3.23-cp39-cp39-win32.whl", hash = "sha256:94208867f34e60f54a33a37f1c117251be91a47e3bfdb9ab8a7847f20886ad06"},
     {file = "SQLAlchemy-1.3.23-cp39-cp39-win_amd64.whl", hash = "sha256:f4d972139d5000105fcda9539a76452039434013570d6059993120dc2a65e447"},
     {file = "SQLAlchemy-1.3.23.tar.gz", hash = "sha256:6fca33672578666f657c131552c4ef8979c1606e494f78cd5199742dfb26918b"},
+]
+tinydb = [
+    {file = "tinydb-4.4.0-py3-none-any.whl", hash = "sha256:30b0f718ebb288e42d2f69f3e1b18928739f25153e6b5308a234e95c1673de71"},
+    {file = "tinydb-4.4.0.tar.gz", hash = "sha256:d57c29524ecacc081ebc24f96e0d787bba11dc20d52634a32a709b878be3545a"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.2-py2.py3-none-any.whl", hash = "sha256:d8ff90d979214d7b4f8ce956e80f4028fc6860e4431f731ea4a8c08f23f99473"},

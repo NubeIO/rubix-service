@@ -1,20 +1,17 @@
 import json
 
 import requests
-from flask import current_app
 from packaging import version
 from rubix_http.exceptions.exception import NotFoundException, PreConditionException
 from rubix_http.resource import RubixResource
 
-from src import AppSetting
-from src.system.resources.app.utils import get_app_from_service
+from src.system.resources.app.utils import get_app_from_service, get_github_token
 
 
 class ReleaseResource(RubixResource):
     @classmethod
     def get(cls, service):
-        app_setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
-        token: str = app_setting.token
+        token: str = get_github_token()
         headers = {}
         if token:
             headers['Authorization'] = f'Bearer {token}'
