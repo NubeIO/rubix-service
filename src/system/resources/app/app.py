@@ -100,7 +100,6 @@ class AppResource(RubixResource):
 
     @classmethod
     def get_installed_app_stat(cls, app: InstallableApp, get_browser_download_url: bool) -> dict:
-        app_setting = current_app.config[AppSetting.FLASK_KEY]
         details: dict = {}
         is_installed: bool = False
         _browser_download_url = {}
