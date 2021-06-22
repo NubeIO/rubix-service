@@ -11,7 +11,7 @@ class TokenResource(RubixResource):
         github_info_model: [GitHubInfoModel, None] = get_github_info()
         if not github_info_model:
             abort(404, message="GitHub token doesn't exist")
-        return {"token": f"***{github_info_model.token[-4:]}"}
+        return {"token": f"{github_info_model.token[:4]}***{github_info_model.token[-4:]}"}
 
     @classmethod
     def put(cls):
