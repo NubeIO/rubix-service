@@ -10,6 +10,7 @@ ADD poetry.lock pyproject.toml ./
 RUN $HOME/.poetry/bin/poetry install
 
 ADD src src
+ADD migrations migrations
 ADD config config
 ADD systemd systemd
 ADD run.py VERSION ./
