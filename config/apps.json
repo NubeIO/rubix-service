@@ -79,20 +79,17 @@
       "url_prefix": "dp"
     },
     {
-      "app_type": "JavaApp",
-      "service": "BACNET_MASTER",
-      "display_name": "BACnet Master",
-      "repo_name": "iot-engine",
-      "service_file_name": "nubeio-bacnet-master.service",
-      "data_dir_name": "bacnet-master",
-      "port": 8888,
-      "min_support_version": "v0.2.0",
-      "description": "BACnet Master for BACnet discovery",
+      "app_type": "PythonApp",
+      "service": "RUBIX_BACNET_MASTER",
+      "display_name": "Rubix BACnet Master",
+      "repo_name": "rubix-bacnet-master",
+      "service_file_name": "nubeio-rubix-bacnet-master.service",
+      "data_dir_name": "rubix-bacnet-master",
+      "port": 1718,
+      "min_support_version": "v0.0.1",
+      "description": "NubeIO Rubix BACnet Master",
       "gateway_access": true,
-      "url_prefix": "bm",
-      "name_contains": "bacnet",
-      "systemd_static_wd_value": "/app/bacnet",
-      "systemd_file_dir": "conf/nubeio-bacnet.service"
+      "url_prefix": "rbm"
     }
   ]
 }
