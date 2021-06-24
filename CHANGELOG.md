@@ -1,5 +1,5 @@
 # CHANGELOG
-## [v1.7.7](https://github.com/NubeIO/rubix-service/tree/v1.7.7) (2021-06-21)
+## [v1.8.0](https://github.com/NubeIO/rubix-service/tree/v1.8.0) (2021-06-24)
 - Rename wires-plat to device-info & TinyDB use
 - Migrate existing wires-plat to TinyDB
 - Use registry for GitHub token
