@@ -47,4 +47,4 @@ def reverse_proxy_handler(_):
 
 def get_bios_port() -> int:
     bios_info_model: Union[BiosInfoModel, None] = get_bios_info()
-    return bios_info_model.port if bios_info_model.port else 1615
+    return bios_info_model.port if bios_info_model else 1615
