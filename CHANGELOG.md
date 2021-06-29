@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.8.1](https://github.com/NubeIO/rubix-service/tree/v1.8.1) (2021-06-29)
+- Make it work on old BIOS
+
 ## [v1.8.0](https://github.com/NubeIO/rubix-service/tree/v1.8.0) (2021-06-24)
 - Rename wires-plat to device-info & TinyDB use
 - Migrate existing wires-plat to TinyDB
