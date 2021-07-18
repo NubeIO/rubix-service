@@ -5,6 +5,7 @@ from rubix_http.exceptions.exception import NotFoundException
 
 class Services(enum.Enum):
     LORAWAN = {'service_file_name': 'lorawan-server.service', 'display_name': 'LoRa WAN Server Service'}
+    LORAWAN_GATEWAY = {'service_file_name': 'lorawan-gateway.service', 'display_name': 'LoRa WAN Gateway Service'}
     MOSQUITTO = {'service_file_name': 'mosquitto.service', 'display_name': 'Mosquitto Service'}
     BBB = {'service_file_name': 'nubeio-bbio.service', 'display_name': 'BBB IO Service'}
     DRAC = {'service_file_name': 'nubeio-drac.service', 'display_name': 'DRAC Server Service'}
