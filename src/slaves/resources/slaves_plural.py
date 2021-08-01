@@ -20,6 +20,8 @@ class SlavesPlural(SlavesBase):
                 slaves[slave]['is_online'] = True
             else:
                 slaves[slave]['is_online'] = False
+            slaves[slave]['total_count'] = RemoteDeviceRegistry().total_count.get(slave, 0)
+            slaves[slave]['failure_count'] = RemoteDeviceRegistry().failure_count.get(slave, 0)
         return slaves
 
     @classmethod
@@ -28,7 +30,8 @@ class SlavesPlural(SlavesBase):
         parser.add_argument('global_uuid', type=str)
         args = parser.parse_args()
         global_uuid = args['global_uuid']
-        device: Dict = RemoteDeviceRegistry().devices[global_uuid]
+        device: Dict = {**RemoteDeviceRegistry().devices[global_uuid]}  # new dict
+        del device['count']
         if global_uuid not in RemoteDeviceRegistry().devices and device:
             raise NotFoundException(f"global_uuid = {global_uuid} does not exist on discovered devices list")
         slaves, slaves_file = cls.get_slaves()

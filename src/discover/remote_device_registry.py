@@ -11,16 +11,29 @@ from src.utils.singleton import Singleton
 
 logger = logging.getLogger(__name__)
 
+MIN_LOOP_TO_SHOW_ONLINE: int = 5
+
 
 class RemoteDeviceRegistry(metaclass=Singleton):
     def __init__(self):
         self.__app_setting: Union[AppSetting, None] = None
+        self.__temp_devices: Dict[str, Dict] = {}
+        self.__total_count: Dict[str, int] = {}
+        self.__failure_count: Dict[str, int] = {}
         self.__devices: Dict[str, Dict] = {}
         self.__available_inserted_devices_global_uuids: List[str] = []
 
     @property
     def devices(self) -> Dict[str, Dict]:
         return self.__devices
+
+    @property
+    def total_count(self) -> Dict[str, int]:
+        return self.__total_count
+
+    @property
+    def failure_count(self) -> Dict[str, int]:
+        return self.__failure_count
 
     @property
     def available_inserted_devices_global_uuids(self) -> List[str]:
@@ -36,19 +49,40 @@ class RemoteDeviceRegistry(metaclass=Singleton):
         """
         We don't need to sleep the response itself has sleep of bridge timeout seconds
         """
-        devices: Dict[str, Dict] = api_to_slaves_broadcast_topic_mapper('/api/wires/plat').content
-        for global_uuid in devices:
-            device = devices[global_uuid]
+        active_slave_devices: Dict[str, Dict] = api_to_slaves_broadcast_topic_mapper('/api/wires/plat',
+                                                                                     timeout=20).content
+        for global_uuid in active_slave_devices:
+            active_slave_device = active_slave_devices[global_uuid]
             device_info_model: DeviceInfoModel = get_device_info()
-            devices[global_uuid] = {
-                **device,
-                'is_master': global_uuid == device_info_model.global_uuid
+            self.__temp_devices[global_uuid] = {
+                **active_slave_device,
+                'is_master': global_uuid == device_info_model.global_uuid,
+                'count': self.__temp_devices.get(global_uuid, {}).get('count', 0) + 1
             }
         available_inserted_devices_global_uuids: List[str] = []
         slaves: Dict[str, Dict] = SlavesBase.get_slaves_by_app_setting(self.__app_setting)[0]
-        for global_uuid in devices:
-            if global_uuid in slaves:
-                available_inserted_devices_global_uuids.append(global_uuid)
 
+        for global_uuid in slaves:
+            self.__total_count[global_uuid] = self.__total_count.get(global_uuid, 0) + 1
+            if global_uuid not in active_slave_devices:
+                self.__failure_count[global_uuid] = self.__failure_count.get(global_uuid, 0) + 1
+
+        global_uuids: List[str] = list(self.__temp_devices.keys())
+        for global_uuid in global_uuids:
+            if global_uuid not in active_slave_devices:
+                temp_device = self.__temp_devices[global_uuid]
+                logger.warning(f'Deleting global_uuid={global_uuid}, device_name={temp_device.get("device_name")}, '
+                               f'count={temp_device.get("count")}')
+                del self.__temp_devices[global_uuid]
+
+        devices: Dict[str, Dict] = {}
+        for global_uuid in active_slave_devices:
+            temp_device: dict = self.__temp_devices[global_uuid]
+            if temp_device.get('count') >= MIN_LOOP_TO_SHOW_ONLINE:
+                devices[global_uuid] = temp_device
+                if global_uuid in slaves:
+                    available_inserted_devices_global_uuids.append(global_uuid)
+
+        logger.info(f'Available devices count: {len(available_inserted_devices_global_uuids)}')
         self.__devices = devices
         self.__available_inserted_devices_global_uuids = available_inserted_devices_global_uuids

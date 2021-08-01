@@ -21,7 +21,7 @@ class ReleaseResource(RubixResource):
         releases = []
         for row in data:
             if isinstance(row, str):
-                raise PreConditionException('Please insert GitHub valid token!')
+                raise PreConditionException(data)
             if version.parse(app.min_support_version) <= version.parse(row.get('tag_name')):
                 releases.append(row.get('tag_name'))
         if not releases:
