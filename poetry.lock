@@ -225,7 +225,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "mqtt-rest-bridge"
-version = "1.5.1"
+version = "1.6.0"
 description = "MQTT-REST-Bridge"
 category = "main"
 optional = false
@@ -241,8 +241,8 @@ rubix-registry = "rev v1.1.1"
 [package.source]
 type = "git"
 url = "https://github.com/NubeIO/mqtt-rest-bridge"
-reference = "v1.5.1"
-resolved_reference = "40eda03d0ca38d746610fd7e837c33c936a94607"
+reference = "v1.6.0"
+resolved_reference = "f8ff4c3c626c7e8a48ab3b8575e9f4d4ccc89a1d"
 
 [[package]]
 name = "netifaces"
@@ -535,7 +535,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "68309d739b09d927059474cc51e06f1d1be8c2d95fc49ab0fce7a1cf6a1fb9a5"
+content-hash = "bcd2fe898f4336c1ccf3fb3d6230e21afc6172059e0a5df4ef15e388d8281bdb"
 
 [metadata.files]
 altgraph = [
