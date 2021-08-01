@@ -19,8 +19,11 @@ def slaves_proxy_handler(_):
     del url_parts[0]
     del url_parts[0]
     url = "/".join(url_parts)
-    available_inserted_devices_global_uuids: List[
-        str] = RemoteDeviceRegistry().available_inserted_devices_global_uuids
+    if request.args.get("slave_devices", None):
+        available_inserted_devices_global_uuids: List[str] = request.args['slave_devices'].split(",")
+    else:
+        available_inserted_devices_global_uuids: List[
+            str] = RemoteDeviceRegistry().available_inserted_devices_global_uuids
     timeout: str = request.args.get('timeout')
     numeric_timeout: int = int(timeout) if timeout and timeout.isnumeric() else MqttRestBridge().mqtt_setting.timeout
     if available_inserted_devices_global_uuids:
