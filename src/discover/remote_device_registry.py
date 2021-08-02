@@ -11,7 +11,7 @@ from src.utils.singleton import Singleton
 
 logger = logging.getLogger(__name__)
 
-MIN_LOOP_TO_SHOW_ONLINE: int = 5
+MIN_LOOP_TO_SHOW_ONLINE: int = 1
 
 
 class RemoteDeviceRegistry(metaclass=Singleton):
