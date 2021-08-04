@@ -1,4 +1,10 @@
 # CHANGELOG
+## [v1.8.3](https://github.com/NubeIO/rubix-service/tree/v1.8.3) (2021-08-04)
+- Multicast to only those which are actively active
+- Get all releases option
+- Make available multicast selection
+- Upgrade MRB (multicast response with timeouts)
+
 ## [v1.8.2](https://github.com/NubeIO/rubix-service/tree/v1.8.2) (2021-07-19)
 - Add LoRaWAN Gateway service
 
