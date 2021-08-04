@@ -247,7 +247,7 @@ class InstallableApp(BaseModel, ABC):
         latest_release = ''
         for row in data:
             if isinstance(row, str):
-                raise PreConditionException('Please insert GitHub valid token!')
+                raise PreConditionException(data)
             release = row.get('tag_name')
             if not latest_release or packaging_version.parse(latest_release) <= packaging_version.parse(release):
                 latest_release = release
