@@ -34,6 +34,12 @@ class FrontendApp(InstallableApp, ABC):
             }
         return row.get('zipball_url')
 
+    def after_download_upload(self, name: str):
+        # they are already wrapped on folder
+        download_dir: str = self.get_download_dir()
+        extracted_dir = os.path.join(download_dir, name)
+        os.rename(extracted_dir, self.get_downloaded_dir())
+
     def install(self) -> bool:
         install_cmd: str = f"sudo bash script.bash install -s={self.service_file_name} -u=root " \
                            f"--working-dir={self.get_wd()} -g={self.get_global_dir()} -d=data -c=config -p {self.port}"
