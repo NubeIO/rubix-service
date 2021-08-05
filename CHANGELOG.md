@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.8.4](https://github.com/NubeIO/rubix-service/tree/v1.8.4) (2021-08-05)
+- Add Go base class & add lora go on it
+
 ## [v1.8.3](https://github.com/NubeIO/rubix-service/tree/v1.8.3) (2021-08-04)
 - Multicast to only those which are actively active
 - Get all releases option

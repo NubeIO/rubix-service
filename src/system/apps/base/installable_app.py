@@ -119,10 +119,17 @@ class InstallableApp(BaseModel, ABC):
     def app_setting(self):
         return self.__app_setting
 
-    @abstractmethod
     def select_link(self, row: any, is_browser_downloadable: bool):
-        """select_link for selecting builds from GitHub"""
-        raise NotImplementedError("select_link needs to be overridden")
+        setting = current_app.config[AppSetting.FLASK_KEY]
+        for asset in row.get('assets', []):
+            if setting.device_type in asset.get('name'):
+                if is_browser_downloadable:
+                    return {
+                        'name': row.get('name'),
+                        'created_at': row.get('created_at'),
+                        'browser_download_url': asset.get('browser_download_url')
+                    }
+                return asset.get('url')
 
     def download(self) -> dict:
         from src.system.resources.app.utils import get_github_token
@@ -176,10 +183,15 @@ class InstallableApp(BaseModel, ABC):
         return False
 
     def after_download_upload(self, name: str):
-        # they are already wrapped on folder
+        # enforcing to extract on version directory
         download_dir: str = self.get_download_dir()
         extracted_dir = os.path.join(download_dir, name)
-        os.rename(extracted_dir, self.get_downloaded_dir())
+        dir_with_version = os.path.join(download_dir, self.version)
+        mode = 0o744
+        os.makedirs(dir_with_version, mode, True)
+        app_file = os.path.join(dir_with_version, 'app')
+        os.rename(extracted_dir, app_file)
+        os.chmod(app_file, mode)
 
     @abstractmethod
     def install(self) -> bool:
