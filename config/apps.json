@@ -40,6 +40,19 @@
     },
     {
       "app_type": "PythonApp",
+      "service": "MODBUS",
+      "display_name": "Modbus",
+      "repo_name": "nubeio-rubix-app-modbus-py",
+      "service_file_name": "nubeio-rubix-app-modbus-py.service",
+      "data_dir_name": "modbus",
+      "port": 1516,
+      "min_support_version": "v0.0.1",
+      "description": "Flask Application for Nube Rubix Modbus App Py",
+      "gateway_access": true,
+      "url_prefix": "modbus"
+    },
+    {
+      "app_type": "PythonApp",
       "service": "BACNET_SERVER",
       "display_name": "Rubix BACnet Server",
       "repo_name": "rubix-bacnet-server",
