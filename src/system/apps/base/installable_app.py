@@ -291,7 +291,7 @@ class InstallableApp(BaseModel, ABC):
 
     def get_backup_dir(self):
         setting = current_app.config[AppSetting.FLASK_KEY]
-        return os.path.join(setting.backup_dir, self.repo_name,
+        return os.path.join(setting.backup_dir, self.data_dir_name,
                             f'{datetime.now().strftime("%Y%m%d%H%M%S")}_{self.version}')
 
     def set_version(self, _version):
