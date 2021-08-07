@@ -240,7 +240,7 @@ class InstallableApp(BaseModel, ABC):
             headers['Authorization'] = f'Bearer {token}'
         release_link: str = f'https://api.github.com/repos/NubeIO/{self.repo_name}/releases/tags/{self.version}'
         resp = requests.get(release_link, headers=headers)
-        row: str = json.loads(resp.content)
+        row: any = json.loads(resp.content)
         setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
         download_link = self.select_link(row, is_browser_downloadable)
         if not download_link:
