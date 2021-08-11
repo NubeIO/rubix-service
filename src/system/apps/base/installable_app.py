@@ -240,7 +240,7 @@ class InstallableApp(BaseModel, ABC):
             headers['Authorization'] = f'Bearer {token}'
         release_link: str = f'https://api.github.com/repos/NubeIO/{self.repo_name}/releases/tags/{self.version}'
         resp = requests.get(release_link, headers=headers)
-        row: str = json.loads(resp.content)
+        row: any = json.loads(resp.content)
         setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
         download_link = self.select_link(row, is_browser_downloadable)
         if not download_link:
@@ -291,7 +291,7 @@ class InstallableApp(BaseModel, ABC):
 
     def get_backup_dir(self):
         setting = current_app.config[AppSetting.FLASK_KEY]
-        return os.path.join(setting.backup_dir, self.repo_name,
+        return os.path.join(setting.backup_dir, self.data_dir_name,
                             f'{datetime.now().strftime("%Y%m%d%H%M%S")}_{self.version}')
 
     def set_version(self, _version):
