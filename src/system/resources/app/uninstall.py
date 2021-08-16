@@ -4,7 +4,7 @@ from rubix_http.resource import RubixResource
 
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.resources.app.utils import get_app_from_service
-from src.system.utils.file import get_extracted_dir, delete_existing_folder
+from src.system.utils.file import delete_existing_folder
 
 
 class UnInstallResource(RubixResource):
@@ -15,7 +15,7 @@ class UnInstallResource(RubixResource):
         args = parser.parse_args()
         service: str = args['service'].upper()
         app: InstallableApp = get_app_from_service(service)
-        version: str = get_extracted_dir(app.get_installation_dir())
+        version: str = app.get_installed_version()
         if not version:
             raise NotFoundException(f'service {service} is not running')
         app.set_version(version)

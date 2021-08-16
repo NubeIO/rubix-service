@@ -79,9 +79,8 @@ class InstallableApp(BaseModel, ABC):
 
     @property
     def min_support_version(self):
-        _version: str = get_extracted_dir(self.get_installation_dir())
-        if _version:
-            installed_version = _version.split("/")[-1]
+        installed_version: str = self.get_installed_version()
+        if installed_version:
             if packaging_version.parse(installed_version) > \
                     packaging_version.parse(self.__app_setting.min_support_version):
                 return installed_version
@@ -291,8 +290,12 @@ class InstallableApp(BaseModel, ABC):
 
     def get_backup_dir(self):
         setting = current_app.config[AppSetting.FLASK_KEY]
+        installed_version = self.get_installed_version()
         return os.path.join(setting.backup_dir, self.data_dir_name,
-                            f'{datetime.now().strftime("%Y%m%d%H%M%S")}_{self.version}')
+                            f'{datetime.now().strftime("%Y%m%d%H%M%S")}_{installed_version}')
+
+    def get_installed_version(self):
+        return get_extracted_dir(self.get_installation_dir()).split("/")[-1]
 
     def set_version(self, _version):
         self.__version = _version
