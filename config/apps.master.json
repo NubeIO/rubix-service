@@ -129,6 +129,19 @@
       "description": "NubeIO Rubix App LoRa Go",
       "gateway_access": true,
       "url_prefix": "lg"
+    },
+    {
+      "app_type": "GoApp",
+      "service": "FLOW_FRAMEWORK",
+      "display_name": "Flow Framework",
+      "repo_name": "flow-framework",
+      "service_file_name": "nubeio-flow-framework.service",
+      "data_dir_name": "flow-framework",
+      "port": 1660,
+      "min_support_version": "v0.0.1",
+      "description": "Flow Framework",
+      "gateway_access": true,
+      "url_prefix": "ff"
     }
   ]
 }
