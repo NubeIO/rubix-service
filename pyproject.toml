@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rubix-service"
-version = "1.8.6"
+version = "1.8.7"
 description = "Install service via systemd"
 authors = ["NubeIO"]
 
@@ -12,7 +12,7 @@ gunicorn = "^20.0.4"
 click = "^7.1.2"
 packaging = "^20.8"
 PyJWT = "^2.0.1"
-rubix-registry = { git = "https://github.com/NubeIO/rubix-registry", rev = "v1.1.1" }
+rubix-registry = { git = "https://github.com/NubeIO/rubix-registry", rev = "v1.1.2" }
 rubix-http = { git = "https://github.com/NubeIO/rubix-http", rev = "v1.3.0" }
 Flask = "1.1.2"
 gevent = "^21.1.2"
