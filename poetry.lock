@@ -419,7 +419,7 @@ resolved_reference = "cd9070a4c4b6c352826b1a3dff1d1bc016285125"
 
 [[package]]
 name = "rubix-registry"
-version = "1.1.1"
+version = "1.1.2"
 description = "Rubix Registry"
 category = "main"
 optional = false
@@ -433,8 +433,8 @@ tinydb = "4.4.0"
 [package.source]
 type = "git"
 url = "https://github.com/NubeIO/rubix-registry"
-reference = "v1.1.1"
-resolved_reference = "6f2d9ccca328ed6b202b17e0316b7dcfc25b6b7f"
+reference = "v1.1.2"
+resolved_reference = "3ab399934243607affae736797cfaddc5804eff7"
 
 [[package]]
 name = "shortuuid"
@@ -535,7 +535,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "bcd2fe898f4336c1ccf3fb3d6230e21afc6172059e0a5df4ef15e388d8281bdb"
+content-hash = "55ae9d0e1f39c4a6a80a30a5456e3b6f657d58ca15215a8ea04b77f2d3de3079"
 
 [metadata.files]
 altgraph = [
