@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.8.8](https://github.com/NubeIO/rubix-service/tree/v1.8.8) (2021-09-20)
+- Remove lora go app
+
 ## [v1.8.7](https://github.com/NubeIO/rubix-service/tree/v1.8.7) (2021-08-31)
 - Fix: OSError: [Errno 24] Too many open files
 
