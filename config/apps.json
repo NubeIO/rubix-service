@@ -106,19 +106,6 @@
     },
     {
       "app_type": "GoApp",
-      "service": "LORA_GO",
-      "display_name": "LoRa Go",
-      "repo_name": "nubeio-rubix-app-lora-go",
-      "service_file_name": "nubeio-rubix-app-lora-go.service",
-      "data_dir_name": "lora-go",
-      "port": 1920,
-      "min_support_version": "v0.0.1",
-      "description": "NubeIO Rubix App LoRa Go",
-      "gateway_access": true,
-      "url_prefix": "lg"
-    },
-    {
-      "app_type": "GoApp",
       "service": "FLOW_FRAMEWORK",
       "display_name": "Flow Framework",
       "repo_name": "flow-framework",
