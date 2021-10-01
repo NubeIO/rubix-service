@@ -15,6 +15,14 @@ class GoApp(SystemdApp, ABC):
     def app_type(self):
         return Types.GO_APP.value
 
+    @property
+    def select_in(self) -> bool:
+        return True
+
+    @property
+    def select_in_content(self) -> str:
+        return "flow-framework"
+
     # noinspection DuplicatedCode
     def create_service(self):
         lines = []

@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.8.9](https://github.com/NubeIO/rubix-service/tree/v1.8.9) (2021-10-01)
+- Give the option for selection on multiple artifacts
+
 ## [v1.8.8](https://github.com/NubeIO/rubix-service/tree/v1.8.8) (2021-09-20)
 - Remove lora go app
 

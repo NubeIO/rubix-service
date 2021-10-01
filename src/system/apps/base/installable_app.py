@@ -115,13 +115,23 @@ class InstallableApp(BaseModel, ABC):
         return True
 
     @property
+    def select_in(self) -> bool:
+        return False
+
+    @property
+    def select_in_content(self) -> str:
+        return ""
+
+    @property
     def app_setting(self):
         return self.__app_setting
 
     def select_link(self, row: any, is_browser_downloadable: bool):
         setting = current_app.config[AppSetting.FLASK_KEY]
         for asset in row.get('assets', []):
-            if setting.device_type in asset.get('name'):
+            artifact_name: str = asset.get('name')
+            if setting.device_type in artifact_name and (
+                    (self.select_in and self.select_in_content in artifact_name) or not self.select_in):
                 if is_browser_downloadable:
                     return {
                         'name': row.get('name'),
