@@ -52,6 +52,7 @@ class AppSetting:
     default_artifact_dir: str = 'apps'
     default_backup_dir: str = 'backup'
     default_secret_key_file = 'secret_key.txt'
+    default_internal_token_file = 'internal_token.txt'
     default_setting_file: str = 'config.json'
     default_logging_conf: str = 'logging.conf'
     default_app_settings_file: str = 'apps.json'
@@ -82,6 +83,8 @@ class AppSetting:
         self.__device_type = kwargs.get('device_type')
         self.__secret_key = ''
         self.__secret_key_file = os.path.join(self.__config_dir, self.default_secret_key_file)
+        self.__internal_token = ''
+        self.__internal_token_file = os.path.join(self.__data_dir, self.default_internal_token_file)
         self.__users_file = os.path.join(self.__data_dir, self.default_users_file)
         self.__auth = kwargs.get('auth') or False
         self.__mqtt_rest_bridge_setting: MqttRestBridgeSetting = MqttRestBridgeSetting()
@@ -139,6 +142,18 @@ class AppSetting:
     @property
     def secret_key(self) -> str:
         return self.__secret_key
+
+    @property
+    def internal_token_file(self) -> str:
+        return self.__internal_token_file
+
+    @property
+    def internal_token(self) -> str:
+        return self.__internal_token
+
+    @internal_token.setter
+    def internal_token(self, internal_token):
+        self.__internal_token = internal_token
 
     @property
     def auth(self) -> bool:

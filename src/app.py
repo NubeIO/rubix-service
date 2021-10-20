@@ -41,6 +41,7 @@ def create_app(app_setting: AppSetting) -> Flask:
     def register_router(_app: Flask) -> Flask:
         from src.routes import bp_system, bp_networking, bp_service, bp_app, bp_device_info, bp_users, bp_mrb_listener, \
             bp_discover, bp_slaves
+        from src.proxy.master_proxy_routes import bp_master_proxy
         from src.proxy.reverse_proxy_routes import bp_reverse_proxy
 
         _app.register_blueprint(bp_system)
@@ -51,15 +52,14 @@ def create_app(app_setting: AppSetting) -> Flask:
         _app.register_blueprint(bp_reverse_proxy)
         _app.register_blueprint(bp_users)
         _app.register_blueprint(bp_mrb_listener)
+        _app.register_blueprint(bp_master_proxy)
 
         if app_setting.mqtt_rest_bridge_setting.enabled and app_setting.mqtt_rest_bridge_setting.master:
-            from src.proxy.master_proxy_routes import bp_master_proxy
             from src.proxy.slave_proxy_routes import bp_slave_proxy
             from src.proxy.slaves_multicast_proxy_routes import bp_slaves_multicast_proxy
             from src.proxy.slaves_broadcast_proxy_routes import bp_slaves_broadcast_proxy
             _app.register_blueprint(bp_discover)
             _app.register_blueprint(bp_slaves)
-            _app.register_blueprint(bp_master_proxy)
             _app.register_blueprint(bp_slave_proxy)
             _app.register_blueprint(bp_slaves_broadcast_proxy)
             _app.register_blueprint(bp_slaves_multicast_proxy)

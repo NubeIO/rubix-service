@@ -6,6 +6,7 @@ from flask import current_app
 from mrb.brige import MqttRestBridge
 
 from .setting import AppSetting
+from .token import create_internal_token
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,7 @@ class Background:
     @staticmethod
     def run():
         setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
+        create_internal_token(setting)
         if setting.mqtt_rest_bridge_setting.enabled:
             MqttRestBridge(port=setting.port,
                            mqtt_setting=setting.mqtt_rest_bridge_setting,
