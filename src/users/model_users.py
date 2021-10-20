@@ -65,15 +65,20 @@ class UserModel:
 
     @staticmethod
     def authorize():
-        app_setting = current_app.config[AppSetting.FLASK_KEY]
+        app_setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
         if request.endpoint != 'users.login' and app_setting.auth:
             if request.endpoint != 'users.login' and app_setting.auth:
                 if 'Authorization' not in request.headers:
                     abort(401, message='Authorization header is missing')
 
                 data = request.headers['Authorization']
-                access_token = str.replace(str(data), 'Bearer ', '')
-                try:
-                    UserModel.decode_jwt_token(access_token)
-                except Exception as e:
-                    abort(401, message=str(e))
+                if data.find("Internal ") != -1:
+                    access_token = str.replace(str(data), 'Internal ', '')
+                    if app_setting.internal_token != access_token:
+                        abort(401, message="Not a valid access token!")
+                else:
+                    access_token = str.replace(str(data), 'Bearer ', '')
+                    try:
+                        UserModel.decode_jwt_token(access_token)
+                    except Exception as e:
+                        abort(401, message=str(e))
