@@ -10,6 +10,7 @@ from requests.exceptions import ConnectionError
 from src import AppSetting
 from src.inheritors import get_instance
 from src.system.apps.base.installable_app import InstallableApp
+from src.token import get_internal_token
 
 bp_reverse_proxy = Blueprint("reverse_proxy", __name__, url_prefix='/')
 methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE']
@@ -37,8 +38,11 @@ def reverse_proxy_handler(_):
     del url_parts[0]
     path: str = "/".join(url_parts)
     actual_url = f'http://0.0.0.0:{port}/{path}'
+    setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
+    internal_token: str = get_internal_token(setting)
     try:
-        resp = requests.request(request.method, actual_url, json=request.get_json(), headers=request.headers)
+        resp = requests.request(request.method, actual_url, json=request.get_json(),
+                                headers={**request.headers, 'Authorization': f"Internal {internal_token}"})
         response = Response(resp.content, resp.status_code, resp.raw.headers.items())
         return response
     except ConnectionError:
