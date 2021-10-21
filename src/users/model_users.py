@@ -71,13 +71,12 @@ class UserModel:
                 if 'Authorization' not in request.headers:
                     abort(401, message='Authorization header is missing')
 
-                data = request.headers['Authorization']
-                if data.find("Internal ") != -1:
-                    access_token = str.replace(str(data), 'Internal ', '')
-                    if app_setting.internal_token != access_token:
-                        abort(401, message="Not a valid access token!")
+                authorization = request.headers['Authorization']
+                if authorization.find('Internal ') != -1:
+                    if app_setting.internal_token != authorization:
+                        abort(401, message="Internal token mismatch!")
                 else:
-                    access_token = str.replace(str(data), 'Bearer ', '')
+                    access_token = str.replace(str(authorization), 'Bearer ', '')
                     try:
                         UserModel.decode_jwt_token(access_token)
                     except Exception as e:

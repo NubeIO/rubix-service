@@ -1,4 +1,13 @@
 # CHANGELOG
+## [v1.9.1](https://github.com/NubeIO/rubix-service/tree/v1.9.1) (2021-10-21)
+- Improvement: internal token
+    - RubixService > FlowFramework access locally
+
+## [v1.9.0](https://github.com/NubeIO/rubix-service/tree/v1.9.0) (2021-10-20)
+- Make master API available on slave device
+- Create internal token for local app access
+    - FlowFramework > RubixService access for master/slave
+
 ## [v1.8.9](https://github.com/NubeIO/rubix-service/tree/v1.8.9) (2021-10-01)
 - Give the option for selection on multiple artifacts
 
