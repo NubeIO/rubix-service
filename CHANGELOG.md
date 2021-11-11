@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.9.2](https://github.com/NubeIO/rubix-service/tree/v1.9.2) (2021-11-11)
+- CORS issue fix
+
 ## [v1.9.1](https://github.com/NubeIO/rubix-service/tree/v1.9.1) (2021-10-21)
 - Improvement: internal token
     - RubixService > FlowFramework access locally
