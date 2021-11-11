@@ -30,7 +30,8 @@ def create_app(app_setting: AppSetting) -> Flask:
     @app.before_request
     def before_request_fn():
         env: dict = request.environ
-        if not (env.get('REMOTE_ADDR', '') == "127.0.0.1" and "python-requests" in env.get('HTTP_USER_AGENT', '')):
+        if request.method != 'OPTIONS' and not (
+                env.get('REMOTE_ADDR', '') == "127.0.0.1" and "python-requests" in env.get('HTTP_USER_AGENT', '')):
             if env.get('REMOTE_ADDR', ''):
                 env['REMOTE_ADDR'] = "127.0.0.1"
             if env.get('HTTP_USER_AGENT', ''):
