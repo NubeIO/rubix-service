@@ -129,6 +129,20 @@
       "description": "Flow Framework",
       "gateway_access": true,
       "url_prefix": "ff"
+    },
+    {
+      "app_type": "AptApp",
+      "service": "OPEN_VPN_CLIENT",
+      "display_name": "Open VPN Client",
+      "repo_name": "openvpn",
+      "service_file_name": "openvpn@client",
+      "data_dir_name": "openvpn-client",
+      "port": 0,
+      "min_support_version": "v0.0.0",
+      "description": "Open VPN Client service",
+      "gateway_access": false,
+      "url_prefix": "",
+      "config_file": "/etc/openvpn/client.conf"
     }
   ]
 }

@@ -32,6 +32,7 @@ class InstallableAppSetting(BaseSetting):
         self.name_contains = ''
         self.systemd_static_wd_value = ''
         self.systemd_file_dir = ''
+        self.config_file = ''
 
 
 class AppSetting:

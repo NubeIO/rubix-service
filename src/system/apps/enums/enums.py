@@ -7,6 +7,7 @@ class Types(enum.Enum):
     PYTHON_APP = 'PythonApp'
     GO_APP = 'GoApp'
     JAVA_APP = 'JavaApp'
+    APT_APP = 'AptApp'
 
 
 class DownloadState(enum.Enum):
