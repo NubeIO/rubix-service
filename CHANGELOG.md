@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.9.3](https://github.com/NubeIO/rubix-service/tree/v1.9.3) (2021-11-16)
+- Remove sudo (run from where you have sudo access)
+
 ## [v1.9.2](https://github.com/NubeIO/rubix-service/tree/v1.9.2) (2021-11-11)
 - CORS issue fix
 
