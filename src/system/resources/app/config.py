@@ -7,6 +7,7 @@ from rubix_http.exceptions.exception import NotFoundException, BadDataException
 from rubix_http.resource import RubixResource
 
 from src.system.apps.base.installable_app import InstallableApp
+from src.system.apps.enums.enums import Types
 from src.system.resources.app.utils import get_app_from_service, get_installed_app_details
 from src.system.resources.fields import config_fields, config_delete_fields
 from src.system.resources.rest_schema.schema_config import config_attributes
@@ -21,25 +22,26 @@ class ConfigResource(RubixResource):
         if not service:
             raise BadDataException("Include ?service as an argument")
         app: InstallableApp = get_app_from_service(service)
-        filename = 'config.json'
-        directory = os.path.join(app.get_global_dir(), 'config')
-        file = os.path.join(directory, filename)
-        if not os.path.exists(file):
-            raise NotFoundException(f'Service {service} does not have {filename}')
-        return {"data": json.loads(read_file(file))}
+        if app.app_type == Types.APT_APP.value:
+            return {"data": read_file(app.app_setting.config_file)}
+        else:
+            filename = 'config.json'
+            directory = os.path.join(app.get_global_dir(), 'config')
+            file = os.path.join(directory, filename)
+            if not os.path.exists(file):
+                raise NotFoundException(f'Service {service} does not have {filename}')
+            return {"data": json.loads(read_file(file))}
 
     @classmethod
     @marshal_with(config_fields)
     def put(cls):
-        parser = reqparse.RequestParser()
-        parser.add_argument('service', type=str, required=True)
-        parser.add_argument('data', type=dict, required=True)
-        args = parser.parse_args()
-        service = args['service'].upper()
-        data: dict = args['data']
+        args = request.get_json()
+        if args is None:
+            raise BadDataException("Invalid request")
+        service = args.get('service', '').upper()
+        data = args.get('data', None)
         app: InstallableApp = get_app_from_service(service)
-        json_data = json.dumps(data, indent=2)
-        update = app.update_config_file(json_data)
+        update = app.update_config_file(data)
         app_details = get_installed_app_details(app) or {}
         return {'service': service, 'update': update, **app_details}
 

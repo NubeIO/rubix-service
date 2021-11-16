@@ -141,6 +141,8 @@ class InstallableApp(BaseModel, ABC):
                 return asset.get('url')
 
     def download(self) -> dict:
+        if self.app_type == Types.APT_APP.value:
+            return {'service': self.service, 'version': self.version, 'existing_app_deletion': False}
         from src.system.resources.app.utils import get_github_token
         token: str = get_github_token()
         download_name = download_unzip_service(self.get_download_link(token), self.get_download_dir(), token,
@@ -150,14 +152,21 @@ class InstallableApp(BaseModel, ABC):
         return {'service': self.service, 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
     def upload(self, file: FileStorage) -> dict:
+        if self.app_type == Types.APT_APP.value:
+            return {'service': self.service, 'version': self.version, 'existing_app_deletion': False}
         upload_name = upload_unzip_service(file, self.get_download_dir())
         existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
         self.after_download_upload(upload_name)
         return {'service': self.service, 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
-    def update_config_file(self, data: str) -> bool:
+    def update_config_file(self, data) -> bool:
         if self.app_type == Types.PYTHON_APP.value:
-            write_file(os.path.join(self.get_global_dir(), 'config/config.json'), data)
+            file = self.app_setting.config_file if self.app_setting.config_file else os.path.join(self.get_global_dir(),
+                                                                                                  'config/config.json')
+            write_file(file, json.dumps(data, indent=2))
+            return True
+        if self.app_type == Types.APT_APP.value:
+            write_file(self.app_setting.config_file, str(data))
             return True
         return False
 
@@ -174,8 +183,10 @@ class InstallableApp(BaseModel, ABC):
         return False
 
     def delete_config_file(self) -> bool:
-        if self.app_type == Types.PYTHON_APP.value:
-            delete_file(os.path.join(self.get_global_dir(), 'config/config.json'))
+        if self.app_type in (Types.PYTHON_APP.value, Types.APT_APP.value):
+            file = self.app_setting.config_file if self.app_setting.config_file else os.path.join(self.get_global_dir(),
+                                                                                                  'config/config.json')
+            delete_file(file)
             return True
         return False
 
@@ -244,6 +255,8 @@ class InstallableApp(BaseModel, ABC):
         return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.repo_name)
 
     def get_download_link(self, token: str, is_browser_downloadable: bool = False):
+        if self.app_type == Types.APT_APP.value:
+            return {}
         headers = {}
         if token:
             headers['Authorization'] = f'Bearer {token}'
@@ -259,6 +272,8 @@ class InstallableApp(BaseModel, ABC):
         return download_link
 
     def get_latest_release(self, token: str):
+        if self.app_type == Types.APT_APP.value:
+            return self.app_setting.min_support_version
         headers = {}
         if token:
             headers['Authorization'] = f'Bearer {token}'
@@ -305,10 +320,12 @@ class InstallableApp(BaseModel, ABC):
                             f'{datetime.now().strftime("%Y%m%d%H%M%S")}_{installed_version}')
 
     def get_installed_version(self):
+        if self.app_type == Types.APT_APP.value:
+            return self.app_setting.min_support_version
         return get_extracted_dir(self.get_installation_dir()).split("/")[-1]
 
     def set_version(self, _version):
         self.__version = _version
 
-    def set_app_settings(self, _app_Settings):
-        self.__app_setting = _app_Settings
+    def set_app_settings(self, _app_settings):
+        self.__app_setting = _app_settings

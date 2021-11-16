@@ -10,7 +10,7 @@ from rubix_http.exceptions.exception import NotFoundException
 
 from src import AppSetting
 from src.system.apps.base.installable_app import InstallableApp
-from src.system.apps.enums.enums import DownloadState
+from src.system.apps.enums.enums import DownloadState, Types
 from src.system.utils.file import write_file, read_file, is_dir_exist, delete_existing_folder
 from src.system.utils.shell import systemctl_status
 
@@ -72,18 +72,22 @@ def install_app(arg):
     res = {'service': _service, 'version': _version, 'installation': False, 'backup_data': False, 'error': ''}
     try:
         app: InstallableApp = get_app_from_service(_service, _version)
-        if not is_dir_exist(app.get_downloaded_dir()):
-            res = {
-                **res, 'version': app.version,
-                'error': f'Please download service {app.service} with version {app.version} at first'
-            }
-        if not res.get('error'):
-            backup_data: bool = app.backup_data()
-            delete_existing_folder(app.get_installation_dir())
-            shutil.copytree(app.get_downloaded_dir(), app.get_installed_dir())
+        if app.app_type == Types.APT_APP.value:
             installation: bool = app.install()
-            delete_existing_folder(app.get_download_dir())
-            res = {**res, 'version': app.version, 'installation': installation, 'backup_data': backup_data}
+            res = {**res, 'version': app.version, 'installation': installation}
+        else:
+            if not is_dir_exist(app.get_downloaded_dir()):
+                res = {
+                    **res, 'version': app.version,
+                    'error': f'Please download service {app.service} with version {app.version} at first'
+                }
+            if not res.get('error'):
+                backup_data: bool = app.backup_data()
+                delete_existing_folder(app.get_installation_dir())
+                shutil.copytree(app.get_downloaded_dir(), app.get_installed_dir())
+                installation: bool = app.install()
+                delete_existing_folder(app.get_download_dir())
+                res = {**res, 'version': app.version, 'installation': installation, 'backup_data': backup_data}
     except (Exception, NotFoundException) as e:
         res = {**res, 'error': str(e)}
     return res
