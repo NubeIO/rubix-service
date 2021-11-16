@@ -41,10 +41,10 @@ class FrontendApp(InstallableApp, ABC):
         os.rename(extracted_dir, self.get_downloaded_dir())
 
     def install(self) -> bool:
-        install_cmd: str = f"sudo bash script.bash install -s={self.service_file_name} -u=root " \
+        install_cmd: str = f"bash script.bash install -s={self.service_file_name} -u=root " \
                            f"--working-dir={self.get_wd()} -g={self.get_global_dir()} -d=data -c=config -p {self.port}"
         return execute_command(install_cmd, self.get_cwd())
 
     def uninstall(self) -> bool:
-        uninstall_cmd: str = "sudo bash script.bash delete"
+        uninstall_cmd: str = "bash script.bash delete"
         return execute_command(uninstall_cmd, self.get_cwd())
