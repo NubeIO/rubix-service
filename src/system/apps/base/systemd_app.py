@@ -43,11 +43,11 @@ class SystemdApp(InstallableApp, ABC):
         os.symlink(self.service_file, self.symlink_service_file)
 
         logger.info('Hitting daemon-reload...')
-        if not execute_command('sudo systemctl daemon-reload'):
+        if not execute_command('systemctl daemon-reload'):
             return False
 
         logger.info('Enabling Linux Service...')
-        if not execute_command('sudo systemctl enable {}'.format(self.service_file_name)):
+        if not execute_command('systemctl enable {}'.format(self.service_file_name)):
             return False
 
         """
@@ -55,7 +55,7 @@ class SystemdApp(InstallableApp, ABC):
         So leave it on background
         """
         logger.info('Starting Linux Service...')
-        gevent.spawn(execute_command, 'sudo systemctl restart {}'.format(self.service_file_name))
+        gevent.spawn(execute_command, 'systemctl restart {}'.format(self.service_file_name))
 
         logger.info('Successfully started service')
         return True
@@ -75,7 +75,7 @@ class SystemdApp(InstallableApp, ABC):
         delete_file(self.service_file)
 
         logger.info('Hitting daemon-reload...')
-        if not execute_command('sudo systemctl daemon-reload'):
+        if not execute_command('systemctl daemon-reload'):
             return False
         logger.info('Service is deleted.')
         return True

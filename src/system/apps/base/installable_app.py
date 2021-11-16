@@ -212,14 +212,14 @@ class InstallableApp(BaseModel, ABC):
 
     def stop(self) -> bool:
         logger.info('Stopping Linux Service...')
-        if not execute_command('sudo systemctl stop {}'.format(self.service_file_name)):
+        if not execute_command('systemctl stop {}'.format(self.service_file_name)):
             return False
         logger.info('Successfully stopped service.')
         return True
 
     def restart(self) -> bool:
         logger.info('Restarting Linux Service...')
-        if not execute_command(f'sudo systemctl restart {self.service_file_name}'):
+        if not execute_command(f'systemctl restart {self.service_file_name}'):
             return False
         logger.info('Successfully restarted service.')
         return True

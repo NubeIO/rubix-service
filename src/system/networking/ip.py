@@ -92,6 +92,6 @@ class dhcpcdManager:
             return e
 
     def restart_interface(self,  interface: str):
-        subprocess.call(["sudo", "ifconfig", interface, "down"])
+        subprocess.call(["ifconfig", interface, "down"])
         time.sleep(1)
-        subprocess.call(["sudo", "ifconfig", interface, "up"])
+        subprocess.call(["ifconfig", interface, "up"])

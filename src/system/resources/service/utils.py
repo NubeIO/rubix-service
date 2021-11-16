@@ -37,17 +37,14 @@ def validate_and_create_action(action) -> str:
 
 def validate_host_restart(action) -> str:
     if action == 'restart':
-        return "sudo reboot"
+        return "reboot"
     raise NotFoundException(f'incorrect command to restart host try: `restart` not:`{action}`')
 
 
 def create_service_cmd(action, service_file_name) -> str:
     cmd: str = ""
     if action == "start":
-        cmd = f"sudo systemctl enable {service_file_name} &&"
+        cmd = f"systemctl enable {service_file_name} &&"
     elif action == "stop":
-        cmd = f"sudo systemctl disable {service_file_name} &&"
-    return f"{cmd} sudo systemctl {action} {service_file_name}".strip()
-
-
-
+        cmd = f"systemctl disable {service_file_name} &&"
+    return f"{cmd} systemctl {action} {service_file_name}".strip()

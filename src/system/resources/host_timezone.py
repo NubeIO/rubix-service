@@ -92,7 +92,7 @@ _tz_list = ["Africa/Abidjan", "Africa/Accra", "Africa/Addis_Ababa", "Africa/Algi
 
 def validate_host_set_timezone(timezone) -> str:
     if timezone in _tz_list:
-        return "sudo timedatectl set-timezone {}".format(timezone)
+        return "timedatectl set-timezone {}".format(timezone)
     raise NotFoundException(f"incorrect timezone sent try:`{timezone}`")
 
 
