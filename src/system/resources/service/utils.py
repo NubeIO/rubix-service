@@ -1,6 +1,12 @@
 import enum
+import json
+from datetime import datetime, timedelta
 
+from flask import current_app
 from rubix_http.exceptions.exception import NotFoundException
+
+from src import AppSetting
+from src.system.utils.file import write_file, read_file
 
 
 class Services(enum.Enum):
@@ -48,3 +54,27 @@ def create_service_cmd(action, service_file_name) -> str:
     elif action == "stop":
         cmd = f"systemctl disable {service_file_name} &&"
     return f"{cmd} systemctl {action} {service_file_name}".strip()
+
+
+def get_service_restart_job(service) -> dict:
+    service_schedule_restarts: dict = get_service_restart_jobs()
+    return service_schedule_restarts.get(service, {})
+
+
+def get_service_restart_jobs() -> dict:
+    app_setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
+    return json.loads(read_file(app_setting.service_restart_job_file) or "{}")
+
+
+def create_service_restart_job(data: dict):
+    app_setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
+    service_schedule_restarts: dict = get_service_restart_jobs()
+    service_schedule_restarts.update(data)
+    write_file(app_setting.service_restart_job_file, json.dumps(service_schedule_restarts, indent=2))
+
+
+def delete_service_restart_job(service: str):
+    app_setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
+    service_schedule_restarts: dict = get_service_restart_jobs()
+    service_schedule_restarts.pop(service)
+    write_file(app_setting.service_restart_job_file, json.dumps(service_schedule_restarts, indent=2))

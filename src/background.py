@@ -39,6 +39,9 @@ class Background:
                 from src.discover.remote_device_registry import RemoteDeviceRegistry
                 gevent.spawn(RemoteDeviceRegistry().register, setting)
 
+        from src.system.services.restart_job import RestartJob
+        FlaskThread(target=RestartJob().setup, daemon=True).start()
+
     @staticmethod
     def sync_on_start():
         pass
