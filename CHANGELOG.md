@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.10.0](https://github.com/NubeIO/rubix-service/tree/v1.10.0) (2021-11-21)
+- Add restart job for apps & services
+
 ## [v1.9.3](https://github.com/NubeIO/rubix-service/tree/v1.9.3) (2021-11-16)
 - Remove sudo (run from where you have sudo access)
 
