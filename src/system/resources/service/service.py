@@ -2,7 +2,7 @@ from flask_restful import marshal_with
 from rubix_http.resource import RubixResource
 
 from src.system.resources.fields import service_fields
-from src.system.resources.service.utils import Services
+from src.system.resources.service.utils import Services, get_service_restart_job
 from src.system.utils.shell import systemctl_status, systemctl_installed
 
 
@@ -31,4 +31,5 @@ class ServiceResource(RubixResource):
             'display_name': Services[service].value.get('display_name'),
             'service': service,
             'is_installed': is_installed,
+            'restart_job': get_service_restart_job(service)
         }

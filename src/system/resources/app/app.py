@@ -12,6 +12,7 @@ from src.inheritors import get_instance
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.resources.app.utils import get_installed_app_details, get_app_from_service, get_github_token
 from src.system.resources.fields import service_fields
+from src.system.resources.service.utils import get_service_restart_job
 from src.system.utils.shell import systemctl_installed
 
 logger = LocalProxy(lambda: current_app.logger)
@@ -31,7 +32,7 @@ class AppResource(RubixResource):
         'port': fields.Integer,
         **service_fields,
         'browser_download_url': fields.String,
-        'latest_version': fields.String
+        'latest_version': fields.String,
     }
 
     @classmethod
@@ -70,6 +71,7 @@ class AppResource(RubixResource):
                 latest_versions[output.get('service')] = output.get('latest_version')
         for installed_app in installed_apps:
             installed_app['latest_version'] = latest_versions.get(installed_app.get('service'))
+            installed_app['restart_job'] = get_service_restart_job(installed_app.get('service'))
         return installed_apps
 
     @classmethod

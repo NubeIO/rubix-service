@@ -17,6 +17,7 @@ from src.system.resources.app.download import DownloadResource, DownloadStateRes
 from src.system.resources.app.download_data import DownloadDataResource
 from src.system.resources.app.install import InstallResource
 from src.system.resources.app.release import ReleaseResource
+from src.system.resources.app.restart_job import RestartJobResource
 from src.system.resources.app.stats import AppStatsResource
 from src.system.resources.app.token import TokenResource
 from src.system.resources.app.uninstall import UnInstallResource
@@ -26,6 +27,7 @@ from src.system.resources.host_reboot import HostReboot
 from src.system.resources.host_timezone import SetSystemTimeZone
 from src.system.resources.ping import Ping
 from src.system.resources.service.control import ServiceControl
+from src.system.resources.service.restart_job import ServiceRestartJob
 from src.system.resources.service.service import ServiceResource
 from src.system.resources.service.stats import ServiceStats
 from src.users.resource_login_users import UsersLoginResource
@@ -64,6 +66,7 @@ api_service = Api(bp_service)
 api_service.add_resource(ServiceResource, '')
 api_service.add_resource(ServiceStats, '/stats/<string:service>')
 api_service.add_resource(ServiceControl, "/control")
+api_service.add_resource(ServiceRestartJob, "/restart_job")
 
 # 4
 api_app = Api(bp_app)
@@ -83,7 +86,7 @@ api_app.add_resource(DownloadDataResource, '/download_data')
 api_app.add_resource(ConfigResource, '/config/config')
 api_app.add_resource(LoggingResource, '/config/logging')
 api_app.add_resource(EnvResource, '/config/env')
-
+api_app.add_resource(RestartJobResource, "/restart_job")
 # 5
 api_device_info = Api(bp_device_info)
 api_device_info.add_resource(DeviceInfoResource, '/plat')
