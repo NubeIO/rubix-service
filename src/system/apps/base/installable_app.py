@@ -149,7 +149,23 @@ class InstallableApp(BaseModel, ABC):
                                                self.is_asset)
         existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
         self.after_download_upload(download_name)
+        self.download_installed_plugin()
         return {'service': self.service, 'version': self.version, 'existing_app_deletion': existing_app_deletion}
+
+    def download_plugins(self, plugins: list) -> list:
+        return []
+
+    def download_installed_plugin(self):
+        pass
+
+    def install_plugin(self, plugin) -> bool:
+        return False
+
+    def install_plugins(self) -> bool:
+        return False
+
+    def uninstall_plugin(self, plugin) -> bool:
+        return False
 
     def upload(self, file: FileStorage) -> dict:
         if self.app_type == Types.APT_APP.value:
@@ -157,6 +173,7 @@ class InstallableApp(BaseModel, ABC):
         upload_name = upload_unzip_service(file, self.get_download_dir())
         existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
         self.after_download_upload(upload_name)
+        self.download_installed_plugin()
         return {'service': self.service, 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
     def update_config_file(self, data) -> bool:
@@ -291,6 +308,9 @@ class InstallableApp(BaseModel, ABC):
             raise NotFoundException('Latest release not found!')
         return latest_release
 
+    def get_plugin_list(self, token: str):
+        return []
+
     def get_cwd(self) -> str:
         """current working dir for script.bash execution"""
         return self.get_installed_dir()
@@ -323,6 +343,14 @@ class InstallableApp(BaseModel, ABC):
         if self.app_type == Types.APT_APP.value:
             return self.app_setting.min_support_version
         return get_extracted_dir(self.get_installation_dir()).split("/")[-1]
+
+    def get_plugin_download_dir(self) -> str:
+        setting = current_app.config[AppSetting.FLASK_KEY]
+        return os.path.join(setting.download_dir, self.repo_name, 'plugins')
+
+    def get_plugin_installation_dir(self) -> str:
+        setting = current_app.config[AppSetting.FLASK_KEY]
+        return os.path.join(setting.install_dir, self.repo_name, 'plugins')
 
     def set_version(self, _version):
         self.__version = _version

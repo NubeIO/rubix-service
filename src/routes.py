@@ -16,6 +16,8 @@ from src.system.resources.app.delete_data import DeleteDataResource
 from src.system.resources.app.download import DownloadResource, DownloadStateResource
 from src.system.resources.app.download_data import DownloadDataResource
 from src.system.resources.app.install import InstallResource
+from src.system.resources.app.plugin import DownloadPluginResource, \
+    InstallPluginResource, UnInstallPluginResource, PluginDownloadStateResource, PluginResource
 from src.system.resources.app.release import ReleaseResource
 from src.system.resources.app.restart_job import RestartJobResource
 from src.system.resources.app.stats import AppStatsResource
@@ -87,6 +89,11 @@ api_app.add_resource(ConfigResource, '/config/config')
 api_app.add_resource(LoggingResource, '/config/logging')
 api_app.add_resource(EnvResource, '/config/env')
 api_app.add_resource(RestartJobResource, "/restart_job")
+api_app.add_resource(PluginResource, '/plugins/<string:service>')
+api_app.add_resource(DownloadPluginResource, '/plugins/<string:service>/download')
+api_app.add_resource(PluginDownloadStateResource, '/plugins/download_state')
+api_app.add_resource(InstallPluginResource, '/plugins/<string:service>/install')
+api_app.add_resource(UnInstallPluginResource, '/plugins/<string:service>/uninstall')
 # 5
 api_device_info = Api(bp_device_info)
 api_device_info.add_resource(DeviceInfoResource, '/plat')

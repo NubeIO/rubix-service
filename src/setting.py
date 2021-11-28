@@ -65,6 +65,7 @@ class AppSetting:
     default_slaves_file = 'slaves.json'
     default_download_state_file = 'download_stat.json'
     default_service_restart_job_file = 'service_restart_job.json'
+    default_plugin_download_state_file = 'plugin_download_stat.json'
 
     def __init__(self, **kwargs):
         self.__port = kwargs.get('port') or AppSetting.PORT
@@ -92,6 +93,7 @@ class AppSetting:
         self.__mqtt_rest_bridge_setting: MqttRestBridgeSetting = MqttRestBridgeSetting()
         self.__installable_app_settings: List[InstallableAppSetting] = [InstallableAppSetting()]
         self.__download_state_file = os.path.join(self.__data_dir, self.default_download_state_file)
+        self.__plugin_download_state_file = os.path.join(self.__data_dir, self.default_plugin_download_state_file)
         self.__service_restart_job_file = os.path.join(self.__data_dir, self.default_service_restart_job_file)
 
     @property
@@ -177,6 +179,10 @@ class AppSetting:
     @property
     def download_status_file(self) -> str:
         return self.__download_state_file
+
+    @property
+    def plugin_download_status_file(self) -> str:
+        return self.__plugin_download_state_file
 
     @property
     def service_restart_job_file(self) -> str:

@@ -8,3 +8,10 @@ download_attributes = {
         'required': True
     }
 }
+
+download_plugin_attributes = {
+    'plugin': {
+        'type': str,
+        'required': True
+    },
+}
