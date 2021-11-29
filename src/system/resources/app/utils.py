@@ -60,6 +60,16 @@ def download_async(app_context, args):
             update_download_state(DownloadState.DOWNLOADED, services)
 
 
+def download_plugins_async(app_context, app: InstallableApp, args):
+    if app_context:
+        with app_context():
+            plugins = []
+            for arg in args:
+                plugins.append(arg["plugin"].lower())
+            download_res = app.download_plugins(plugins)
+            update_plugin_download_state(DownloadState.DOWNLOADED, app.service, app.version, download_res)
+
+
 def install_app_async(app_context, arg):
     if app_context:
         with app_context():
@@ -86,6 +96,7 @@ def install_app(arg):
                 delete_existing_folder(app.get_installation_dir())
                 shutil.copytree(app.get_downloaded_dir(), app.get_installed_dir())
                 installation: bool = app.install()
+                app.install_plugins()
                 delete_existing_folder(app.get_download_dir())
                 res = {**res, 'version': app.version, 'installation': installation, 'backup_data': backup_data}
     except (Exception, NotFoundException) as e:
@@ -99,10 +110,24 @@ def update_download_state(state: DownloadState, services: List[Dict] = None):
                json.dumps({"state": state.name, "services": services if services else []}))
 
 
+def update_plugin_download_state(state: DownloadState, service: str = "", _version: str = "",
+                                 plugins: List[Dict] = None):
+    app_setting = current_app.config[AppSetting.FLASK_KEY]
+    write_file(app_setting.plugin_download_status_file,
+               json.dumps({"state": state.name, "service": service, "version": _version,
+                           "plugins": plugins if plugins else []}))
+
+
 def get_download_state():
     app_setting = current_app.config[AppSetting.FLASK_KEY]
     return json.loads(read_file(app_setting.download_status_file) or "{}") or {
         "state": DownloadState.CLEARED.name, "services": []}
+
+
+def get_plugin_download_state():
+    app_setting = current_app.config[AppSetting.FLASK_KEY]
+    return json.loads(read_file(app_setting.plugin_download_status_file) or "{}") or {
+        "state": DownloadState.CLEARED.name, "service": "", "version": "", "plugins": []}
 
 
 def get_github_token() -> str:

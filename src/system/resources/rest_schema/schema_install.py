@@ -8,3 +8,10 @@ install_attributes = {
         'required': True
     }
 }
+
+install_plugin_attributes = {
+    'plugin': {
+        'type': str,
+        'required': True
+    }
+}

@@ -1,5 +1,3 @@
-import os
-
 from flask import request
 from rubix_http.exceptions.exception import BadDataException
 from rubix_http.resource import RubixResource
@@ -25,7 +23,7 @@ class DeleteDataResource(RubixResource):
                 res = {'service': service, 'deletion': False, 'backup_data': False, 'stop': False, 'error': ''}
                 stop: bool = app.stop()
                 backup_data: bool = app.backup_data()
-                deletion: bool = delete_existing_folder(os.path.join(app.get_global_dir(), 'data'))
+                deletion: bool = delete_existing_folder(app.get_data_dir())
                 res = {**res, 'deletion': deletion, 'backup_data': backup_data, 'stop': stop}
             except Exception as e:
                 res = {'error': str(e)}

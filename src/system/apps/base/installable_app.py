@@ -22,6 +22,8 @@ from src.system.utils.shell import execute_command
 
 logger = LocalProxy(lambda: current_app.logger)
 
+PLUGIN_DIR: str = 'plugins'
+
 
 class InstallableApp(BaseModel, ABC):
 
@@ -149,7 +151,23 @@ class InstallableApp(BaseModel, ABC):
                                                self.is_asset)
         existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
         self.after_download_upload(download_name)
+        self.download_installed_plugin()
         return {'service': self.service, 'version': self.version, 'existing_app_deletion': existing_app_deletion}
+
+    def download_plugins(self, plugins: list) -> list:
+        return []
+
+    def download_installed_plugin(self):
+        pass
+
+    def install_plugin(self, plugin) -> bool:
+        return False
+
+    def install_plugins(self) -> bool:
+        return False
+
+    def uninstall_plugin(self, plugin) -> bool:
+        return False
 
     def upload(self, file: FileStorage) -> dict:
         if self.app_type == Types.APT_APP.value:
@@ -157,6 +175,7 @@ class InstallableApp(BaseModel, ABC):
         upload_name = upload_unzip_service(file, self.get_download_dir())
         existing_app_deletion: bool = delete_existing_folder(self.get_downloaded_dir())
         self.after_download_upload(upload_name)
+        self.download_installed_plugin()
         return {'service': self.service, 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
     def update_config_file(self, data) -> bool:
@@ -245,11 +264,15 @@ class InstallableApp(BaseModel, ABC):
         return False
 
     def download_data(self):
-        return directory_zip_service(os.path.join(self.get_global_dir(), 'data'))
+        return directory_zip_service(self.get_data_dir())
 
     def get_global_dir(self) -> str:
         setting = current_app.config[AppSetting.FLASK_KEY]
         return os.path.join(setting.root_dir, self.data_dir_name)
+
+    def get_data_dir(self) -> str:
+        setting = current_app.config[AppSetting.FLASK_KEY]
+        return os.path.join(self.get_global_dir(), setting.default_data_dir)
 
     def get_releases_link(self) -> str:
         return 'https://api.github.com/repos/NubeIO/{}/releases'.format(self.repo_name)
@@ -291,6 +314,9 @@ class InstallableApp(BaseModel, ABC):
             raise NotFoundException('Latest release not found!')
         return latest_release
 
+    def get_plugin_list(self, token: str):
+        return []
+
     def get_cwd(self) -> str:
         """current working dir for script.bash execution"""
         return self.get_installed_dir()
@@ -323,6 +349,12 @@ class InstallableApp(BaseModel, ABC):
         if self.app_type == Types.APT_APP.value:
             return self.app_setting.min_support_version
         return get_extracted_dir(self.get_installation_dir()).split("/")[-1]
+
+    def get_plugin_download_dir(self) -> str:
+        return os.path.join(self.get_download_dir(), PLUGIN_DIR)
+
+    def get_plugin_installation_dir(self) -> str:
+        return os.path.join(self.get_data_dir(), PLUGIN_DIR)
 
     def set_version(self, _version):
         self.__version = _version
