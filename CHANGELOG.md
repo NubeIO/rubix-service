@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.10.1](https://github.com/NubeIO/rubix-service/tree/v1.10.1) (2021-11-30)
+- Add plugin installer for FF
+
 ## [v1.10.0](https://github.com/NubeIO/rubix-service/tree/v1.10.0) (2021-11-21)
 - Add restart job for apps & services
 
