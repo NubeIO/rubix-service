@@ -99,36 +99,35 @@ class GoApp(SystemdApp, ABC):
 
     def download_installed_plugin(self):
         installed_path: str = self.get_plugin_installation_dir()
-        plugins = [x.split('-')[0] for x in os.listdir(installed_path)]
-        self.download_plugins(plugins)
+        if os.path.exists(installed_path):
+            plugins = [x.split('-')[0] for x in os.listdir(installed_path)]
+            self.download_plugins(plugins)
 
     def install_plugin(self, plugin) -> bool:
         try:
             mode = 0o744
             plugin_file_name = get_plugin_file_name(plugin)
-            source_file = os.path.join(self.get_plugin_download_dir(), plugin_file_name)
-            destination: str = os.path.join(self.get_global_dir(), 'data', 'plugins')
-            destination_file: str = os.path.join(destination, plugin_file_name)
-            os.makedirs(destination, mode, True)
-            shutil.copy(source_file, destination_file)
-
-            destination = self.get_plugin_installation_dir()
-            destination_file = os.path.join(destination, plugin_file_name)
-            os.makedirs(destination, mode, True)
-            shutil.copy(source_file, destination_file)
+            plugin_download_file = os.path.join(self.get_plugin_download_dir(), plugin_file_name)
+            if os.path.exists(plugin_download_file):
+                plugin_installation_dir: str = self.get_plugin_installation_dir()
+                plugin_installation_file: str = os.path.join(plugin_installation_dir, plugin_file_name)
+                os.makedirs(plugin_installation_dir, mode, True)
+                shutil.copy(plugin_download_file, plugin_installation_file)
+                delete_file(plugin_download_file)
+                return True
         except Exception as e:
             logger.info(str(e))
-            return False
-        return True
+        return False
 
     def install_plugins(self) -> bool:
         try:
-            if not os.path.exists(self.get_plugin_download_dir()):
+            plugin_download_dir: str = self.get_plugin_download_dir()
+            if not os.path.exists(plugin_download_dir):
                 return False
-            shutil.copytree(self.get_plugin_download_dir(), self.get_plugin_installation_dir())
-            destination = os.path.join(self.get_global_dir(), 'data', 'plugins')
-            delete_existing_folder(destination)
-            shutil.copytree(self.get_plugin_download_dir(), destination)
+            plugin_installation_dir = self.get_plugin_installation_dir()
+            delete_existing_folder(plugin_installation_dir)
+            shutil.copytree(plugin_download_dir, plugin_installation_dir)
+            delete_existing_folder(plugin_download_dir)
         except Exception as e:
             logger.info(str(e))
             return False
@@ -137,8 +136,6 @@ class GoApp(SystemdApp, ABC):
     def uninstall_plugin(self, plugin) -> bool:
         try:
             plugin_file_name = get_plugin_file_name(plugin)
-            file: str = os.path.join(self.get_global_dir(), 'data', 'plugins', plugin_file_name)
-            delete_file(file)
             file = os.path.join(self.get_plugin_installation_dir(), plugin_file_name)
             delete_file(file)
         except Exception as e:

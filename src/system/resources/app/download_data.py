@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 
 from flask import send_file
@@ -18,7 +17,7 @@ class DownloadDataResource(RubixResource):
         if not service:
             raise BadDataException("Include ?service as an argument")
         app: InstallableApp = get_app_from_service(service)
-        if not is_dir_exist(os.path.join(app.get_global_dir(), 'data')):
+        if not is_dir_exist(app.get_data_dir()):
             raise NotFoundException(f'Service {service} does not have any data to download')
         file = app.download_data()
         if request.args.get('bridge'):
