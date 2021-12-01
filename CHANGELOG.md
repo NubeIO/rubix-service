@@ -1,9 +1,14 @@
 # CHANGELOG
+## [v1.10.2](https://github.com/NubeIO/rubix-service/tree/v1.10.2) (2021-12-01)
+- Fix: Open VPN installation
+- Rename plugins download state API endpoint
+
 ## [v1.10.1](https://github.com/NubeIO/rubix-service/tree/v1.10.1) (2021-11-30)
 - Add plugin installer for FF
 
 ## [v1.10.0](https://github.com/NubeIO/rubix-service/tree/v1.10.0) (2021-11-21)
 - Add restart job for apps & services
+- Add OpenVPN Client app
 
 ## [v1.9.3](https://github.com/NubeIO/rubix-service/tree/v1.9.3) (2021-11-16)
 - Remove sudo (run from where you have sudo access)
