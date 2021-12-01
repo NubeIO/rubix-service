@@ -15,6 +15,7 @@ from src.system.utils.data_validation import validate_args
 class PluginResource(RubixResource):
     @classmethod
     def get(cls, service):
+        service = service.upper()
         token: str = get_github_token()
         app: InstallableApp = get_app_from_service(service)
         _version: str = app.get_installed_version()
@@ -27,20 +28,21 @@ class PluginResource(RubixResource):
 class DownloadPluginResource(RubixResource):
     @classmethod
     def post(cls, service):
+        service = service.upper()
         args = request.get_json()
         if not validate_args(args, download_plugin_attributes):
             raise BadDataException('Invalid request')
-        download_state: str = get_plugin_download_state().get('state')
+        download_state: str = get_plugin_download_state(service).get('state')
         if download_state == DownloadState.DOWNLOADING.name:
             raise PreConditionException('Download is in progress')
         elif download_state == DownloadState.DOWNLOADED.name:
             raise PreConditionException('Download state is not cleared')
-        app: InstallableApp = get_app_from_service(service.upper())
+        app: InstallableApp = get_app_from_service(service)
         _version: str = app.get_installed_version()
         if not _version:
             return {"message": f"Please install service {service} first"}
         app.set_version(_version)
-        update_plugin_download_state(DownloadState.DOWNLOADING)
+        update_plugin_download_state(DownloadState.DOWNLOADING, service, _version)
         gevent.spawn(download_plugins_async, current_app._get_current_object().app_context, app, args)
         return {"message": "Download started"}
 
@@ -48,18 +50,23 @@ class DownloadPluginResource(RubixResource):
 class PluginDownloadStateResource(RubixResource):
 
     @classmethod
-    def get(cls):
-        return get_plugin_download_state()
+    def get(cls, service):
+        service = service.upper()
+        get_app_from_service(service)
+        return get_plugin_download_state(service)
 
     @classmethod
-    def delete(cls):
-        update_plugin_download_state(DownloadState.CLEARED)
+    def delete(cls, service):
+        service = service.upper()
+        get_app_from_service(service)
+        update_plugin_download_state(DownloadState.CLEARED, service)
         return {'message': 'Download state is cleared'}
 
 
 class InstallPluginResource(RubixResource):
     @classmethod
     def post(cls, service):
+        service = service.upper()
         args = request.get_json()
         if not validate_args(args, install_plugin_attributes):
             raise BadDataException('Invalid request')
@@ -81,6 +88,7 @@ class InstallPluginResource(RubixResource):
 class UnInstallPluginResource(RubixResource):
     @classmethod
     def post(cls, service):
+        service = service.upper()
         args = request.get_json()
         if not validate_args(args, install_plugin_attributes):
             raise BadDataException('Invalid request')

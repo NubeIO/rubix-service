@@ -110,12 +110,13 @@ def update_download_state(state: DownloadState, services: List[Dict] = None):
                json.dumps({"state": state.name, "services": services if services else []}))
 
 
-def update_plugin_download_state(state: DownloadState, service: str = "", _version: str = "",
+def update_plugin_download_state(state: DownloadState, service: str, _version: str = "",
                                  plugins: List[Dict] = None):
     app_setting = current_app.config[AppSetting.FLASK_KEY]
+    plugin_download_state = json.loads(read_file(app_setting.plugin_download_status_file) or "{}")
     write_file(app_setting.plugin_download_status_file,
-               json.dumps({"state": state.name, "service": service, "version": _version,
-                           "plugins": plugins if plugins else []}))
+               json.dumps({**plugin_download_state,
+                           service: {"state": state.name, "version": _version, "plugins": plugins if plugins else []}}))
 
 
 def get_download_state():
@@ -124,10 +125,11 @@ def get_download_state():
         "state": DownloadState.CLEARED.name, "services": []}
 
 
-def get_plugin_download_state():
+def get_plugin_download_state(service: str):
     app_setting = current_app.config[AppSetting.FLASK_KEY]
-    return json.loads(read_file(app_setting.plugin_download_status_file) or "{}") or {
-        "state": DownloadState.CLEARED.name, "service": "", "version": "", "plugins": []}
+    plugin_download_state = json.loads(read_file(app_setting.plugin_download_status_file) or "{}")
+    return plugin_download_state.get(service, {}) or {
+        "state": DownloadState.CLEARED.name, "version": "", "plugins": []}
 
 
 def get_github_token() -> str:
