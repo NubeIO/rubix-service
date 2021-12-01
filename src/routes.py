@@ -91,7 +91,7 @@ api_app.add_resource(EnvResource, '/config/env')
 api_app.add_resource(RestartJobResource, "/restart_job")
 api_app.add_resource(PluginResource, '/plugins/<string:service>')
 api_app.add_resource(DownloadPluginResource, '/plugins/<string:service>/download')
-api_app.add_resource(PluginDownloadStateResource, '/plugins/download_state')
+api_app.add_resource(PluginDownloadStateResource, '/plugins/<string:service>/download_state')
 api_app.add_resource(InstallPluginResource, '/plugins/<string:service>/install')
 api_app.add_resource(UnInstallPluginResource, '/plugins/<string:service>/uninstall')
 # 5
