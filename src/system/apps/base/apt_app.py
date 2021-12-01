@@ -33,7 +33,7 @@ class AptApp(InstallableApp, ABC):
         if not execute_command('systemctl disable openvpn@client && systemctl stop openvpn@client'):
             return False
         logger.info('Removing OpenVPN service...')
-        if not execute_command('apt-get remove openvpn'):
+        if not execute_command('apt-get remove openvpn -y'):
             return False
         logger.info('OpenVPN Service is deleted.')
         return True
