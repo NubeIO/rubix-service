@@ -9,10 +9,14 @@ from rubix_http.resource import RubixResource
 
 from src.system.resources.app.utils import get_app_from_service, get_github_token
 
+OPEN_VPN_CLIENT = "OPEN_VPN_CLIENT"
+
 
 class ReleaseResource(RubixResource):
     @classmethod
     def get(cls, service):
+        if service == OPEN_VPN_CLIENT:
+            return ["v0.0.0"]
         token: str = get_github_token()
         headers = {}
         if token:

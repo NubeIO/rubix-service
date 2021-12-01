@@ -21,6 +21,7 @@ service_fields = {
 
 config_fields = {
     'service': fields.String,
+    'delete': fields.Boolean,
     'update': fields.Boolean,
     'state': fields.String(default=States.INACTIVE.value)
 }

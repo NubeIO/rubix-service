@@ -10,8 +10,6 @@ from src.system.apps.base.installable_app import InstallableApp
 from src.system.apps.enums.enums import Types
 from src.system.resources.app.utils import get_app_from_service, get_installed_app_details
 from src.system.resources.fields import config_fields, config_delete_fields
-from src.system.resources.rest_schema.schema_config import config_attributes
-from src.system.utils.data_validation import validate_args
 from src.system.utils.file import read_file
 
 
@@ -48,22 +46,19 @@ class ConfigResource(RubixResource):
     @classmethod
     @marshal_with(config_delete_fields)
     def delete(cls):
-        args = request.get_json()
-        if not validate_args(args, config_attributes):
-            raise BadDataException('Invalid request')
-        config_res = []
-        for arg in args:
-            service = arg['service'].upper()
-            res = {'service': service, 'delete': False, 'update': False, 'state': '', 'error': ''}
-            try:
-                app: InstallableApp = get_app_from_service(service)
-                delete = app.delete_config_file()
-                app_details = get_installed_app_details(app) or {}
-                res = {**res, 'delete': delete, **app_details}
-            except Exception as e:
-                res = {**res, 'error': str(e)}
-            config_res.append(res)
-        return config_res
+        parser = reqparse.RequestParser()
+        parser.add_argument('service', type=str, required=True)
+        args = parser.parse_args()
+        service = args['service'].upper()
+        res = {'service': service, 'delete': False, 'update': False, 'state': '', 'error': ''}
+        try:
+            app: InstallableApp = get_app_from_service(service)
+            delete = app.delete_config_file()
+            app_details = get_installed_app_details(app) or {}
+            res = {**res, 'delete': delete, **app_details}
+        except Exception as e:
+            res = {**res, 'error': str(e)}
+        return res
 
 
 class LoggingResource(RubixResource):
