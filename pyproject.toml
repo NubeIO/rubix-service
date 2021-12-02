@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rubix-service"
-version = "1.10.1"
+version = "1.10.2"
 description = "Install service via systemd"
 authors = ["NubeIO"]
 
