@@ -9,6 +9,7 @@ from gunicorn.workers.ggevent import GeventWorker
 from .app import create_app
 from .pyinstaller import resource_path
 from .setting import AppSetting
+from .system.apps.enums.enums import DownloadState
 
 
 def init_logconfig_option(_app_setting: AppSetting, _options=None):
@@ -60,9 +61,18 @@ class GunicornFlaskApplication(BaseApplication, ABC):
         self.application = create_app(self._app_setting)
         return self.application
 
+    def clear_download_state(self):
+        from .system.resources.app.utils import update_download_state, update_plugin_download_state
+        update_download_state(DownloadState.CLEARED)
+        app_settings = self.application.config[AppSetting.FLASK_KEY].installable_app_settings
+        for app_setting in app_settings:
+            update_plugin_download_state(DownloadState.CLEARED, app_setting.service)
+
     def wsgi(self):
         output = super(GunicornFlaskApplication, self).wsgi()
         with self.application.app_context():
             from src.background import Background
             Background.run()
+            self.clear_download_state()
+
         return output
