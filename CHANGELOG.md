@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.10.3](https://github.com/NubeIO/rubix-service/tree/v1.10.3) (2021-12-21)
+- Clear download state when we start
+
 ## [v1.10.2](https://github.com/NubeIO/rubix-service/tree/v1.10.2) (2021-12-01)
 - Fix: Open VPN installation
 - Rename plugins download state API endpoint
