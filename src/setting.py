@@ -5,7 +5,7 @@ from typing import List
 
 from flask import Flask
 from mrb.setting import MqttSetting as MqttRestBridgeSetting
-from rubix_mqtt.setting import BaseSetting
+from rubix_mqtt.setting import BaseSetting, MqttSettingBase
 
 from src.pyinstaller import resource_path
 from src.system.utils.file import write_file, read_file
@@ -33,6 +33,16 @@ class InstallableAppSetting(BaseSetting):
         self.systemd_static_wd_value = ''
         self.systemd_file_dir = ''
         self.config_file = ''
+
+
+class OpenVPNSetting(MqttSettingBase):
+    KEY = 'openvpn'
+
+    def __init__(self):
+        super().__init__()
+        self.enabled = False
+        self.host = 'localhost'
+        self.port = 1617
 
 
 class AppSetting:
@@ -91,6 +101,7 @@ class AppSetting:
         self.__users_file = os.path.join(self.__data_dir, self.default_users_file)
         self.__auth = kwargs.get('auth') or False
         self.__mqtt_rest_bridge_setting: MqttRestBridgeSetting = MqttRestBridgeSetting()
+        self.__openvpn_setting: OpenVPNSetting = OpenVPNSetting()
         self.__installable_app_settings: List[InstallableAppSetting] = [InstallableAppSetting()]
         self.__download_state_file = os.path.join(self.__data_dir, self.default_download_state_file)
         self.__plugin_download_state_file = os.path.join(self.__data_dir, self.default_plugin_download_state_file)
@@ -173,6 +184,10 @@ class AppSetting:
         return self.__mqtt_rest_bridge_setting
 
     @property
+    def openvpn_setting(self) -> OpenVPNSetting:
+        return self.__openvpn_setting
+
+    @property
     def installable_app_settings(self) -> List[InstallableAppSetting]:
         return self.__installable_app_settings
 
@@ -191,6 +206,16 @@ class AppSetting:
     def reload(self, is_json_str: bool = False):
         data = self.__read_file(self.default_setting_file, self.__config_dir, is_json_str)
         self.__mqtt_rest_bridge_setting = self.__mqtt_rest_bridge_setting.reload(data.get('mqtt_rest_bridge_listener'))
+        self.__openvpn_setting = self.__openvpn_setting.reload(data.get('openvpn'))
+        openvpn_enabled = os.getenv('OPENVPN_ENABLED')
+        openvpn_host = os.getenv('OPENVPN_HOST')
+        openvpn_port = os.getenv('OPENVPN_PORT')
+        if openvpn_enabled:
+            self.__openvpn_setting.enable = openvpn_enabled
+        if openvpn_host:
+            self.__openvpn_setting.host = openvpn_host
+        if openvpn_port:
+            self.__openvpn_setting.port = openvpn_port
         self.__reload_app_settings()
         return self
 
