@@ -94,25 +94,26 @@ api_app.add_resource(DownloadPluginResource, '/plugins/<string:service>/download
 api_app.add_resource(PluginDownloadStateResource, '/plugins/<string:service>/download_state')
 api_app.add_resource(InstallPluginResource, '/plugins/<string:service>/install')
 api_app.add_resource(UnInstallPluginResource, '/plugins/<string:service>/uninstall')
+
 # 5
 api_device_info = Api(bp_device_info)
 api_device_info.add_resource(DeviceInfoResource, '/plat')
 
-# 5
+# 6
 api_users = Api(bp_users)
 api_users.add_resource(UsersResource, '')
 api_users.add_resource(UsersLoginResource, '/login', endpoint="login")
 
-# 6
+# 7
 api_mrb_listener = Api(bp_mrb_listener)
 api_mrb_listener.add_resource(MRBListenerResource, '')
 
-# 7
+# 8
 bp_discover = Blueprint('discover', __name__, url_prefix='/api/discover')
 api_discover = Api(bp_discover)
 api_discover.add_resource(RemoteDevice, '/remote_devices')
 
-# 8
+# 9
 bp_slaves = Blueprint('slaves', __name__, url_prefix='/api/slaves')
 api_slaves = Api(bp_slaves)
 api_slaves.add_resource(SlavesPlural, '')
