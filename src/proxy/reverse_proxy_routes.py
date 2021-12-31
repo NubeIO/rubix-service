@@ -20,7 +20,8 @@ methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE']
 def reverse_proxy_handler(_):
     url_parts = request.full_path.split("/")
     url_prefixes = {}
-    app_settings = current_app.config[AppSetting.FLASK_KEY].installable_app_settings
+    settings = current_app.config[AppSetting.FLASK_KEY]
+    app_settings = settings.installable_app_settings
     for app_setting in app_settings:
         dummy_app = get_instance(InstallableApp, app_setting.app_type)
         if dummy_app is not None:
@@ -29,15 +30,18 @@ def reverse_proxy_handler(_):
                 url_prefixes[dummy_app.url_prefix] = dummy_app
     requested_url_prefix = url_parts[1] if len(url_parts) > 1 else ''
     port: int = get_bios_port()
+    is_openvpn: bool = requested_url_prefix == 'ov' and settings.openvpn_setting.enabled
     if requested_url_prefix in url_prefixes.keys():
         app_to_redirect = url_prefixes[requested_url_prefix]
         port: int = app_to_redirect.port
-    elif not requested_url_prefix == 'bios':
+    elif not (requested_url_prefix == 'bios' or is_openvpn):
         abort(404)
     del url_parts[0]
     del url_parts[0]
     path: str = "/".join(url_parts)
-    actual_url = f'http://0.0.0.0:{port}/{path}'
+    actual_url: str = f'http://0.0.0.0:{port}/{path}'
+    if is_openvpn:
+        actual_url: str = f'http://{settings.openvpn_setting.host}:{settings.openvpn_setting.port}/{path}'
     setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
     internal_token: str = get_internal_token(setting)
     try:
