@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.10.4](https://github.com/NubeIO/rubix-service/tree/v1.10.4) (2021-12-27)
+- Add reverse proxy for openvpn
+
 ## [v1.10.3](https://github.com/NubeIO/rubix-service/tree/v1.10.3) (2021-12-21)
 - Clear download state when we start
 
