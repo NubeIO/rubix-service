@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.10.5](https://github.com/NubeIO/rubix-service/tree/v1.10.5) (2022-01-04)
+- OpenVPN enable itself on installation plus allow-releaseinfo-change
+
 ## [v1.10.4](https://github.com/NubeIO/rubix-service/tree/v1.10.4) (2021-12-27)
 - Add reverse proxy for openvpn
 
