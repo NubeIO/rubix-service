@@ -1,6 +1,8 @@
 import logging
+import threading
 from typing import List, Dict, Union
 
+import gevent
 from mrb.mapper import api_to_slaves_broadcast_topic_mapper
 from registry.models.model_device_info import DeviceInfoModel
 from registry.resources.resource_device_info import get_device_info
@@ -11,7 +13,7 @@ from src.utils.singleton import Singleton
 
 logger = logging.getLogger(__name__)
 
-MIN_LOOP_TO_SHOW_ONLINE: int = 1
+MIN_LOOP_TO_SHOW_ONLINE: int = 5
 
 
 class RemoteDeviceRegistry(metaclass=Singleton):
@@ -22,6 +24,7 @@ class RemoteDeviceRegistry(metaclass=Singleton):
         self.__failure_count: Dict[str, int] = {}
         self.__devices: Dict[str, Dict] = {}
         self.__available_inserted_devices_global_uuids: List[str] = []
+        self.__sem = threading.Semaphore()
 
     @property
     def devices(self) -> Dict[str, Dict]:
@@ -39,18 +42,25 @@ class RemoteDeviceRegistry(metaclass=Singleton):
     def available_inserted_devices_global_uuids(self) -> List[str]:
         return self.__available_inserted_devices_global_uuids
 
+    @property
+    def sem(self):
+        return self.__sem
+
     def register(self, app_setting: AppSetting):
         logger.info(f"Called devices registration")
         self.__app_setting = app_setting
         while True:
             self.poll_devices()
+            gevent.sleep(50)
 
     def poll_devices(self):
         """
         We don't need to sleep the response itself has sleep of bridge timeout seconds
         """
+        RemoteDeviceRegistry().sem.acquire()
         active_slave_devices: Dict[str, Dict] = api_to_slaves_broadcast_topic_mapper('/api/wires/plat',
-                                                                                     timeout=20).content
+                                                                                     timeout=10).content
+        RemoteDeviceRegistry().sem.release()
         for global_uuid in active_slave_devices:
             active_slave_device = active_slave_devices[global_uuid]
             device_info_model: DeviceInfoModel = get_device_info()
@@ -78,7 +88,7 @@ class RemoteDeviceRegistry(metaclass=Singleton):
         devices: Dict[str, Dict] = {}
         for global_uuid in active_slave_devices:
             temp_device: dict = self.__temp_devices[global_uuid]
-            if temp_device.get('count') >= MIN_LOOP_TO_SHOW_ONLINE:
+            if temp_device.get('count') >= MIN_LOOP_TO_SHOW_ONLINE or self.failure_count.get(global_uuid, 0) == 0:
                 devices[global_uuid] = temp_device
                 if global_uuid in slaves:
                     available_inserted_devices_global_uuids.append(global_uuid)

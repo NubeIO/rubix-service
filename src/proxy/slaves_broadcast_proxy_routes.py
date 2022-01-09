@@ -5,6 +5,8 @@ from mrb.brige import MqttRestBridge
 from mrb.mapper import api_to_slaves_broadcast_topic_mapper
 from mrb.message import Response as MessageResponse, HttpMethod
 
+from src.discover.remote_device_registry import RemoteDeviceRegistry
+
 bp_slaves_broadcast_proxy = Blueprint("slaves_broadcast_proxy", __name__, url_prefix='/slaves/broadcast')
 methods = ['GET']
 
@@ -18,12 +20,14 @@ def slaves_proxy_handler(_):
     url = "/".join(url_parts)
     timeout: str = request.args.get('timeout')
     numeric_timeout: int = int(timeout) if timeout and timeout.isnumeric() else MqttRestBridge().mqtt_setting.timeout
+    RemoteDeviceRegistry().sem.acquire()
     response: MessageResponse = api_to_slaves_broadcast_topic_mapper(
         api=url,
         body=request.get_json(),
         http_method=HttpMethod[request.method.upper()],
         timeout=numeric_timeout
     )
+    RemoteDeviceRegistry().sem.release()
     if response.error:
         return Response(json.dumps({'message': response.error_message}), response.status_code, response.headers)
     else:
