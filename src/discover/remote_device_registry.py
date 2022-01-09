@@ -1,6 +1,7 @@
 import logging
 from typing import List, Dict, Union
 
+import gevent
 from mrb.mapper import api_to_slaves_broadcast_topic_mapper
 from registry.models.model_device_info import DeviceInfoModel
 from registry.resources.resource_device_info import get_device_info
@@ -44,13 +45,14 @@ class RemoteDeviceRegistry(metaclass=Singleton):
         self.__app_setting = app_setting
         while True:
             self.poll_devices()
+            gevent.sleep(20)
 
     def poll_devices(self):
         """
         We don't need to sleep the response itself has sleep of bridge timeout seconds
         """
         active_slave_devices: Dict[str, Dict] = api_to_slaves_broadcast_topic_mapper('/api/wires/plat',
-                                                                                     timeout=20).content
+                                                                                     timeout=10).content
         for global_uuid in active_slave_devices:
             active_slave_device = active_slave_devices[global_uuid]
             device_info_model: DeviceInfoModel = get_device_info()
