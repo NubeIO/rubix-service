@@ -11,7 +11,7 @@ from src.utils.singleton import Singleton
 
 logger = logging.getLogger(__name__)
 
-MIN_LOOP_TO_SHOW_ONLINE: int = 1
+MIN_LOOP_TO_SHOW_ONLINE: int = 5
 
 
 class RemoteDeviceRegistry(metaclass=Singleton):
@@ -78,7 +78,7 @@ class RemoteDeviceRegistry(metaclass=Singleton):
         devices: Dict[str, Dict] = {}
         for global_uuid in active_slave_devices:
             temp_device: dict = self.__temp_devices[global_uuid]
-            if temp_device.get('count') >= MIN_LOOP_TO_SHOW_ONLINE:
+            if temp_device.get('count') >= MIN_LOOP_TO_SHOW_ONLINE or self.failure_count.get(global_uuid, 0) == 0:
                 devices[global_uuid] = temp_device
                 if global_uuid in slaves:
                     available_inserted_devices_global_uuids.append(global_uuid)
