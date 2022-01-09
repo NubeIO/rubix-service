@@ -1,4 +1,9 @@
 # CHANGELOG
+## [v1.10.6](https://github.com/NubeIO/rubix-service/tree/v1.10.6) (2022-01-09)
+- Update min_loop_to_show_online to 5
+- Queue multicast request as it's heavy
+- Decrease broadcast time to 10 sec. and add sleep time to 20
+
 ## [v1.10.5](https://github.com/NubeIO/rubix-service/tree/v1.10.5) (2022-01-04)
 - OpenVPN enable itself on installation plus allow-releaseinfo-change
 
