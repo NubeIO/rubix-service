@@ -1,4 +1,5 @@
 import logging
+import threading
 from typing import List, Dict, Union
 
 import gevent
@@ -23,6 +24,7 @@ class RemoteDeviceRegistry(metaclass=Singleton):
         self.__failure_count: Dict[str, int] = {}
         self.__devices: Dict[str, Dict] = {}
         self.__available_inserted_devices_global_uuids: List[str] = []
+        self.__sem = threading.Semaphore()
 
     @property
     def devices(self) -> Dict[str, Dict]:
@@ -40,19 +42,25 @@ class RemoteDeviceRegistry(metaclass=Singleton):
     def available_inserted_devices_global_uuids(self) -> List[str]:
         return self.__available_inserted_devices_global_uuids
 
+    @property
+    def sem(self):
+        return self.__sem
+
     def register(self, app_setting: AppSetting):
         logger.info(f"Called devices registration")
         self.__app_setting = app_setting
         while True:
             self.poll_devices()
-            gevent.sleep(20)
+            gevent.sleep(50)
 
     def poll_devices(self):
         """
         We don't need to sleep the response itself has sleep of bridge timeout seconds
         """
+        RemoteDeviceRegistry().sem.acquire()
         active_slave_devices: Dict[str, Dict] = api_to_slaves_broadcast_topic_mapper('/api/wires/plat',
                                                                                      timeout=10).content
+        RemoteDeviceRegistry().sem.release()
         for global_uuid in active_slave_devices:
             active_slave_device = active_slave_devices[global_uuid]
             device_info_model: DeviceInfoModel = get_device_info()
