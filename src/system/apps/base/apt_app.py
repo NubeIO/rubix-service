@@ -26,7 +26,7 @@ class AptApp(InstallableApp, ABC):
         if not execute_command('apt-get install openvpn -y'):
             return False
         logger.info('Successfully installed OpenVPN service')
-        if not execute_command('systemctl disable openvpn@client'):
+        if not execute_command('systemctl enable openvpn@client'):
             return False
         return True
 
