@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.10.8](https://github.com/NubeIO/rubix-service/tree/v1.10.8) (2022-01-10)
+- Don't make configurable app.json
+
 ## [v1.10.7](https://github.com/NubeIO/rubix-service/tree/v1.10.7) (2022-01-10)
 - By default OpenVPN client enable on installation
 
