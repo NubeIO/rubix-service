@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.10.7](https://github.com/NubeIO/rubix-service/tree/v1.10.7) (2022-01-10)
+- By default OpenVPN client enable on installation
+
 ## [v1.10.6](https://github.com/NubeIO/rubix-service/tree/v1.10.6) (2022-01-09)
 - Update min_loop_to_show_online to 5
 - Queue broadcast/multicast request as it's heavy
