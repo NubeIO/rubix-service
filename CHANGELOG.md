@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.10.9](https://github.com/NubeIO/rubix-service/tree/v1.10.9) (2022-01-13)
+- Add VPN details on slaves listing
+
 ## [v1.10.8](https://github.com/NubeIO/rubix-service/tree/v1.10.8) (2022-01-10)
 - Don't make configurable app.json
 
