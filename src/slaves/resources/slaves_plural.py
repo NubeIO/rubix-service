@@ -1,9 +1,12 @@
 import json
 from typing import Dict
 
+import requests
+from flask import current_app
 from flask_restful import reqparse
 from rubix_http.exceptions.exception import NotFoundException, BadDataException
 
+from src import AppSetting
 from src.discover.remote_device_registry import RemoteDeviceRegistry
 from src.slaves.resources.slaves_base import SlavesBase
 from src.system.utils.file import write_file
@@ -15,6 +18,12 @@ class SlavesPlural(SlavesBase):
     def get(cls):
         devices: Dict[str, Dict] = RemoteDeviceRegistry().devices
         slaves: Dict[str, Dict] = cls.get_slaves()[0]
+        settings = current_app.config[AppSetting.FLASK_KEY]
+        is_openvpn_exists: bool = settings.openvpn_setting.enabled
+        clients: dict = {}
+        if is_openvpn_exists:
+            url: str = f'http://{settings.openvpn_setting.host}:{settings.openvpn_setting.port}/api/clients'
+            clients = json.loads(requests.get(url).content)
         for slave in slaves:
             if slave in devices:
                 slaves[slave]['is_online'] = True
@@ -22,6 +31,11 @@ class SlavesPlural(SlavesBase):
                 slaves[slave]['is_online'] = False
             slaves[slave]['total_count'] = RemoteDeviceRegistry().total_count.get(slave, 0)
             slaves[slave]['failure_count'] = RemoteDeviceRegistry().failure_count.get(slave, 0)
+            if is_openvpn_exists:
+                defaults: dict = {'virtual_ip': 'N/A', 'received_bytes': 0, 'sent_bytes': 0, 'connected_since': "N/A"}
+                vpn_details: dict = clients.get(slaves[slave].get('global_uuid'), defaults)
+                if vpn_details:
+                    slaves[slave] = {**slaves[slave], **vpn_details}
         return slaves
 
     @classmethod
