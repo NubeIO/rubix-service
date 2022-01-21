@@ -16,6 +16,9 @@ mrb_listener_all_attributes = {
     'port': {
         'type': int,
     },
+    'ssl': {
+        'type': bool,
+    },
     'authentication': {
         'type': bool,
     },
