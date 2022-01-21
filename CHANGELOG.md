@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.11.0](https://github.com/NubeIO/rubix-service/tree/v1.11.0) (2022-01-21)
+- Upgrade mrb for SSL support
+
 ## [v1.10.9](https://github.com/NubeIO/rubix-service/tree/v1.10.9) (2022-01-13)
 - Add VPN details on slaves listing
 
