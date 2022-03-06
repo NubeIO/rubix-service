@@ -5,7 +5,7 @@ from src.discover.resources.remote_device import RemoteDevice
 from src.mrb_listener.resource_mrb_listener import MRBListenerResource
 from src.platform.resource_device_info import DeviceInfoResource
 from src.slaves.resources.slaves_plural import SlavesPlural
-from src.slaves.resources.slaves_singular import SlavesSingular
+from src.slaves.resources.slaves_singular import SlavesSingular, SlavesComment, SlavesTags
 from src.system.networking.network import NetworkInfo, NetworkSetStaticIP, NetworkSetDHCP, NetworkPingRange, \
     NetworkCheckPort
 from src.system.networking.ufw import UFWRuleList, UFWStatus, UFWEnable
@@ -118,3 +118,5 @@ bp_slaves = Blueprint('slaves', __name__, url_prefix='/api/slaves')
 api_slaves = Api(bp_slaves)
 api_slaves.add_resource(SlavesPlural, '')
 api_slaves.add_resource(SlavesSingular, '/<string:global_uuid>')
+api_slaves.add_resource(SlavesComment, '/comment/<string:global_uuid>')
+api_slaves.add_resource(SlavesTags, '/tags/<string:global_uuid>')
