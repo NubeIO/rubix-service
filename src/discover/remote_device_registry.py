@@ -67,7 +67,8 @@ class RemoteDeviceRegistry(metaclass=Singleton):
             self.__temp_devices[global_uuid] = {
                 **active_slave_device,
                 'is_master': global_uuid == device_info_model.global_uuid,
-                'count': self.__temp_devices.get(global_uuid, {}).get('count', 0) + 1
+                'consecutive_success_count':
+                    self.__temp_devices.get(global_uuid, {}).get('consecutive_success_count', 0) + 1
             }
         available_inserted_devices_global_uuids: List[str] = []
         slaves: Dict[str, Dict] = SlavesBase.get_slaves_by_app_setting(self.__app_setting)[0]
@@ -82,13 +83,14 @@ class RemoteDeviceRegistry(metaclass=Singleton):
             if global_uuid not in active_slave_devices:
                 temp_device = self.__temp_devices[global_uuid]
                 logger.warning(f'Deleting global_uuid={global_uuid}, device_name={temp_device.get("device_name")}, '
-                               f'count={temp_device.get("count")}')
+                               f'consecutive_success_count={temp_device.get("consecutive_success_count")}')
                 del self.__temp_devices[global_uuid]
 
         devices: Dict[str, Dict] = {}
         for global_uuid in active_slave_devices:
             temp_device: dict = self.__temp_devices[global_uuid]
-            if temp_device.get('count') >= MIN_LOOP_TO_SHOW_ONLINE or self.failure_count.get(global_uuid, 0) == 0:
+            if temp_device.get('consecutive_success_count') >= MIN_LOOP_TO_SHOW_ONLINE or self.failure_count.get(
+                    global_uuid, 0) == 0:
                 devices[global_uuid] = temp_device
                 if global_uuid in slaves:
                     available_inserted_devices_global_uuids.append(global_uuid)
