@@ -1,4 +1,9 @@
 # CHANGELOG
+## [v1.12.0](https://github.com/NubeIO/rubix-service/tree/v1.12.0) (2022-03-07)
+- Add comment and tags endpoint
+- Create slaves sync API
+- Add consecutive_success_count field
+
 ## [v1.11.0](https://github.com/NubeIO/rubix-service/tree/v1.11.0) (2022-01-21)
 - Upgrade mrb for SSL support
 
