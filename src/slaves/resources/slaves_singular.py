@@ -4,8 +4,22 @@ from flask import request
 from flask_restful import reqparse
 from rubix_http.exceptions.exception import NotFoundException, BadDataException
 
+from src.discover.remote_device_registry import RemoteDeviceRegistry
 from src.slaves.resources.slaves_base import SlavesBase
 from src.system.utils.file import write_file
+
+
+class Sync(SlavesBase):
+    @classmethod
+    def get(cls):
+        slaves, slaves_file = cls.get_slaves()
+        for global_uuid in slaves:
+            registry_slave = RemoteDeviceRegistry().devices.get(global_uuid)
+            if registry_slave is None:
+                continue
+            slaves[global_uuid] = {**slaves[global_uuid], **registry_slave}
+        write_file(slaves_file, json.dumps(slaves))
+        return {"message": "successfully synced!"}, 200
 
 
 class SlavesSingular(SlavesBase):
