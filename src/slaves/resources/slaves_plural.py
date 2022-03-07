@@ -31,6 +31,8 @@ class SlavesPlural(SlavesBase):
                 slaves[slave]['is_online'] = False
             slaves[slave]['total_count'] = RemoteDeviceRegistry().total_count.get(slave, 0)
             slaves[slave]['failure_count'] = RemoteDeviceRegistry().failure_count.get(slave, 0)
+            slaves[slave]['consecutive_success_count'] = \
+                RemoteDeviceRegistry().devices.get(slave, {}).get("consecutive_success_count", 0)
             if is_openvpn_exists:
                 defaults: dict = {'virtual_ip': 'N/A', 'received_bytes': 0, 'sent_bytes': 0, 'connected_since': "N/A"}
                 vpn_details: dict = clients.get(slaves[slave].get('global_uuid'), defaults)
