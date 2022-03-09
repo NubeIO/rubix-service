@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.12.1](https://github.com/NubeIO/rubix-service/tree/v1.12.1) (2022-03-09)
+- Fix: breaking issue on del device['count']
+
 ## [v1.12.0](https://github.com/NubeIO/rubix-service/tree/v1.12.0) (2022-03-07)
 - Add comment and tags endpoint
 - Create slaves sync API
