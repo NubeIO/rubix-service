@@ -118,6 +118,32 @@
       "url_prefix": "rbm"
     },
     {
+      "app_type": "PythonApp",
+      "service": "LORA_SERIAL",
+      "display_name": "Lora Serial",
+      "repo_name": "nubeio-rubix-app-lora-serial-py",
+      "service_file_name": "nubeio-rubix-app-lora-serial-py.service",
+      "data_dir_name": "nubeio-rubix-app-lora-serial-py",
+      "port": 0,
+      "min_support_version": "v0.0.1",
+      "description": "NubeIO Rubix App LoRa Serial Py",
+      "gateway_access": false,
+      "url_prefix": ""
+    },
+    {
+      "app_type": "PythonApp",
+      "service": "RUBIX_GPIO",
+      "display_name": "Rubix GPIO",
+      "repo_name": "nubeio-rubix-app-rubix-gpio-py",
+      "service_file_name": "nubeio-rubix-app-rubix-gpio-py.service",
+      "data_dir_name": "nubeio-rubix-app-rubix-gpio-py",
+      "port": 0,
+      "min_support_version": "v0.0.1",
+      "description": "NubeIO Rubix App Rubix GPIO Py",
+      "gateway_access": false,
+      "url_prefix": ""
+    },
+    {
       "app_type": "GoApp",
       "service": "FLOW_FRAMEWORK",
       "display_name": "Flow Framework",
