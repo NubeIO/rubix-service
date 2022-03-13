@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.13.0](https://github.com/NubeIO/rubix-service/tree/v1.13.0) (2022-03-13)
+- Add python LoRa Serial & GPIO apps
+
 ## [v1.12.1](https://github.com/NubeIO/rubix-service/tree/v1.12.1) (2022-03-09)
 - Fix: breaking issue on del device['count']
 
