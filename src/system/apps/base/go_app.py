@@ -121,11 +121,11 @@ class GoApp(SystemdApp, ABC):
 
     def install_plugins(self) -> bool:
         try:
+            plugin_installation_dir = self.get_plugin_installation_dir()
+            delete_existing_folder(plugin_installation_dir)
             plugin_download_dir: str = self.get_plugin_download_dir()
             if not os.path.exists(plugin_download_dir):
                 return False
-            plugin_installation_dir = self.get_plugin_installation_dir()
-            delete_existing_folder(plugin_installation_dir)
             shutil.copytree(plugin_download_dir, plugin_installation_dir)
             delete_existing_folder(plugin_download_dir)
         except Exception as e:
