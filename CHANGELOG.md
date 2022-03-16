@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.13.1](https://github.com/NubeIO/rubix-service/tree/v1.13.1) (2022-03-16)
+- Fix: plugins installation on upgrading app
+- Add BIOS app state clear
+
 ## [v1.13.0](https://github.com/NubeIO/rubix-service/tree/v1.13.0) (2022-03-13)
 - Add python LoRa Serial & GPIO apps
 
