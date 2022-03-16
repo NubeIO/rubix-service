@@ -7,6 +7,7 @@ from gunicorn.glogging import Logger
 from gunicorn.workers.ggevent import GeventWorker
 
 from .app import create_app
+from .bios.utils import clear_bios_app_state
 from .pyinstaller import resource_path
 from .setting import AppSetting
 from .system.apps.enums.enums import DownloadState
@@ -74,5 +75,6 @@ class GunicornFlaskApplication(BaseApplication, ABC):
             from src.background import Background
             Background.run()
             self.clear_download_state()
+            clear_bios_app_state()
 
         return output

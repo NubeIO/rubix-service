@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api
 
+from src.bios.resources.clear_app_state import ClearAppStateResource
 from src.discover.resources.remote_device import RemoteDevice
 from src.mrb_listener.resource_mrb_listener import MRBListenerResource
 from src.platform.resource_device_info import DeviceInfoResource
@@ -121,3 +122,8 @@ api_slaves.add_resource(Sync, '/sync')
 api_slaves.add_resource(SlavesSingular, '/<string:global_uuid>')
 api_slaves.add_resource(SlavesComment, '/comment/<string:global_uuid>')
 api_slaves.add_resource(SlavesTags, '/tags/<string:global_uuid>')
+
+# 10
+bp_bios = Blueprint('bios', __name__, url_prefix='/api/bios')
+api_bios = Api(bp_bios)
+api_bios.add_resource(ClearAppStateResource, '/clear_app_state')
