@@ -22,6 +22,10 @@ def create_app(app_setting: AppSetting) -> Flask:
             app.logger.handlers = gunicorn_logger.handlers
             app.logger.setLevel(gunicorn_logger.level)
 
+    @app.errorhandler(404)
+    def handle_not_found(e):
+        return {'message': 'not found'}, 404
+
     @app.before_first_request
     def create_default_user():
         from src.users.model_users import UserModel
