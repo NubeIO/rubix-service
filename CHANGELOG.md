@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.13.2](https://github.com/NubeIO/rubix-service/tree/v1.13.2) (2022-03-22)
+- Fix: BIOS app state file not found exception
+- Addition of 404 not found error handler
+
 ## [v1.13.1](https://github.com/NubeIO/rubix-service/tree/v1.13.1) (2022-03-16)
 - Fix: plugins installation on upgrading app
 - Add BIOS app state clear
