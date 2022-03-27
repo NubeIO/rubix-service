@@ -144,6 +144,19 @@
       "url_prefix": ""
     },
     {
+      "app_type": "PythonApp",
+      "service": "BBB_REST",
+      "display_name": "BBB REST",
+      "repo_name": "bbb-rest-py",
+      "service_file_name": "nubeio-rubix-app-bbb-rest-py.service",
+      "data_dir_name": "nubeio-rubix-app-bbb-rest-py",
+      "port": 0,
+      "min_support_version": "v0.0.1",
+      "description": "NubeIO Rubix App BBB REST Py",
+      "gateway_access": false,
+      "url_prefix": ""
+    },
+    {
       "app_type": "GoApp",
       "service": "FLOW_FRAMEWORK",
       "display_name": "Flow Framework",
