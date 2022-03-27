@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.14.0](https://github.com/NubeIO/rubix-service/tree/v1.14.0) (2022-03-27)
+- Add BBB_REST app
+
 ## [v1.13.2](https://github.com/NubeIO/rubix-service/tree/v1.13.2) (2022-03-22)
 - Fix: BIOS app state file not found exception
 - Addition of 404 not found error handler
