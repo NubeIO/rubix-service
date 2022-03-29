@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.14.1](https://github.com/NubeIO/rubix-service/tree/v1.14.1) (2022-03-29)
+- Fix: repo_name of BBB_REST on apps.master.json
+
 ## [v1.14.0](https://github.com/NubeIO/rubix-service/tree/v1.14.0) (2022-03-27)
 - Add BBB_REST app
 
