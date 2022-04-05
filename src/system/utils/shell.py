@@ -33,7 +33,7 @@ def execute_command(cmd, cwd=None) -> bool:
     """Run command line"""
     try:
         subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, cwd=cwd)
-    except subprocess.CalledProcessError:
+    except Exception:
         return False
     return True
 
@@ -46,7 +46,7 @@ def systemctl_status_check(service) -> bool:
     try:
         cmd = "systemctl is-active {} >/dev/null 2>&1 && echo TRUE || echo FALSE".format(service)
         completed = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE)
-    except subprocess.CalledProcessError:
+    except Exception:
         return False
     for line in completed.stdout.decode('utf-8').splitlines():
         if 'TRUE' in line:
@@ -55,9 +55,11 @@ def systemctl_status_check(service) -> bool:
 
 
 def systemctl_status(service) -> dict:
-    p = subprocess.Popen(["systemctl", "status", service], stdout=subprocess.PIPE)
-    (output, err) = p.communicate()
-    output = output.decode('utf-8')
+    try:
+        output = subprocess.run(["systemctl", "status", service], stdout=subprocess.PIPE)
+    except Exception:
+        return {}
+    output = output.stderr.decode('utf-8')
     active_status_regx = r"Active:(.*) since (.*);(.*)"
     loaded_status_regx = f"Loaded:(.*); (.*);(.*)"
     service_status = {}
@@ -83,7 +85,7 @@ def systemctl_installed(service) -> bool:
     try:
         cmd: str = "systemctl status {} | wc -l | grep -w -Fq 0 && echo FALSE || echo TRUE".format(service)
         completed = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE)
-    except subprocess.CalledProcessError:
+    except Exception:
         return False
     for line in completed.stdout.decode('utf-8').splitlines():
         if 'TRUE' in line:
