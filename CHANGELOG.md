@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.14.2](https://github.com/NubeIO/rubix-service/tree/v1.14.2) (2022-04-06)
+- Fix: OSError: [Errno 24] Too many open files
+
 ## [v1.14.1](https://github.com/NubeIO/rubix-service/tree/v1.14.1) (2022-03-29)
 - Fix: repo_name of BBB_REST on apps.master.json
 
