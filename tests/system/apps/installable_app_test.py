@@ -1,12 +1,19 @@
+import subprocess
+
 import gevent
 
-from src.system.utils.file import read_file
+
+def test2():
+    p = subprocess.Popen(["systemctl", "status", "nubeio-rubix-service"], stdout=subprocess.PIPE)
+    (output, err) = p.communicate()
+    print("output", output)
 
 
 def test():
     for i in range(1000000):
         print(i)
-        gevent.spawn(read_file, "/data/rubix-registry/device_info.json")
+        gevent.spawn(test2)
+        # gevent.spawn(read_file, "/data/rubix-registry/device_info.json")
         # read_file("/data/rubix-registry/device_info.json")
 
 
