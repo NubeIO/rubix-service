@@ -26,8 +26,8 @@ def is_dir_exist(dir_) -> bool:
 
 def read_file(file) -> str:
     try:
-        with open(file, "r") as f:
-            return f.read()
+        f = open(file, "r")
+        return f.read()
     except Exception:
         return ""
 

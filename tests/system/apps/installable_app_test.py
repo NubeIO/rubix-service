@@ -1,7 +1,14 @@
-from src.system.apps.base.installable_app import InstallableApp
+import gevent
+
+from src.system.utils.file import read_file
+
+
+def test():
+    for i in range(1000000):
+        print(i)
+        gevent.spawn(read_file, "/data/rubix-registry/device_info.json")
+        # read_file("/data/rubix-registry/device_info.json")
+
 
 if __name__ == "__main__":
-    app = InstallableApp.get_app('WIRES', 'v1.0.0')
-    print(app.get_installation_dir())
-    app = InstallableApp.get_app('BACNET_SERVER', 'v1.0.0')
-    print(app.get_installation_dir())
+    test()
