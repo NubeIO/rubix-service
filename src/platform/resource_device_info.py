@@ -6,7 +6,9 @@ from registry.resources.resource_device_info import get_device_info, put_device_
 from rubix_http.exceptions.exception import NotFoundException
 from rubix_http.resource import RubixResource
 
-from src.platform.schema_device_info import device_info_all_attributes, device_info_all_fields
+from src.platform.schema_device_info import device_info_all_attributes, device_info_all_fields, \
+    device_info_all_fields_with_reboot_job
+from src.system.resources.service.utils import get_reboot_job
 
 
 class DeviceInfoResource(RubixResource):
@@ -19,12 +21,12 @@ class DeviceInfoResource(RubixResource):
                             store_missing=False)
 
     @classmethod
-    @marshal_with(device_info_all_fields)
+    @marshal_with(device_info_all_fields_with_reboot_job)
     def get(cls):
         device_info: dict = get_device_info_dict()
         if not device_info:
             raise NotFoundException('Device info not found')
-        return device_info
+        return {**device_info, 'reboot_job': get_reboot_job()}
 
     @classmethod
     @marshal_with(device_info_all_fields)

@@ -1,6 +1,5 @@
 import enum
 import json
-from datetime import datetime, timedelta
 
 from flask import current_app
 from rubix_http.exceptions.exception import NotFoundException
@@ -78,3 +77,14 @@ def delete_service_restart_job(service: str):
     service_schedule_restarts: dict = get_service_restart_jobs()
     service_schedule_restarts.pop(service)
     write_file(app_setting.service_restart_job_file, json.dumps(service_schedule_restarts, indent=2))
+
+
+def get_reboot_job() -> dict:
+    app_setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
+    return json.loads(read_file(app_setting.reboot_job_file) or "{}")
+
+
+def create_reboot_job(data: dict):
+    app_setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
+    write_file(app_setting.reboot_job_file, json.dumps(data, indent=2))
+    return data

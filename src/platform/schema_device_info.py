@@ -1,4 +1,7 @@
+from flask_restful import fields
+
 from src.platform.utils import map_rest_schema
+from src.system.resources.rest_schema.schema_reboot_job import reboot_all_fields
 
 device_info_all_attributes = {
     'client_id': {
@@ -74,3 +77,5 @@ device_info_return_attributes = {
 device_info_all_fields = {}
 map_rest_schema(device_info_return_attributes, device_info_all_fields)
 map_rest_schema(device_info_all_attributes, device_info_all_fields)
+
+device_info_all_fields_with_reboot_job = {**device_info_all_fields, 'reboot_job': fields.Nested(reboot_all_fields)}
