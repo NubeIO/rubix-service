@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.15.0](https://github.com/NubeIO/rubix-service/tree/v1.15.0) (2022-04-08)
+- Improvement: Too many open files
+- Upgrade mrb to v1.8.1 (Improvement: Too many open files)
+
 ## [v1.14.2](https://github.com/NubeIO/rubix-service/tree/v1.14.2) (2022-04-06)
 - Fix: OSError: [Errno 24] Too many open files
 
