@@ -24,7 +24,7 @@ class RebootJob(RubixResource):
 
     @classmethod
     @marshal_with(reboot_all_fields)
-    def post(cls):
+    def put(cls):
         args: dict = cls.parser.parse_args()
         timer = args['timer']
         if timer < 10:
