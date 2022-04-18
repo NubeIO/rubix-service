@@ -131,7 +131,7 @@
       "url_prefix": ""
     },
     {
-      "app_type": "GoApp",
+      "app_type": "GoFFApp",
       "service": "FLOW_FRAMEWORK",
       "display_name": "Flow Framework",
       "repo_name": "flow-framework",
