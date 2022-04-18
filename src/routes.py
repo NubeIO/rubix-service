@@ -29,6 +29,7 @@ from src.system.resources.host_info import GetSystemMem, GetSystemTime, GetSyste
 from src.system.resources.host_reboot import HostReboot
 from src.system.resources.host_timezone import SetSystemTimeZone
 from src.system.resources.ping import Ping
+from src.system.resources.reboot_job import RebootJob
 from src.system.resources.service.control import ServiceControl
 from src.system.resources.service.restart_job import ServiceRestartJob
 from src.system.resources.service.service import ServiceResource
@@ -52,6 +53,7 @@ api_system.add_resource(SetSystemTimeZone, '/time/timezone')
 api_system.add_resource(GetSystemMem, '/memory')
 api_system.add_resource(GetSystemDiscUsage, '/disc')
 api_system.add_resource(HostReboot, '/host/restart')
+api_system.add_resource(RebootJob, '/reboot_job')
 
 # 2
 api_networking = Api(bp_networking)

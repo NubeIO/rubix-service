@@ -75,6 +75,7 @@ class AppSetting:
     default_download_state_file = 'download_stat.json'
     default_service_restart_job_file = 'service_restart_job.json'
     default_plugin_download_state_file = 'plugin_download_stat.json'
+    default_reboot_job_file = 'reboot_job.json'
 
     def __init__(self, **kwargs):
         self.__port = kwargs.get('port') or AppSetting.PORT
@@ -105,6 +106,7 @@ class AppSetting:
         self.__download_state_file = os.path.join(self.__data_dir, self.default_download_state_file)
         self.__plugin_download_state_file = os.path.join(self.__data_dir, self.default_plugin_download_state_file)
         self.__service_restart_job_file = os.path.join(self.__data_dir, self.default_service_restart_job_file)
+        self.__reboot_job_file = os.path.join(self.__data_dir, self.default_reboot_job_file)
 
     @property
     def port(self):
@@ -201,6 +203,10 @@ class AppSetting:
     @property
     def service_restart_job_file(self) -> str:
         return self.__service_restart_job_file
+
+    @property
+    def reboot_job_file(self) -> str:
+        return self.__reboot_job_file
 
     def reload(self, is_json_str: bool = False):
         data = self.__read_file(self.default_setting_file, self.__config_dir, is_json_str)
