@@ -28,6 +28,10 @@ device_info_all_attributes = {
         'type': str,
         'required': True,
     },
+    'device_type': {
+        'type': str,
+        'required': True,
+    },
     'site_address': {
         'type': str,
         'required': True,
