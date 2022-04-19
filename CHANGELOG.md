@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.16.1](https://github.com/NubeIO/rubix-service/tree/v1.16.1) (2022-04-18)
+- Don't restrict config CURD with app type
+- Add YmlConfig resource
+
 ## [v1.16.0](https://github.com/NubeIO/rubix-service/tree/v1.16.0) (2022-04-18)
 - Add auto-reboot scheduler
 - Add Rubix Broker Go App
