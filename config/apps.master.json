@@ -157,7 +157,7 @@
       "url_prefix": ""
     },
     {
-      "app_type": "GoApp",
+      "app_type": "GoFFApp",
       "service": "FLOW_FRAMEWORK",
       "display_name": "Flow Framework",
       "repo_name": "flow-framework",
@@ -168,6 +168,19 @@
       "description": "Flow Framework",
       "gateway_access": true,
       "url_prefix": "ff"
+    },
+    {
+      "app_type": "GoApp",
+      "service": "RUBIX_BROKER",
+      "display_name": "Rubix Broker",
+      "repo_name": "nubeio-rubix-app-rubix-broker-go",
+      "service_file_name": "nubeio-rubix-app-rubix-broker-go.service",
+      "data_dir_name": "rubix-broker",
+      "port": 1883,
+      "min_support_version": "v0.0.1",
+      "description": "Rubix Broker",
+      "gateway_access": false,
+      "url_prefix": ""
     },
     {
       "app_type": "AptApp",

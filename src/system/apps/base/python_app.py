@@ -18,7 +18,7 @@ class PythonApp(SystemdApp, ABC):
     # noinspection DuplicatedCode
     def create_service(self):
         lines = []
-        with open(resource_path('systemd/nubeio-app-service.service')) as systemd_file:
+        with open(resource_path('systemd/nubeio-py-app-service.service')) as systemd_file:
             wd: str = self.get_wd()
             global_dir: str = self.get_global_dir()
             for line in systemd_file.readlines():
