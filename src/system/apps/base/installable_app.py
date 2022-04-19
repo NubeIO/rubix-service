@@ -178,14 +178,17 @@ class InstallableApp(BaseModel, ABC):
         self.download_installed_plugin()
         return {'service': self.service, 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
-    def update_config_file(self, data) -> bool:
+    def update_config_file(self, data, relative_path, is_json) -> bool:
         if self.app_type == Types.APT_APP.value:
             write_file(self.app_setting.config_file, str(data))
             return True
         else:
             file = self.app_setting.config_file if self.app_setting.config_file else os.path.join(self.get_global_dir(),
-                                                                                                  'config/config.json')
-            write_file(file, json.dumps(data, indent=2))
+                                                                                                  relative_path)
+            if is_json:
+                write_file(file, json.dumps(data, indent=2))
+            else:
+                write_file(file, data)
             return True
 
     def update_logging_file(self, data: str) -> bool:
@@ -196,9 +199,9 @@ class InstallableApp(BaseModel, ABC):
         write_file(os.path.join(self.get_global_dir(), 'config/.env'), data)
         return True
 
-    def delete_config_file(self) -> bool:
+    def delete_config_file(self, relative_path) -> bool:
         file = self.app_setting.config_file if self.app_setting.config_file else os.path.join(self.get_global_dir(),
-                                                                                              'config/config.json')
+                                                                                              relative_path)
         delete_file(file)
         return True
 

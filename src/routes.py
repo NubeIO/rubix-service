@@ -11,7 +11,7 @@ from src.system.networking.network import NetworkInfo, NetworkSetStaticIP, Netwo
     NetworkCheckPort
 from src.system.networking.ufw import UFWRuleList, UFWStatus, UFWEnable
 from src.system.resources.app.app import AppResource, AppLatestResource
-from src.system.resources.app.config import ConfigResource, LoggingResource, EnvResource
+from src.system.resources.app.config import ConfigResource, LoggingResource, EnvResource, YmlConfigResource
 from src.system.resources.app.control import ControlResource
 from src.system.resources.app.delete_data import DeleteDataResource
 from src.system.resources.app.download import DownloadResource, DownloadStateResource
@@ -89,6 +89,7 @@ api_app.add_resource(UnInstallResource, '/uninstall')
 api_app.add_resource(DeleteDataResource, '/delete_data')
 api_app.add_resource(DownloadDataResource, '/download_data')
 api_app.add_resource(ConfigResource, '/config/config')
+api_app.add_resource(YmlConfigResource, '/config/yml_config')
 api_app.add_resource(LoggingResource, '/config/logging')
 api_app.add_resource(EnvResource, '/config/env')
 api_app.add_resource(RestartJobResource, "/restart_job")
