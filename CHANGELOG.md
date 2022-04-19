@@ -1,4 +1,9 @@
 # CHANGELOG
+## [v1.16.0](https://github.com/NubeIO/rubix-service/tree/v1.16.0) (2022-04-18)
+- Add auto-reboot scheduler
+- Add Rubix Broker Go App
+- Add a new field device type
+
 ## [v1.15.0](https://github.com/NubeIO/rubix-service/tree/v1.15.0) (2022-04-08)
 - Improvement: Too many open files
 - Upgrade mrb to v1.8.1 (Improvement: Too many open files)
