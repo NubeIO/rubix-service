@@ -178,48 +178,40 @@ class InstallableApp(BaseModel, ABC):
         self.download_installed_plugin()
         return {'service': self.service, 'version': self.version, 'existing_app_deletion': existing_app_deletion}
 
-    def update_config_file(self, data) -> bool:
-        if self.app_type == Types.PYTHON_APP.value:
-            file = self.app_setting.config_file if self.app_setting.config_file else os.path.join(self.get_global_dir(),
-                                                                                                  'config/config.json')
-            write_file(file, json.dumps(data, indent=2))
-            return True
+    def update_config_file(self, data, relative_path, is_json) -> bool:
         if self.app_type == Types.APT_APP.value:
             write_file(self.app_setting.config_file, str(data))
             return True
-        return False
+        else:
+            file = self.app_setting.config_file if self.app_setting.config_file else os.path.join(self.get_global_dir(),
+                                                                                                  relative_path)
+            if is_json:
+                write_file(file, json.dumps(data, indent=2))
+            else:
+                write_file(file, data)
+            return True
 
     def update_logging_file(self, data: str) -> bool:
-        if self.app_type == Types.PYTHON_APP.value:
-            write_file(os.path.join(self.get_global_dir(), 'config/logging.conf'), data)
-            return True
-        return False
+        write_file(os.path.join(self.get_global_dir(), 'config/logging.conf'), data)
+        return True
 
     def update_env_file(self, data: str) -> bool:
-        if self.app_type == Types.FRONTEND_APP.value:
-            write_file(os.path.join(self.get_global_dir(), 'config/.env'), data)
-            return True
-        return False
+        write_file(os.path.join(self.get_global_dir(), 'config/.env'), data)
+        return True
 
-    def delete_config_file(self) -> bool:
-        if self.app_type in (Types.PYTHON_APP.value, Types.APT_APP.value):
-            file = self.app_setting.config_file if self.app_setting.config_file else os.path.join(self.get_global_dir(),
-                                                                                                  'config/config.json')
-            delete_file(file)
-            return True
-        return False
+    def delete_config_file(self, relative_path) -> bool:
+        file = self.app_setting.config_file if self.app_setting.config_file else os.path.join(self.get_global_dir(),
+                                                                                              relative_path)
+        delete_file(file)
+        return True
 
     def delete_logging_file(self) -> bool:
-        if self.app_type == Types.PYTHON_APP.value:
-            delete_file(os.path.join(self.get_global_dir(), 'config/logging.conf'))
-            return True
-        return False
+        delete_file(os.path.join(self.get_global_dir(), 'config/logging.conf'))
+        return True
 
     def delete_env_file(self) -> bool:
-        if self.app_type == Types.FRONTEND_APP.value:
-            delete_file(os.path.join(self.get_global_dir(), 'config/.env'))
-            return True
-        return False
+        delete_file(os.path.join(self.get_global_dir(), 'config/.env'))
+        return True
 
     def after_download_upload(self, name: str):
         # enforcing to extract on version directory
