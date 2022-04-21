@@ -1,5 +1,8 @@
 # CHANGELOG
-## [v1.16.1](https://github.com/NubeIO/rubix-service/tree/v1.16.1) (2022-04-18)
+## [v1.17.1](https://github.com/NubeIO/rubix-service/tree/v1.17.1) (2022-04-21)
+- Fix: auto reboot logic placement
+
+## [v1.17.0](https://github.com/NubeIO/rubix-service/tree/v1.17.0) (2022-04-18)
 - Don't restrict config CURD with app type
 - Add YmlConfig resource
 
