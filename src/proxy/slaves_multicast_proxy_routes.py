@@ -7,12 +7,9 @@ from mrb.mapper import api_to_slaves_multicast_topic_mapper
 from mrb.message import Response as MessageResponse, HttpMethod
 
 from src.discover.remote_device_registry import RemoteDeviceRegistry
-from src.system.resources.service.utils import get_reboot_job
 
 bp_slaves_multicast_proxy = Blueprint("slaves_multicast_proxy", __name__, url_prefix='/slaves/multicast')
 methods = ['GET']
-
-BIOS_SERVICE_URL = 'bios/api/service?'
 
 
 @bp_slaves_multicast_proxy.route("/<path:_>", methods=methods)
@@ -42,11 +39,5 @@ def slaves_proxy_handler(_):
         if response.error:
             return Response(json.dumps({'message': response.error_message}), response.status_code, response.headers)
         else:
-            if url == BIOS_SERVICE_URL and HttpMethod[request.method.upper()] == HttpMethod.GET:
-                reboot_job = get_reboot_job()
-                response.content = {**response.content, 'reboot_job': {
-                    'timer': reboot_job.get('timer', 0),
-                    'error': reboot_job.get('error', '')
-                }}
             return Response(json.dumps(response.content).encode('utf-8'), response.status_code, response.headers)
     return {"message": "Registered devices are not available or haven't registered yet!"}, 404
