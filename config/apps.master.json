@@ -183,6 +183,19 @@
       "url_prefix": ""
     },
     {
+      "app_type": "GoApp",
+      "service": "PI_GPIO",
+      "display_name": "PI GPIO",
+      "repo_name": "nubeio-rubix-app-pi-gpio-go",
+      "service_file_name": "nubeio-rubix-app-pi_gpio-go.service",
+      "data_dir_name": "pi-gpio",
+      "port": 5001,
+      "min_support_version": "v0.0.1",
+      "description": "PI GPIO",
+      "gateway_access": true,
+      "url_prefix": "pi_gpio"
+    },
+    {
       "app_type": "AptApp",
       "service": "OPEN_VPN_CLIENT",
       "display_name": "Open VPN Client",
