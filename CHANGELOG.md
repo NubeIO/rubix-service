@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.18.0](https://github.com/NubeIO/rubix-service/tree/v1.18.0) (2022-04-22)
+- Add app PI_GPIO
+
 ## [v1.17.1](https://github.com/NubeIO/rubix-service/tree/v1.17.1) (2022-04-21)
 - Fix: auto reboot logic placement
 
