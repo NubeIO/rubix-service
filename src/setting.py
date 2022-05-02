@@ -7,6 +7,7 @@ from flask import Flask
 from mrb.setting import MqttSetting as MqttRestBridgeSetting
 from rubix_mqtt.setting import BaseSetting, MqttSettingBase
 
+from src.platform.utils import get_device_type
 from src.pyinstaller import resource_path
 from src.system.utils.file import write_file, read_file
 
@@ -33,6 +34,7 @@ class InstallableAppSetting(BaseSetting):
         self.systemd_static_wd_value = ''
         self.systemd_file_dir = ''
         self.config_file = ''
+        self.device_types = []
 
 
 class OpenVPNSetting(MqttSettingBase):
@@ -69,7 +71,6 @@ class AppSetting:
     fallback_logging_conf: str = 'config/logging.conf'
     fallback_logging_prod_conf: str = 'config/logging.prod.conf'
     fallback_app_settings_file = 'config/apps.json'
-    fallback_app_master_settings_file = 'config/apps.master.json'
     default_users_file = 'users.txt'
     default_slaves_file = 'slaves.json'
     default_download_state_file = 'download_stat.json'
@@ -190,7 +191,9 @@ class AppSetting:
 
     @property
     def installable_app_settings(self) -> List[InstallableAppSetting]:
-        return self.__installable_app_settings
+        device_type = get_device_type()
+        return [app_setting for app_setting in self.__installable_app_settings if
+                device_type in app_setting.device_types]
 
     @property
     def download_status_file(self) -> str:
@@ -243,10 +246,7 @@ class AppSetting:
         return _dir if _dir is None or _dir.strip() == '' else os.path.join(self.__global_dir, _dir)
 
     def __reload_app_settings(self):
-        if self.mqtt_rest_bridge_setting.master:
-            path: str = self.fallback_app_master_settings_file
-        else:
-            path: str = self.fallback_app_settings_file
+        path: str = self.fallback_app_settings_file
         app_setting = resource_path(path)
         data = self.__read_file(app_setting, "", False)
         installable_app_settings = data.get(InstallableAppSetting.KEY, [])

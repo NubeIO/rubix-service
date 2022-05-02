@@ -33,6 +33,7 @@ class AppResource(RubixResource):
         **service_fields,
         'browser_download_url': fields.String,
         'latest_version': fields.String,
+        'device_types': fields.List(fields.String)
     }
 
     @classmethod

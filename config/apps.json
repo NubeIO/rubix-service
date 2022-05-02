@@ -11,7 +11,8 @@
       "min_support_version": "v2.0.4",
       "description": "Wires for for IoT",
       "working_dir_name": "rubix-wires",
-      "current_working_dir_name": "rubix-wires/systemd"
+      "current_working_dir_name": "rubix-wires/systemd",
+      "device_types": ["rubix-compute"]
     },
     {
       "app_type": "FrontendApp",
@@ -23,7 +24,8 @@
       "port": 1414,
       "min_support_version": "v1.5.0",
       "description": "Rubix Platform",
-      "current_working_dir_name": "rubix-plat"
+      "current_working_dir_name": "rubix-plat",
+      "device_types": []
     },
     {
       "app_type": "PythonApp",
@@ -36,7 +38,8 @@
       "min_support_version": "v1.4.2",
       "description": "Flask Application for Nube Rest API",
       "gateway_access": true,
-      "url_prefix": "ps"
+      "url_prefix": "ps",
+      "device_types": []
     },
     {
       "app_type": "PythonApp",
@@ -49,7 +52,8 @@
       "min_support_version": "v0.0.1",
       "description": "Flask Application for Nube Rubix Modbus App Py",
       "gateway_access": true,
-      "url_prefix": "modbus"
+      "url_prefix": "modbus",
+      "device_types": []
     },
     {
       "app_type": "PythonApp",
@@ -63,7 +67,8 @@
       "description": "Flask Application for Nube BACNET SERVER",
       "gateway_access": true,
       "url_prefix": "bacnet",
-      "pre_start_sleep": 60
+      "pre_start_sleep": 60,
+      "device_types": []
     },
     {
       "app_type": "PythonApp",
@@ -76,7 +81,8 @@
       "min_support_version": "v1.3.6",
       "description": "NubeIO LoRa Raw pyserial",
       "gateway_access": true,
-      "url_prefix": "lora"
+      "url_prefix": "lora",
+      "device_types": []
     },
     {
       "app_type": "PythonApp",
@@ -89,7 +95,8 @@
       "min_support_version": "v0.0.1",
       "description": "NubeIO Rubix BACnet Master",
       "gateway_access": true,
-      "url_prefix": "rbm"
+      "url_prefix": "rbm",
+      "device_types": []
     },
     {
       "app_type": "PythonApp",
@@ -102,7 +109,8 @@
       "min_support_version": "v0.0.1",
       "description": "NubeIO Rubix App LoRa Serial Py",
       "gateway_access": false,
-      "url_prefix": ""
+      "url_prefix": "",
+      "device_types": []
     },
     {
       "app_type": "PythonApp",
@@ -115,7 +123,8 @@
       "min_support_version": "v0.0.1",
       "description": "NubeIO Rubix App Rubix GPIO Py",
       "gateway_access": false,
-      "url_prefix": ""
+      "url_prefix": "",
+      "device_types": []
     },
     {
       "app_type": "PythonApp",
@@ -128,7 +137,8 @@
       "min_support_version": "v0.0.1",
       "description": "NubeIO Rubix App BBB REST Py",
       "gateway_access": false,
-      "url_prefix": ""
+      "url_prefix": "",
+      "device_types": []
     },
     {
       "app_type": "GoFFApp",
@@ -141,7 +151,8 @@
       "min_support_version": "v0.0.1",
       "description": "Flow Framework",
       "gateway_access": true,
-      "url_prefix": "ff"
+      "url_prefix": "ff",
+      "device_types": []
     },
     {
       "app_type": "GoApp",
@@ -154,7 +165,8 @@
       "min_support_version": "v0.0.1",
       "description": "Rubix Broker",
       "gateway_access": false,
-      "url_prefix": ""
+      "url_prefix": "",
+      "device_types": []
     },
     {
       "app_type": "GoApp",
@@ -167,7 +179,8 @@
       "min_support_version": "v0.0.1",
       "description": "PI GPIO",
       "gateway_access": true,
-      "url_prefix": "pi_gpio"
+      "url_prefix": "pi_gpio",
+      "device_types": []
     },
     {
       "app_type": "AptApp",
@@ -181,7 +194,36 @@
       "description": "Open VPN Client service",
       "gateway_access": false,
       "url_prefix": "",
-      "config_file": "/etc/openvpn/client.conf"
+      "config_file": "/etc/openvpn/client.conf",
+      "device_types": []
+    },
+    {
+      "app_type": "PythonApp",
+      "service": "USER_MANAGEMENT",
+      "display_name": "User Management",
+      "repo_name": "rubix-user-management",
+      "service_file_name": "nubeio-user-management.service",
+      "data_dir_name": "user-management",
+      "port": 1617,
+      "min_support_version": "v0.0.1",
+      "description": "NubeIO Data Push Service",
+      "gateway_access": true,
+      "url_prefix": "um",
+      "device_types": []
+    },
+    {
+      "app_type": "PythonApp",
+      "service": "DATA_PUSH",
+      "display_name": "Data Push Service",
+      "repo_name": "rubix-data-push",
+      "service_file_name": "nubeio-data-push.service",
+      "data_dir_name": "data-push",
+      "port": 2020,
+      "min_support_version": "v0.1.1",
+      "description": "NubeIO Data Push Service",
+      "gateway_access": true,
+      "url_prefix": "dp",
+      "device_types": []
     }
   ]
 }
