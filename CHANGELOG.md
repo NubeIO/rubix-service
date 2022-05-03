@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.19.0](https://github.com/NubeIO/rubix-service/tree/v1.19.0) (2022-05-03)
+- Device Type wise apps
+
 ## [v1.18.0](https://github.com/NubeIO/rubix-service/tree/v1.18.0) (2022-04-22)
 - Add app PI_GPIO
 
