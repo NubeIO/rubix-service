@@ -1,4 +1,10 @@
+from typing import Union
+
 from flask_restful import fields
+from registry.models.model_device_info import DeviceInfoModel
+from registry.resources.resource_device_info import get_device_info_dict, get_device_info
+
+DEFAULT_DEVICE_TYPE = 'rubix-compute'
 
 
 def get_field_type(attr_type):
@@ -24,3 +30,26 @@ def map_rest_schema(schema, resource_fields):
             resource_fields[attr] = schema[attr]['type']
         if schema[attr].get('nested', False):
             resource_fields[attr].__init__(attribute=schema[attr]['dict'])
+
+
+def get_device_info_dict_with_defaults() -> Union[dict, None]:
+    device_info: dict = get_device_info_dict()
+    if not device_info:
+        return None
+    if not device_info.get('device_type'):
+        device_info = {**device_info, 'device_type': DEFAULT_DEVICE_TYPE}
+    return device_info
+
+
+def get_device_info_with_defaults() -> Union[DeviceInfoModel, None]:
+    device_info: DeviceInfoModel = get_device_info()
+    if not device_info:
+        return None
+    if not device_info.device_type:
+        device_info.device_type = DEFAULT_DEVICE_TYPE
+    return device_info
+
+
+def get_device_type() -> str:
+    device_info: dict = get_device_info_dict_with_defaults()
+    return device_info.get('device_type') if device_info else DEFAULT_DEVICE_TYPE

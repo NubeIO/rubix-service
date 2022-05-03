@@ -128,6 +128,10 @@ class InstallableApp(BaseModel, ABC):
     def app_setting(self):
         return self.__app_setting
 
+    @property
+    def device_types(self):
+        return self.__app_setting.device_types
+
     def select_link(self, row: any, is_browser_downloadable: bool):
         setting = current_app.config[AppSetting.FLASK_KEY]
         for asset in row.get('assets', []):
