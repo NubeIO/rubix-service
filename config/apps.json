@@ -12,7 +12,13 @@
       "description": "Wires for for IoT",
       "working_dir_name": "rubix-wires",
       "current_working_dir_name": "rubix-wires/systemd",
-      "device_types": ["rubix-compute"]
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
     },
     {
       "app_type": "FrontendApp",
@@ -25,7 +31,13 @@
       "min_support_version": "v1.5.0",
       "description": "Rubix Platform",
       "current_working_dir_name": "rubix-plat",
-      "device_types": []
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
     },
     {
       "app_type": "PythonApp",
@@ -39,7 +51,13 @@
       "description": "Flask Application for Nube Rest API",
       "gateway_access": true,
       "url_prefix": "ps",
-      "device_types": []
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
     },
     {
       "app_type": "PythonApp",
@@ -53,7 +71,13 @@
       "description": "Flask Application for Nube Rubix Modbus App Py",
       "gateway_access": true,
       "url_prefix": "modbus",
-      "device_types": []
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
     },
     {
       "app_type": "PythonApp",
@@ -68,7 +92,13 @@
       "gateway_access": true,
       "url_prefix": "bacnet",
       "pre_start_sleep": 60,
-      "device_types": []
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
     },
     {
       "app_type": "PythonApp",
@@ -82,7 +112,13 @@
       "description": "NubeIO LoRa Raw pyserial",
       "gateway_access": true,
       "url_prefix": "lora",
-      "device_types": []
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
     },
     {
       "app_type": "PythonApp",
@@ -96,7 +132,13 @@
       "description": "NubeIO Rubix BACnet Master",
       "gateway_access": true,
       "url_prefix": "rbm",
-      "device_types": []
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
     },
     {
       "app_type": "PythonApp",
@@ -110,21 +152,13 @@
       "description": "NubeIO Rubix App LoRa Serial Py",
       "gateway_access": false,
       "url_prefix": "",
-      "device_types": []
-    },
-    {
-      "app_type": "PythonApp",
-      "service": "RUBIX_GPIO",
-      "display_name": "Rubix GPIO",
-      "repo_name": "nubeio-rubix-app-rubix-gpio-py",
-      "service_file_name": "nubeio-rubix-app-rubix-gpio-py.service",
-      "data_dir_name": "nubeio-rubix-app-rubix-gpio-py",
-      "port": 0,
-      "min_support_version": "v0.0.1",
-      "description": "NubeIO Rubix App Rubix GPIO Py",
-      "gateway_access": false,
-      "url_prefix": "",
-      "device_types": []
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
     },
     {
       "app_type": "PythonApp",
@@ -138,7 +172,9 @@
       "description": "NubeIO Rubix App BBB REST Py",
       "gateway_access": false,
       "url_prefix": "",
-      "device_types": []
+      "device_types": [
+        "edge-28"
+      ]
     },
     {
       "app_type": "GoFFApp",
@@ -152,7 +188,13 @@
       "description": "Flow Framework",
       "gateway_access": true,
       "url_prefix": "ff",
-      "device_types": []
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
     },
     {
       "app_type": "GoApp",
@@ -166,7 +208,13 @@
       "description": "Rubix Broker",
       "gateway_access": false,
       "url_prefix": "",
-      "device_types": []
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
     },
     {
       "app_type": "GoApp",
@@ -180,7 +228,9 @@
       "description": "PI GPIO",
       "gateway_access": true,
       "url_prefix": "pi_gpio",
-      "device_types": []
+      "device_types": [
+        "rubix-compute-io"
+      ]
     },
     {
       "app_type": "AptApp",
@@ -195,7 +245,13 @@
       "gateway_access": false,
       "url_prefix": "",
       "config_file": "/etc/openvpn/client.conf",
-      "device_types": []
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
     },
     {
       "app_type": "PythonApp",
@@ -209,7 +265,9 @@
       "description": "NubeIO Data Push Service",
       "gateway_access": true,
       "url_prefix": "um",
-      "device_types": []
+      "device_types": [
+        "cloud"
+      ]
     },
     {
       "app_type": "PythonApp",
@@ -223,7 +281,9 @@
       "description": "NubeIO Data Push Service",
       "gateway_access": true,
       "url_prefix": "dp",
-      "device_types": []
+      "device_types": [
+        "cloud"
+      ]
     }
   ]
 }
