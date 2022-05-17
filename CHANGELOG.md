@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.19.1](https://github.com/NubeIO/rubix-service/tree/v1.19.1) (2022-05-17)
+- Increase timeout to 120 sec.
+   - Installation taking too much time
+
 ## [v1.19.0](https://github.com/NubeIO/rubix-service/tree/v1.19.0) (2022-05-03)
 - Device Type wise apps
 
