@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.19.2](https://github.com/NubeIO/rubix-service/tree/v1.19.2) (2022-05-18)
+- Ignored plugins dir ie: `plugins` during data backup
+
 ## [v1.19.1](https://github.com/NubeIO/rubix-service/tree/v1.19.1) (2022-05-17)
 - Increase timeout to 120 sec.
    - Installation taking too much time
