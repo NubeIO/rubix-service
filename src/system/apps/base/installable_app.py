@@ -254,7 +254,7 @@ class InstallableApp(BaseModel, ABC):
         logger.info('Starting data backup...')
         global_dir = self.get_global_dir()
         if is_dir_exist(global_dir):
-            shutil.copytree(global_dir, self.get_backup_dir())
+            shutil.copytree(global_dir, self.get_backup_dir(), ignore=shutil.ignore_patterns(PLUGIN_DIR))
             logger.info('Successfully completed data backup...')
             return True
         return False
