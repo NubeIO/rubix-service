@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.19.3](https://github.com/NubeIO/rubix-service/tree/v1.19.3) (2022-06-12)
+- Fix the internal token folder with existing system support
+   - This is just for making local development easier without configuring the Internal token location
+
 ## [v1.19.2](https://github.com/NubeIO/rubix-service/tree/v1.19.2) (2022-05-18)
 - Ignored plugins dir ie: `plugins` during data backup
 
