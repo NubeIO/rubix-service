@@ -44,6 +44,8 @@ def cli(port, root_dir, global_dir, data_dir, config_dir, artifact_dir, backup_d
         log_level, device_type, auth, logging_conf):
     if not os.path.isdir(RUBIX_REGISTRY_DIR):
         os.mkdir(RUBIX_REGISTRY_DIR)
+    if not os.path.isdir(AppSetting.TOKEN_FOLDER):
+        os.mkdir(AppSetting.TOKEN_FOLDER)
     migrate()
     setting = AppSetting(port=port, root_dir=root_dir, global_dir=global_dir, data_dir=data_dir, config_dir=config_dir,
                          artifact_dir=artifact_dir, backup_dir=backup_dir, prod=prod, device_type=device_type,

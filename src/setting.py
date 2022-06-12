@@ -56,6 +56,7 @@ class AppSetting:
     ARTIFACT_DIR_ENV = 'ARTIFACT_DIR'
     BACKUP_DATA_DIR_ENV = 'BACKUP_DATA'
     FLASK_KEY: str = 'APP_SETTING'
+    TOKEN_FOLDER: str = '/data/rubix-service/data'
 
     default_root_dir: str = 'out'
     default_global_dir: str = 'out/rubix-service'
@@ -98,7 +99,7 @@ class AppSetting:
         self.__secret_key = ''
         self.__secret_key_file = os.path.join(self.__config_dir, self.default_secret_key_file)
         self.__internal_token = ''
-        self.__internal_token_file = os.path.join(self.__data_dir, self.default_internal_token_file)
+        self.__internal_token_file = os.path.join(self.TOKEN_FOLDER, self.default_internal_token_file)
         self.__users_file = os.path.join(self.__data_dir, self.default_users_file)
         self.__auth = kwargs.get('auth') or False
         self.__mqtt_rest_bridge_setting: MqttRestBridgeSetting = MqttRestBridgeSetting()
