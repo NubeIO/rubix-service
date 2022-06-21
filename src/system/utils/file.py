@@ -33,7 +33,11 @@ def read_file(file) -> str:
 
 
 def write_file(file, content):
-    f = open(file, "w")
+    mode = 0o744
+    dir_ = os.path.dirname(file)
+    if not is_dir_exist(dir_):
+        os.makedirs(dir_, mode, True)
+    f = open(file, 'w')
     f.write(content)
     f.close()
 
