@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.19.4](https://github.com/NubeIO/rubix-service/tree/v1.19.4) (2022-06-21)
+- Fix: No such file or directory
+
 ## [v1.19.3](https://github.com/NubeIO/rubix-service/tree/v1.19.3) (2022-06-12)
 - Fix the internal token folder with existing system support
    - This is just for making local development easier without configuring the Internal token location
