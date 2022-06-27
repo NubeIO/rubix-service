@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.19.5](https://github.com/NubeIO/rubix-service/tree/v1.19.5) (2022-06-27)
+- Fix: create token folder
+
 ## [v1.19.4](https://github.com/NubeIO/rubix-service/tree/v1.19.4) (2022-06-21)
 - Fix: No such file or directory
 
