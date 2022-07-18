@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.19.6](https://github.com/NubeIO/rubix-service/tree/v1.19.6) (2022-07-18)
+- Don't recreate internal token if it already exists
+
 ## [v1.19.5](https://github.com/NubeIO/rubix-service/tree/v1.19.5) (2022-06-27)
 - Fix: create token folder
 
