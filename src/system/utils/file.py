@@ -24,6 +24,10 @@ def is_dir_exist(dir_) -> bool:
     return dir_path.exists()
 
 
+def is_file_exist(file) -> bool:
+    return os.path.exists(file)
+
+
 def read_file(file) -> str:
     try:
         with open(file, "r") as f:
