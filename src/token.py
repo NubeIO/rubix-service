@@ -8,6 +8,8 @@ def create_internal_token(app_setting: AppSetting):
     if not is_file_exist(app_setting.internal_token_file):
         write_file(app_setting.internal_token_file, internal_token)
         app_setting.internal_token = f'Internal {internal_token}'
+    else:
+        app_setting.internal_token = get_internal_token(app_setting)
 
 
 def get_internal_token(app_setting: AppSetting) -> str:
