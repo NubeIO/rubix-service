@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.19.7](https://github.com/NubeIO/rubix-service/tree/v1.19.7) (2022-07-19)
+- Fix: internal token issue
+
 ## [v1.19.6](https://github.com/NubeIO/rubix-service/tree/v1.19.6) (2022-07-18)
 - Don't recreate internal token if it already exists
 
