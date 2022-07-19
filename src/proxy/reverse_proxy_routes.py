@@ -13,7 +13,6 @@ from src import AppSetting
 from src.inheritors import get_instance
 from src.system.apps.base.installable_app import InstallableApp
 from src.system.resources.service.utils import get_reboot_job
-from src.token import get_internal_token
 
 bp_reverse_proxy = Blueprint("reverse_proxy", __name__, url_prefix='/')
 methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE']
@@ -48,10 +47,9 @@ def reverse_proxy_handler(_):
     if is_openvpn:
         actual_url: str = f'http://{settings.openvpn_setting.host}:{settings.openvpn_setting.port}/{path}'
     setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
-    internal_token: str = get_internal_token(setting)
     try:
         resp = requests.request(request.method, actual_url, json=request.get_json(),
-                                headers={**request.headers, 'Authorization': f"Internal {internal_token}"})
+                                headers={**request.headers, 'Authorization': f"{setting.internal_token}"})
         # we are not upgrading BIOS, and we are changing data on the middleware (not so cool)
         if path.startswith(BIOS_SERVICE_URL) and HttpMethod[request.method.upper()] == HttpMethod.GET:
             reboot_job = get_reboot_job()
