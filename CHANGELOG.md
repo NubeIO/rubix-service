@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.19.8](https://github.com/NubeIO/rubix-service/tree/v1.19.8) (2022-07-27)
+- Repo name change bbb-py-rest to bbb-rest-py
+
 ## [v1.19.7](https://github.com/NubeIO/rubix-service/tree/v1.19.7) (2022-07-19)
 - Fix: internal token issue
 

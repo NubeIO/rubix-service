@@ -164,7 +164,7 @@
       "app_type": "PythonApp",
       "service": "BBB_REST",
       "display_name": "BBB REST",
-      "repo_name": "bbb-py-rest",
+      "repo_name": "bbb-rest-py",
       "service_file_name": "nubeio-rubix-app-bbb-rest-py.service",
       "data_dir_name": "nubeio-rubix-app-bbb-rest-py",
       "port": 0,
