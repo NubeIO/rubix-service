@@ -8,6 +8,7 @@ class Types(enum.Enum):
     GO_FF_APP = 'GoFFApp'
     GO_APP = 'GoApp'
     JAVA_APP = 'JavaApp'
+    C_APP = 'CApp'
     APT_APP = 'AptApp'
 
 

@@ -7,7 +7,9 @@ ExecStartPre=/bin/sleep <pre_start_sleep>
 Type=simple
 User=root
 WorkingDirectory=<working_dir>
-ExecStart=<working_dir>/app -p <port> -r <root_dir> -a <app_dir> -d data -c config --prod server
+Environment="g=<global_dir>"
+Environment="s=config.yml"
+ExecStart=<working_dir>/app
 Restart=always
 RestartSec=10
 StandardOutput=syslog
