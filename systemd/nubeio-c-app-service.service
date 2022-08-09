@@ -1,0 +1,20 @@
+[Unit]
+Description=<description>
+After=network.target
+
+[Service]
+ExecStartPre=/bin/sleep <pre_start_sleep>
+Type=simple
+User=root
+WorkingDirectory=<working_dir>
+Environment="g=<global_dir>"
+Environment="s=config.yml"
+ExecStart=<working_dir>/app
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=<name>
+
+[Install]
+WantedBy=multi-user.target
