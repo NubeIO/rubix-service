@@ -1,4 +1,12 @@
 # CHANGELOG
+## [v1.20.0](https://github.com/NubeIO/rubix-service/tree/v1.20.0) (2022-08-09)
+- Add C type & BACnet Server C
+- Edit FF commandline (-prod to --prod)
+- Add rubix-assist & rubix-edge go apps
+- Note:- it doesn't support the following apps (GO apps have new attributes which only support after these):
+  - RUBIX_BROKER < v0.1.0
+  - PI_GPIO < v0.1.0
+
 ## [v1.19.8](https://github.com/NubeIO/rubix-service/tree/v1.19.8) (2022-07-27)
 - Repo name change bbb-py-rest to bbb-rest-py
 
