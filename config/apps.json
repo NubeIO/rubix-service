@@ -233,6 +233,42 @@
       ]
     },
     {
+      "app_type": "GoApp",
+      "service": "RUBIX_ASSIST",
+      "display_name": "Rubix Assist",
+      "repo_name": "rubix-assist",
+      "service_file_name": "nubeio-rubix-assist.service",
+      "data_dir_name": "rubix-assist",
+      "port": 1662,
+      "min_support_version": "v0.2.2",
+      "description": "Rubix Assist",
+      "gateway_access": false,
+      "url_prefix": "",
+      "device_types": [
+        "cloud"
+      ]
+    },
+    {
+      "app_type": "GoApp",
+      "service": "RUBIX_EDGE",
+      "display_name": "Rubix Edge",
+      "repo_name": "rubix-edge",
+      "service_file_name": "nubeio-rubix-edge.service",
+      "data_dir_name": "rubix-edge",
+      "port": 1661,
+      "min_support_version": "v0.0.9",
+      "description": "Rubix Edge",
+      "gateway_access": false,
+      "url_prefix": "",
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
+    },
+    {
       "app_type": "AptApp",
       "service": "OPEN_VPN_CLIENT",
       "display_name": "Open VPN Client",

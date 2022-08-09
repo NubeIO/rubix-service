@@ -28,8 +28,10 @@ class GoApp(SystemdApp, ABC):
                     line = line.replace('<working_dir>', wd)
                 if '<port>' in line and self.port:
                     line = line.replace('<port>', str(self.port))
-                if '<global_dir>' in line and global_dir:
-                    line = line.replace('<global_dir>', global_dir)
+                if '<root_dir>' in line and self.root_dir():
+                    line = line.replace('<root_dir>', self.root_dir())
+                if '<app_dir>' in line and self.data_dir_name:
+                    line = line.replace('<app_dir>', self.data_dir_name)
                 if '<name>' in line and self.repo_name:
                     line = line.replace('<name>', self.repo_name)
                 if '<description>' in line and self.description:
