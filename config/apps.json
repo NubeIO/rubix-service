@@ -245,7 +245,10 @@
       "gateway_access": false,
       "url_prefix": "",
       "device_types": [
-        "cloud"
+        "rubix-compute",
+        "rubix-compute-io",
+        "cloud",
+        "edge-gateway"
       ]
     },
     {
