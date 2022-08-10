@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.20.1](https://github.com/NubeIO/rubix-service/tree/v1.20.1) (2022-08-10)
+- Make Rubix Assist available for other device types as well
+
 ## [v1.20.0](https://github.com/NubeIO/rubix-service/tree/v1.20.0) (2022-08-09)
 - Add C type & BACnet Server C
 - Edit FF commandline (-prod to --prod)
