@@ -247,6 +247,7 @@
       "device_types": [
         "rubix-compute",
         "rubix-compute-io",
+        "edge-28",
         "cloud",
         "edge-gateway"
       ]
