@@ -335,8 +335,7 @@
       "port": 0,
       "min_support_version": "v0.0.12",
       "description": "NubeIO BACnet Server C",
-      "gateway_access": true,
-      "url_prefix": "dp",
+      "gateway_access": false,
       "device_types": [
         "rubix-compute",
         "rubix-compute-io",

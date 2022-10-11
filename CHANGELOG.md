@@ -1,4 +1,10 @@
 # CHANGELOG
+## [v1.20.3](https://github.com/NubeIO/rubix-service/tree/v1.20.3) (2022-10-11)
+- Fix: data push prefix url issue
+
+## [v1.20.2](https://github.com/NubeIO/rubix-service/tree/v1.20.2) (2022-08-15)
+- Make Rubix Assist available for BBB as well
+
 ## [v1.20.1](https://github.com/NubeIO/rubix-service/tree/v1.20.1) (2022-08-10)
 - Make Rubix Assist available for other device types as well
 
