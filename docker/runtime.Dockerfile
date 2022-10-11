@@ -12,17 +12,17 @@ RUN apt install musl-dev -y
 RUN apt install libffi-dev -y
 RUN apt install zlib1g -y
 RUN apt install zlib1g-dev -y
-RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=1.1.13 python3
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_VERSION=1.1.13 python3
 
 WORKDIR /usr/src/app/
 ADD poetry.lock pyproject.toml ./
-RUN $HOME/.local/bin/poetry install
+RUN $HOME/.poetry/bin/poetry install
 
 ADD src src
 ADD config config
 ADD systemd systemd
 ADD run.py VERSION ./
-RUN $HOME/.local/bin/poetry run pyinstaller run.py -n rubix-service --clean --onefile \
+RUN $HOME/.poetry/bin/poetry run pyinstaller run.py -n rubix-service --clean --onefile \
     --add-data VERSION:. \
     --add-data config:config \
     --add-data systemd:systemd
