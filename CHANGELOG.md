@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.21.0](https://github.com/NubeIO/rubix-service/tree/v1.21.0) (2022-10-17)
+- Add Go app rubix-edge-wires
+
 ## [v1.20.3](https://github.com/NubeIO/rubix-service/tree/v1.20.3) (2022-10-11)
 - Fix: data push prefix url issue
 

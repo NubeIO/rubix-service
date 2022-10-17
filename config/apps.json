@@ -273,6 +273,26 @@
       ]
     },
     {
+      "app_type": "GoApp",
+      "service": "RUBIX_EDGE_WIRES",
+      "display_name": "Rubix Edge Wires",
+      "repo_name": "rubix-edge-wires",
+      "service_file_name": "nubeio-rubix-edge-wires.service",
+      "data_dir_name": "rubix-edge-wires",
+      "port": 1665,
+      "min_support_version": "v0.1.0",
+      "description": "Rubix Edge Wires",
+      "gateway_access": false,
+      "url_prefix": "",
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
+    },
+    {
       "app_type": "AptApp",
       "service": "OPEN_VPN_CLIENT",
       "display_name": "Open VPN Client",
