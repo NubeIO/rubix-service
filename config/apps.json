@@ -143,7 +143,7 @@
     {
       "app_type": "PythonApp",
       "service": "LORA_SERIAL",
-      "display_name": "Lora Serial",
+      "display_name": "LoRa Serial",
       "repo_name": "nubeio-rubix-app-lora-serial-py",
       "service_file_name": "nubeio-rubix-app-lora-serial-py.service",
       "data_dir_name": "nubeio-rubix-app-lora-serial-py",
@@ -152,6 +152,26 @@
       "description": "NubeIO Rubix App LoRa Serial Py",
       "gateway_access": false,
       "url_prefix": "",
+      "device_types": [
+        "rubix-compute",
+        "rubix-compute-io",
+        "edge-28",
+        "cloud",
+        "edge-gateway"
+      ]
+    },
+    {
+      "app_type": "PythonApp",
+      "service": "LORAWAN_MODBUS_BRIDGE",
+      "display_name": "LoRaWAN Modbus Bridge",
+      "repo_name": "lorawan-modbus-bridge",
+      "service_file_name": "nubeio-lorawan-modbus-bridge.service",
+      "data_dir_name": "lorawan-modbus-bridge",
+      "port": 1111,
+      "min_support_version": "v0.0.1",
+      "description": "NubeIO LoraWAN Modbus Bridge",
+      "gateway_access": false,
+      "url_prefix": "N/A",
       "device_types": [
         "rubix-compute",
         "rubix-compute-io",
