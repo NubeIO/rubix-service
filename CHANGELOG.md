@@ -1,4 +1,5 @@
 # CHANGELOG
+
 ## [v1.22.0](https://github.com/NubeIO/rubix-service/tree/v1.22.0) (2022-10-26)
 - Add the lorawan-modbus-driver app to the app list
 
