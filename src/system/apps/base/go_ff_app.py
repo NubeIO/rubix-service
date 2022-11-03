@@ -20,8 +20,23 @@ def select_plugin_download_link(plugin: str, row: any):
     setting = current_app.config[AppSetting.FLASK_KEY]
     for asset in row.get('assets', []):
         artifact_name: str = asset.get('name')
-        if setting.device_type in artifact_name and plugin in artifact_name:
+        plugin_name, device_type = parse_artifact_name(artifact_name)
+        if setting.device_type == device_type and plugin == plugin_name:
             return asset.get('url')
+
+
+def parse_artifact_name(artifact_name: str) -> (str, str):
+    plugin_name = ""
+    device_type = ""
+    artifact_name_parts = artifact_name.split("-")
+    if len(artifact_name_parts) >= 3:
+        device_type_parts = artifact_name_parts[-1].split(".")
+        if len(device_type_parts) >= 3:
+            device_type = device_type_parts[-2]
+        del artifact_name_parts[-1]
+        del artifact_name_parts[-1]
+        plugin_name = "-".join(artifact_name_parts)
+    return plugin_name, device_type
 
 
 def get_plugin_file_name(plugin: str):
