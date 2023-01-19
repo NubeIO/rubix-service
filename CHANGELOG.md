@@ -1,3 +1,6 @@
+## [v1.23.0](https://github.com/NubeIO/rubix-service/tree/v1.23.0) (2023-01-19)
+- Attach EnvironmentFile on the Go app so it can detect OpenVPN on RA
+
 ## [v1.22.1](https://github.com/NubeIO/rubix-service/tree/v1.22.1) (2022-11-03)
 - Fix: wrong plugin download & hence failure on installation
 
