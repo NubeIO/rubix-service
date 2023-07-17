@@ -5,11 +5,14 @@ from typing import List
 
 from flask import Flask
 from mrb.setting import MqttSetting as MqttRestBridgeSetting
+from registry.resources.resource_device_info import get_device_info_dict
 from rubix_mqtt.setting import BaseSetting, MqttSettingBase
 
-from src.platform.utils import get_device_type
+from src.platform.utils import DEFAULT_DEVICE_TYPE
 from src.pyinstaller import resource_path
 from src.system.utils.file import write_file, read_file
+
+device_info_dict: dict = get_device_info_dict()
 
 
 class InstallableAppSetting(BaseSetting):
@@ -192,7 +195,7 @@ class AppSetting:
 
     @property
     def installable_app_settings(self) -> List[InstallableAppSetting]:
-        device_type = get_device_type()
+        device_type = device_info_dict.get('device_type') if device_info_dict else DEFAULT_DEVICE_TYPE
         return [app_setting for app_setting in self.__installable_app_settings if
                 device_type in app_setting.device_types]
 
