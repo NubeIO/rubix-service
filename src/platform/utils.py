@@ -48,8 +48,3 @@ def get_device_info_with_defaults() -> Union[DeviceInfoModel, None]:
     if not device_info.device_type:
         device_info.device_type = DEFAULT_DEVICE_TYPE
     return device_info
-
-
-def get_device_type() -> str:
-    device_info: dict = get_device_info_dict_with_defaults()
-    return device_info.get('device_type') if device_info else DEFAULT_DEVICE_TYPE

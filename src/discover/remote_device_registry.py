@@ -5,15 +5,17 @@ from typing import List, Dict, Union
 import gevent
 from mrb.mapper import api_to_slaves_broadcast_topic_mapper
 from registry.models.model_device_info import DeviceInfoModel
+from registry.resources.resource_device_info import get_device_info
 
 from src import AppSetting
-from src.platform.utils import get_device_info_with_defaults
 from src.slaves.resources.slaves_base import SlavesBase
 from src.utils.singleton import Singleton
 
 logger = logging.getLogger(__name__)
 
 MIN_LOOP_TO_SHOW_ONLINE: int = 5
+
+device_info: Union[DeviceInfoModel, None] = get_device_info()
 
 
 class RemoteDeviceRegistry(metaclass=Singleton):
@@ -63,7 +65,7 @@ class RemoteDeviceRegistry(metaclass=Singleton):
         RemoteDeviceRegistry().sem.release()
         for global_uuid in active_slave_devices:
             active_slave_device = active_slave_devices[global_uuid]
-            device_info_model: DeviceInfoModel = get_device_info_with_defaults()
+            device_info_model: DeviceInfoModel = device_info
             self.__temp_devices[global_uuid] = {
                 **active_slave_device,
                 'is_master': global_uuid == device_info_model.global_uuid,
