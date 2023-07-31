@@ -1,3 +1,6 @@
+## [v1.24.0](https://github.com/NubeIO/rubix-service/tree/v1.24.0) (2023-07-31)
+- Fix: Too many open files issues
+
 ## [v1.23.0](https://github.com/NubeIO/rubix-service/tree/v1.23.0) (2023-01-19)
 - Attach EnvironmentFile on the Go app so it can detect OpenVPN on RA
 
