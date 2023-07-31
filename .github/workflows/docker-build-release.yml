@@ -52,7 +52,6 @@ jobs:
         uses: zero88/gh-project-context@v1
         with:
           dry: false
-          mustSign: true
           defaultBranch: master
 
   build:
@@ -109,7 +108,7 @@ jobs:
         if: ${{ needs.context.outputs.isRelease == 'true' }}
         with:
           context: .
-          file: docker/build.Dockerfile
+          file: docker/Dockerfile
           platforms: ${{ env.PLATFORMS }}
           build-args: |
             BASE_IMAGE_VERSION=3.9
@@ -149,7 +148,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: docker/runtime.Dockerfile
+          file: docker/Dockerfile
           platforms: ${{ env.PLATFORMS }}
           build-args: |
             BASE_IMAGE_VERSION=3.9
@@ -164,7 +163,7 @@ jobs:
 
       - name: Cleanup Docker build cache if any
         run: |
-          docker buildx imagetools inspect localhost:5000/${{ env.APP_NAME }}:buildcache || echo "Inspection not working"
+          docker buildx imagetools inspect localhost:5000/${{ env.APP_NAME }}:buildcache || echo "Inspection is not working"
           echo "======================================================"
           docker buildx prune --filter until=72h --keep-storage 5GB -f
 
