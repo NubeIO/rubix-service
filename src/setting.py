@@ -195,7 +195,9 @@ class AppSetting:
 
     @property
     def installable_app_settings(self) -> List[InstallableAppSetting]:
-        device_type = device_info_dict.get('device_type') if device_info_dict else DEFAULT_DEVICE_TYPE
+        device_type = DEFAULT_DEVICE_TYPE
+        if device_info_dict and device_info_dict.get('device_type'):
+            device_type = device_info_dict.get('device_type')
         return [app_setting for app_setting in self.__installable_app_settings if
                 device_type in app_setting.device_types]
 

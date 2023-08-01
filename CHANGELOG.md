@@ -1,3 +1,6 @@
+## [v1.24.1](https://github.com/NubeIO/rubix-service/tree/v1.24.1) (2023-08-01)
+- Fix: get default type if it's not stored in registry
+
 ## [v1.24.0](https://github.com/NubeIO/rubix-service/tree/v1.24.0) (2023-07-31)
 - Fix: Too many open files issues
 
